@@ -3,8 +3,10 @@
 **Owner:** Evan Stachowiak
 **Spec source:** `C:\Users\estac\Downloads\portfolio-redesign-spec.md`
 **Started:** 2026-04-14
-**Current status:** Session 1 — Phase 1 + Phase 2 execution
-**Working branch:** `feat/editorial-redesign`
+**Current status:** Session 1 complete — Phase 1 ✅ + Phase 2 ✅ shipped
+**Working branch:** `feat/editorial-redesign` (pushed to origin)
+**Session 1 commits:** `188a08e` (Phase 1 tokens), `49e0bc9` (Phase 2 routing)
+**Next session starts at:** Phase 3 (Landing + Compile Sequence)
 
 ---
 
@@ -51,26 +53,23 @@ Shift portfolio from dark-mode + terminal-green aesthetic to a warm paper + crim
 - [x] Lock decisions
 - [x] Save roadmap
 
-### 🚧 Phase 1 — Design Foundation (this session)
-**Scope:** tokens, fonts, semantic naming, typography base. Nothing visual changes "layout-wise" — only the color/type system.
+### ✅ Phase 1 — Design Foundation (complete, commit `188a08e`)
+**Scope:** tokens, fonts, semantic naming, typography base. Nothing layout-wise — just color/type system.
 
-- [ ] Replace terminal-* tokens in `src/app/globals.css` with:
-  - `--bg-base: #EFEBE3`, `--bg-surface: #E6E2D9`, `--border-hairline: #D8D3C8`
-  - `--text-primary: #1A1A1A`, `--text-secondary: #5C5853`, `--text-tertiary: #8A857D`
-  - `--accent: #D7263D`, `--accent-hover: #B81E33`, `--accent-muted: rgba(215,38,61,0.08)`
-- [ ] Remove `terminal-green`, `terminal-cyan`, `terminal-amber`, `terminal-glow` tokens
-- [ ] Update `@theme inline` mappings to semantic names
-- [ ] Download General Sans woff2 (400/500/600) from Fontshare → `public/fonts/general-sans/`
-- [ ] Update `src/lib/fonts.ts`: add General Sans local font, keep JetBrains Mono
-- [ ] Set body line-height 1.65, max-width 68ch on paragraphs
-- [ ] h1 letter-spacing `-0.02em`, h2 `-0.01em`
-- [ ] Update type scale: h1 `clamp(3rem, 6vw, 5.5rem)`, h2 `2.25rem`, h3 `1.5rem`, body `1.0625rem`
-- [ ] Migrate all `text-terminal-*`, `border-terminal-*`, `bg-terminal-*` class usages to semantic equivalents
-- [ ] Verify no `oklch` terminal-green survives
-- [ ] Update Vitest tests if they reference color tokens
-- [ ] Dev run + screenshot to confirm warm paper base applies cleanly
+- [x] Replace terminal-* tokens in `src/app/globals.css` with warm paper + crimson hex palette
+- [x] Remove `terminal-green`, `terminal-cyan`, `terminal-amber`, `terminal-glow` tokens
+- [x] Update `@theme inline` mappings to semantic names (`--color-crimson`, `--color-hairline`, `--color-tertiary`)
+- [x] Load General Sans via Fontshare CDN `@import` (self-host deferred to Phase 7 for Lighthouse)
+- [x] Update `src/lib/fonts.ts`: remove Outfit, keep JetBrains Mono
+- [x] Set body line-height 1.65, `.prose-body` utility max-width 68ch
+- [x] h1 letter-spacing `-0.02em`, h2 `-0.01em`, type scale per spec §2
+- [x] Migrate 13 components from `text-terminal-*` etc. to `text-crimson` / semantic tokens
+- [x] Remove `.grid-pattern`, `.noise-overlay`, `.terminal-glow`, `.text-glow`, glitch-flicker keyframe
+- [x] Focus ring per spec §12: 2px crimson outline, 2px offset
+- [x] `color-scheme: light`, dropped `@custom-variant dark`
+- [x] Tests passing (14/14 vitest), tsc clean, no new lint errors
 
-### 🚧 Phase 2 — Routing Restructure (this session)
+### ✅ Phase 2 — Routing Restructure (complete, commit `49e0bc9`)
 **Scope:** split single page into multi-page, refactor nav, add persistent footer.
 
 - [ ] Create `src/app/projects/page.tsx` (index)
