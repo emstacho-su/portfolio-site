@@ -44,7 +44,7 @@ export function ContactSectionClient({ onContactClick }: ContactSectionProps = {
     <Section id="contact">
       <div ref={headingRef} className="mb-4">
         <Reveal>
-          <h2 className="font-mono text-2xl md:text-3xl text-terminal-green">
+          <h2 className="font-mono text-2xl md:text-3xl text-crimson">
             Get In Touch
           </h2>
         </Reveal>
@@ -52,7 +52,7 @@ export function ContactSectionClient({ onContactClick }: ContactSectionProps = {
           initial={{ scaleX: 0 }}
           animate={isHeadingInView ? { scaleX: 1 } : undefined}
           transition={{ duration: 0.8, delay: 0.3, ease: EASE.OUT }}
-          className="h-px bg-gradient-to-r from-terminal-green/60 via-terminal-green/20 to-transparent mt-3 origin-left"
+          className="h-px bg-gradient-to-r from-crimson/60 via-crimson/20 to-transparent mt-3 origin-left"
         />
       </div>
 
@@ -85,35 +85,35 @@ export function ContactSectionClient({ onContactClick }: ContactSectionProps = {
               }
               onClick={() => onContactClick?.(link.label.toLowerCase())}
               className="group flex flex-col items-center gap-3 p-6 bg-card border border-border rounded-lg
-                         hover:border-terminal-green/40 hover:terminal-glow transition-all duration-300
+                         hover:border-crimson/40 transition-all duration-300
                          hover:-translate-y-0.5 relative overflow-hidden"
             >
               {/* Radar pulse rings on scroll-in */}
               <div className="relative">
                 <Icon
                   size={22}
-                  className="text-muted-foreground group-hover:text-terminal-green transition-colors relative z-10"
+                  className="text-muted-foreground group-hover:text-crimson transition-colors relative z-10"
                 />
                 <motion.div
                   initial={{ scale: 0, opacity: 0.6 }}
                   whileInView={{ scale: 2.5, opacity: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.5 + i * 0.15, duration: 1, ease: 'easeOut' }}
-                  className="absolute inset-0 rounded-full border border-terminal-green/40"
+                  className="absolute inset-0 rounded-full border border-crimson/40"
                 />
                 <motion.div
                   initial={{ scale: 0, opacity: 0.4 }}
                   whileInView={{ scale: 3.5, opacity: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.7 + i * 0.15, duration: 1.2, ease: 'easeOut' }}
-                  className="absolute inset-0 rounded-full border border-terminal-green/20"
+                  className="absolute inset-0 rounded-full border border-crimson/20"
                 />
               </div>
               <div className="text-center">
                 <p className="font-mono text-xs text-muted-foreground mb-1">
                   {link.label}
                 </p>
-                <p className="font-mono text-sm text-foreground group-hover:text-terminal-green transition-colors">
+                <p className="font-mono text-sm text-foreground group-hover:text-crimson transition-colors">
                   {link.value}
                 </p>
               </div>

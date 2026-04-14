@@ -74,7 +74,7 @@ export function Navbar() {
         <nav className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="font-mono text-sm text-terminal-green hover:text-glow transition-all"
+            className="font-mono text-sm text-crimson hover:text-crimson-hover transition-all"
           >
             ES_
           </button>
@@ -88,7 +88,7 @@ export function Navbar() {
                 className={cn(
                   'font-mono text-sm relative py-1 transition-colors',
                   activeSection === link.href
-                    ? 'text-terminal-green'
+                    ? 'text-crimson'
                     : 'text-muted-foreground hover:text-foreground'
                 )}
               >
@@ -96,7 +96,7 @@ export function Navbar() {
                 {activeSection === link.href && (
                   <motion.span
                     layoutId="nav-underline"
-                    className="absolute bottom-0 left-0 right-0 h-px bg-terminal-green"
+                    className="absolute bottom-0 left-0 right-0 h-px bg-crimson"
                     transition={{ duration: 0.25 }}
                   />
                 )}

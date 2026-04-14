@@ -42,7 +42,7 @@ export function ProjectCard({ project, onExpand }: ProjectCardProps) {
       }}
       className={cn(
         'group bg-card border border-border rounded-lg overflow-hidden',
-        'hover:border-terminal-green/30 hover:terminal-glow'
+        'hover:border-crimson/30'
       )}
     >
       <PlaceholderImage label={project.imageLabel} />
@@ -63,8 +63,8 @@ export function ProjectCard({ project, onExpand }: ProjectCardProps) {
             className={cn(
               'font-mono text-[10px] shrink-0',
               project.status === 'completed'
-                ? 'border-terminal-green/40 text-terminal-green'
-                : 'border-terminal-amber/40 text-terminal-amber'
+                ? 'border-crimson/40 text-crimson'
+                : 'border-crimson/40 text-crimson'
             )}
           >
             {project.status === 'completed' ? 'Completed' : 'In Progress'}
@@ -99,7 +99,7 @@ export function ProjectCard({ project, onExpand }: ProjectCardProps) {
             className={cn(
               'font-mono text-xs flex items-center gap-1 transition-colors',
               expanded
-                ? 'text-terminal-green'
+                ? 'text-crimson'
                 : 'text-muted-foreground hover:text-foreground'
             )}
           >
@@ -118,7 +118,7 @@ export function ProjectCard({ project, onExpand }: ProjectCardProps) {
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-terminal-green transition-colors ml-auto"
+              className="text-muted-foreground hover:text-crimson transition-colors ml-auto"
               aria-label={`View ${project.title} on GitHub`}
             >
               <ExternalLink size={14} />

@@ -17,7 +17,7 @@ export function AboutSection() {
       {/* Heading with animated underline */}
       <div ref={headingRef} className="mb-10">
         <Reveal>
-          <h2 className="font-mono text-2xl md:text-3xl text-terminal-green">
+          <h2 className="font-mono text-2xl md:text-3xl text-crimson">
             About Me
           </h2>
         </Reveal>
@@ -25,7 +25,7 @@ export function AboutSection() {
           initial={{ scaleX: 0 }}
           animate={isHeadingInView ? { scaleX: 1 } : undefined}
           transition={{ duration: 0.8, delay: 0.3, ease: EASE.OUT }}
-          className="h-px bg-gradient-to-r from-terminal-green/60 via-terminal-green/20 to-transparent mt-3 origin-left"
+          className="h-px bg-gradient-to-r from-crimson/60 via-crimson/20 to-transparent mt-3 origin-left"
         />
       </div>
 

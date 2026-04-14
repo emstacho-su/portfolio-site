@@ -10,7 +10,7 @@ export function AboutSkills() {
     <div className="flex flex-col justify-between h-full">
       {skillCategories.map((category) => (
         <div key={category.label}>
-          <p className="font-mono text-xs text-terminal-green mb-2 uppercase tracking-wider">
+          <p className="font-mono text-xs text-crimson mb-2 uppercase tracking-wider">
             {category.label}
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -19,7 +19,7 @@ export function AboutSkills() {
                 <Badge
                   variant="secondary"
                   className="font-mono text-xs bg-surface border border-border
-                             hover:border-terminal-green/40 hover:text-terminal-green
+                             hover:border-crimson/40 hover:text-crimson
                              transition-colors cursor-default"
                 >
                   {skill}

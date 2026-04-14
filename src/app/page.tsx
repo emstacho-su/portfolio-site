@@ -5,7 +5,6 @@ import { AnalyticsWrapper } from '@/components/sections/analytics-wrapper';
 export default function Home() {
   return (
     <>
-      <div className="noise-overlay" aria-hidden="true" />
       <Navbar />
       <main id="main-content">
         <AnalyticsWrapper />

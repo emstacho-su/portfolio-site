@@ -22,7 +22,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="min-h-screen flex flex-col items-center justify-center px-6 relative grid-pattern"
+      className="min-h-screen flex flex-col items-center justify-center px-6 relative"
     >
       <div className="text-center max-w-3xl">
         {/* Name with per-letter glitch flicker */}
@@ -37,7 +37,7 @@ export function HeroSection() {
                 duration: 0.01,
                 ease: 'linear',
               }}
-              className="inline-block glitch-letter"
+              className="inline-block"
               style={{
                 animationDelay: `${0.3 + i * 0.06}s`,
               }}
@@ -54,10 +54,10 @@ export function HeroSection() {
           transition={{ delay: 1.2, duration: 0.5 }}
           className="mt-6 h-8 flex items-center justify-center"
         >
-          <span className="font-mono text-base sm:text-lg md:text-xl text-terminal-green text-glow">
+          <span className="font-mono text-base sm:text-lg md:text-xl text-crimson">
             {displayText}
             <span
-              className={`inline-block w-[2px] h-5 bg-terminal-green ml-0.5 align-middle transition-opacity ${
+              className={`inline-block w-[2px] h-5 bg-crimson ml-0.5 align-middle transition-opacity ${
                 cursorVisible ? 'opacity-100' : 'opacity-0'
               }`}
             />
@@ -83,9 +83,9 @@ export function HeroSection() {
         >
           <button
             onClick={scrollToProjects}
-            className="font-mono text-sm px-8 py-3 border border-terminal-green text-terminal-green
-                       hover:bg-terminal-green hover:text-background transition-all duration-300
-                       rounded-sm terminal-glow hover:shadow-[0_0_40px_oklch(0.82_0.22_155/25%)]"
+            className="font-mono text-sm px-8 py-3 border border-crimson text-crimson
+                       hover:bg-crimson hover:text-background transition-all duration-300
+                       rounded-sm"
           >
             View My Work
           </button>

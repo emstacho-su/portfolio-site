@@ -70,7 +70,7 @@ export function MobileMenu({
                 className={cn(
                   'font-mono text-2xl transition-colors',
                   activeSection === link.href
-                    ? 'text-terminal-green'
+                    ? 'text-crimson'
                     : 'text-muted-foreground hover:text-foreground'
                 )}
               >

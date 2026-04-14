@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { jetbrainsMono, outfit } from '@/lib/fonts';
+import { jetbrainsMono } from '@/lib/fonts';
 import { AnimationProvider } from './providers/animation-provider';
 import { SkipLink } from '@/components/ui/skip-link';
 import './globals.css';
@@ -41,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${jetbrainsMono.variable} h-full`}
+      className={`${jetbrainsMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">
         <SkipLink />
