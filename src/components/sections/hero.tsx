@@ -1,31 +1,41 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
+import Link from 'next/link';
 import { useTypingAnimation } from '@/hooks/use-typing-animation';
 import { EASE } from '@/lib/animation';
-import { ChevronDown } from 'lucide-react';
 
 const TAGLINE = 'Building systems that think, automate, and scale.';
 const NAME = 'EVAN STACHOWIAK';
 
 export function HeroSection() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start start', 'end start'],
+  });
+
+  // Subtle parallax: hero content translates upward at 0.3x scroll speed
+  const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
   const { displayText, cursorVisible } = useTypingAnimation({
     text: TAGLINE,
     speed: 45,
     startDelay: 1800,
   });
 
-  const scrollToProjects = () => {
-    document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <section
+      ref={ref}
       id="hero"
-      className="min-h-screen flex flex-col items-center justify-center px-6 relative"
+      className="min-h-[78vh] flex flex-col items-center justify-center px-6 relative pt-16 overflow-hidden"
     >
-      <div className="text-center max-w-3xl">
-        {/* Name with per-letter glitch flicker */}
+      <motion.div
+        style={{ y, opacity }}
+        className="text-center max-w-3xl"
+      >
         <h1 className="font-mono text-4xl sm:text-5xl md:text-7xl text-foreground tracking-tight font-bold flex flex-wrap justify-center gap-x-[0.04em]">
           {NAME.split('').map((char, i) => (
             <motion.span
@@ -34,20 +44,16 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 delay: 0.1 + i * 0.04,
-                duration: 0.01,
-                ease: 'linear',
+                duration: 0.3,
+                ease: EASE.OUT,
               }}
               className="inline-block"
-              style={{
-                animationDelay: `${0.3 + i * 0.06}s`,
-              }}
             >
               {char === ' ' ? '\u00A0' : char}
             </motion.span>
           ))}
         </h1>
 
-        {/* Typing tagline */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -64,7 +70,6 @@ export function HeroSection() {
           </span>
         </motion.div>
 
-        {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -74,36 +79,20 @@ export function HeroSection() {
           Syracuse University // IMT // Information Security
         </motion.p>
 
-        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.8, duration: 0.6, ease: EASE.OUT }}
           className="mt-10"
         >
-          <button
-            onClick={scrollToProjects}
-            className="font-mono text-sm px-8 py-3 border border-crimson text-crimson
+          <Link
+            href="/projects"
+            className="inline-block font-mono text-sm px-8 py-3 border border-crimson text-crimson
                        hover:bg-crimson hover:text-background transition-all duration-300
                        rounded-sm"
           >
             View My Work
-          </button>
-        </motion.div>
-      </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.4, duration: 0.6 }}
-        className="absolute bottom-8"
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <ChevronDown size={20} className="text-muted-foreground" />
+          </Link>
         </motion.div>
       </motion.div>
     </section>

@@ -36,7 +36,7 @@ export default async function ProjectDetailPage({
   return (
     <main
       id="main-content"
-      className="flex-1 pt-24 px-6 max-w-[900px] mx-auto w-full"
+      className="flex-1 pt-16 px-6 max-w-[900px] mx-auto w-full"
     >
       <article className="py-12">
         <Link

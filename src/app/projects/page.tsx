@@ -9,7 +9,7 @@ export default function ProjectsPage() {
   return (
     <main
       id="main-content"
-      className="flex-1 pt-24 px-6 max-w-[1200px] mx-auto w-full"
+      className="flex-1 pt-16 px-6 max-w-[1200px] mx-auto w-full"
     >
       <ProjectsSection onProjectClick={trackProjectClick} />
     </main>
