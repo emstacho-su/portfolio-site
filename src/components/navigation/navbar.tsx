@@ -48,10 +48,17 @@ export function Navbar() {
         <nav className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
           <Link
             href="/"
-            className="font-mono text-sm text-foreground hover:text-crimson transition-colors"
+            className="group font-mono text-sm text-foreground hover:text-crimson transition-all duration-200 inline-flex items-baseline hover:-translate-y-[1px] active:translate-y-[1px] active:scale-[0.96]"
             aria-label="Home"
           >
-            ES<span className="text-crimson">_</span>
+            ES
+            <motion.span
+              className="text-crimson inline-block"
+              animate={{ opacity: [1, 0.35, 1] }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              _
+            </motion.span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
@@ -62,7 +69,8 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    'font-mono text-sm relative py-1 transition-colors',
+                    'group font-mono text-sm relative py-1 inline-block transition-all duration-200',
+                    'hover:-translate-y-[1px] active:translate-y-[1px] active:scale-[0.97]',
                     active
                       ? 'text-crimson'
                       : 'text-muted-foreground hover:text-foreground'
@@ -74,6 +82,12 @@ export function Navbar() {
                       layoutId="nav-underline"
                       className="absolute bottom-0 left-0 right-0 h-px bg-crimson"
                       transition={{ duration: 0.25 }}
+                    />
+                  )}
+                  {!active && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute bottom-0 left-0 h-px bg-crimson/60 w-0 group-hover:w-full transition-[width] duration-200 ease-out"
                     />
                   )}
                 </Link>

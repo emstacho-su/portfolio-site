@@ -24,7 +24,7 @@ export function CursorSpotlight() {
       }
       frameRef.current = requestAnimationFrame(() => {
         if (!divRef.current) return;
-        divRef.current.style.background = `radial-gradient(480px circle at ${e.clientX}px ${e.clientY}px, rgba(215, 38, 61, 0.055), transparent 55%)`;
+        divRef.current.style.background = `radial-gradient(520px circle at ${e.clientX}px ${e.clientY}px, rgba(215, 38, 61, 0.028), transparent 60%)`;
       });
     };
 
