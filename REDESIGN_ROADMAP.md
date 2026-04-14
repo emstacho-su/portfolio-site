@@ -3,16 +3,21 @@
 **Owner:** Evan Stachowiak
 **Spec source:** `C:\Users\estac\Downloads\portfolio-redesign-spec.md`
 **Started:** 2026-04-14
-**Current status:** Session 1 complete — Phase 1 ✅ + Phase 2 ✅ shipped
+**Current status:** Session 1 complete — Phase 1 ✅ + Phase 2 ✅ + motion preview work shipped
 **Working branch:** `feat/editorial-redesign` (pushed to origin)
-**Session 1 commits:** `188a08e` (Phase 1 tokens), `49e0bc9` (Phase 2 routing)
-**Next session starts at:** Phase 3 (Landing + Compile Sequence)
+**Key commits:**
+- `188a08e` — Phase 1 tokens
+- `49e0bc9` — Phase 2 routing
+- `f2d448c` — loadup sequence, parallax hero, cursor spotlight, /stack → /toolkit rename, whitespace tightening, link-underline utility
+- `2edad6d` — nav hover/click micro-interactions + blinking ES_ underscore, cursor-spotlight opacity dialled back
+
+**Next session starts at:** Phase 3 (true compile sequence per spec §4 + hero copy/layout rewrite) OR Phase 4 (projects MDX + card redesign). Pick based on priority.
 
 ---
 
 ## Goal
 
-Shift portfolio from dark-mode + terminal-green aesthetic to a warm paper + crimson editorial aesthetic. Soften (don't abandon) the CLI motif. Split the single-page scroll into a multi-page site. Add a `/stack` page that makes the AI-engineering identity undeniable.
+Shift portfolio from dark-mode + terminal-green aesthetic to a warm paper + crimson editorial aesthetic. Soften (don't abandon) the CLI motif. Split the single-page scroll into a multi-page site. Add a `/toolkit` page (renamed from `/stack` — "stack" is a personal nickname) that makes the AI-engineering identity undeniable.
 
 **Positioning to reinforce:** IMT student with process/QA background using AI-engineering + vibe-coding to build real systems. Not CS. Not finance. Intersection builder.
 
@@ -88,10 +93,20 @@ Shift portfolio from dark-mode + terminal-green aesthetic to a warm paper + crim
 
 **Known non-blockers carried forward:**
 - lucide-react v1.7.0 dropped brand icons; footer uses `Mail`/`Link`/`Code` generic icons (matches existing contact.tsx). Swap to inline SVG logos in Phase 7 if desired.
-- ES_ logo blink animation deferred to Phase 3.
+- ES_ logo blink animation — done in `2edad6d`.
 - Pre-existing lint error in `use-analytics.ts` (sendEvent access-before-declaration) not introduced by this session; cleanup candidate for Phase 7.
 
-### ⏳ Phase 3 — Landing Page + Compile Sequence
+### 🟡 Phase 3 — Landing Page + Compile Sequence (partial)
+
+**Shipped as preview in Session 1 (`f2d448c`, `2edad6d`):**
+- [x] Hero shrunk to `min-h-[78vh]` + subtle parallax on scroll (0.3x) + scroll chevron removed
+- [x] CTA "View My Work" navigates to `/projects`
+- [x] **LoadupSequence** overlay: paper-on-paper terminal boot with 6 staggered lines + blinking crimson cursor, plays once per session (sessionStorage gate), skippable on any input, respects `prefers-reduced-motion`. NOT yet the full spec §4 compile sequence — that uses a mono→sans crossfade on the name itself.
+- [x] **CursorSpotlight** on landing — subtle 2.8% crimson radial glow tracks pointer (disabled on touch + reduced-motion)
+- [x] ES_ logo: blinking crimson underscore + hover lift + click press-down
+- [x] Nav links: hover lifts + crimson underline draws L→R, click press-down + scale 97%
+
+**Still to do for full Phase 3:**
 - [ ] Remove grid background, add single hairline rule 1/3 down
 - [ ] Hero: left-aligned, EVAN / STACHOWIAK stacked, ~5.5rem desktop
 - [ ] New tagline (pick from spec §6.4)
@@ -125,8 +140,9 @@ Shift portfolio from dark-mode + terminal-green aesthetic to a warm paper + crim
 - [ ] Build case-study page template in `src/app/projects/[slug]/page.tsx`
 - [ ] Design custom MDX components (pull quote, decision callout, comparison table)
 
-### ⏳ Phase 5 — `/stack` Page (SIGNATURE)
-- [ ] Create `src/data/stack.ts` (hardware, daily drivers, Claude stack, workflow)
+### ⏳ Phase 5 — `/toolkit` Page (SIGNATURE)
+_(Route renamed from `/stack` in commit `f2d448c`. "The Toolkit" is the page heading.)_
+- [ ] Create `src/data/toolkit.ts` (hardware, daily drivers, Claude stack, workflow)
 - [ ] Sections: Hardware / Daily Drivers / The Claude Stack / Workflow / Writing
 - [ ] Terminal-style code blocks (mono, `--bg-surface`, crimson syntax accents)
 - [ ] 2-3 short writing pieces (**OPEN: user needs to provide content**)
@@ -144,7 +160,14 @@ Shift portfolio from dark-mode + terminal-green aesthetic to a warm paper + crim
 - [ ] Replace `public/resume.pdf` (drop the Word-formatted one)
 - [ ] **Rebuild resume projects section** (user noted this needs attention)
 
-### ⏳ Phase 7 — Motion + Accessibility
+### 🟡 Phase 7 — Motion + Accessibility (partial)
+
+**Shipped as preview in Session 1:**
+- [x] `.link-underline` utility class (L→R hover draw) available in globals.css — apply site-wide in polish pass
+- [x] Global `prefers-reduced-motion` shim — forces all animations/transitions to 0.01ms
+- [x] Hero parallax (useScroll + useTransform, 0.3x rate)
+
+**Still to do:**
 - [ ] Page transitions: `AnimatePresence` fade + 12px y 300ms
 - [ ] Scroll reveals: `whileInView once:true`, 16px translate, 80ms stagger
 - [ ] Parallax: hero 0.3x, project images 0.1x
@@ -160,10 +183,10 @@ Shift portfolio from dark-mode + terminal-green aesthetic to a warm paper + crim
 ## Open Items (user-owned)
 
 - [ ] **Screenshots:** which projects get featured; what demo material to capture
-- [ ] **`/stack` writing:** 2-3 short notes on AI-engineering topics (titles suggested in spec §9.5)
+- [ ] **`/toolkit` writing:** 2-3 short notes on AI-engineering topics (titles suggested in spec §9.5)
 - [ ] **Resume projects section:** user flagged this needs rebuild (Phase 6)
-- [ ] **Hardware specs** for /stack page
-- [ ] **Workflow copy** for /stack page
+- [ ] **Hardware specs** for /toolkit page
+- [ ] **Workflow copy** for /toolkit page
 - [ ] **"Currently" line** for persistent footer
 
 ---
@@ -176,7 +199,7 @@ Shift portfolio from dark-mode + terminal-green aesthetic to a warm paper + crim
 | 2 — Routing | 3h | ASSIST |
 | 3 — Landing + Animation | 3h | COLLABORATE |
 | 4 — Projects + MDX | 4h | ASSIST |
-| 5 — /stack | 3h | ASSIST + user content |
+| 5 — /toolkit | 3h | ASSIST + user content |
 | 6 — Resume + PDF | 3h | ASSIST |
 | 7 — Motion + A11y | 2h | AUTOMATE |
 | **Total** | **~20h** | 3-4 sessions |
@@ -205,4 +228,12 @@ Key files to re-read at session start:
 
 ## Changelog
 
-- **2026-04-14** — Session 1 start. Phase 0 complete. Phase 1+2 in execution.
+- **2026-04-14 AM** — Session 1 start. Phase 0 complete. Phase 1 tokens + Phase 2 routing shipped (`188a08e`, `49e0bc9`).
+- **2026-04-14 PM** — Extended Session 1 with motion preview work (`f2d448c`, `2edad6d`):
+  - CTA fix, hero parallax + shrunk height + chevron removal, page whitespace tightening
+  - LoadupSequence (terminal-boot overlay, once per session)
+  - CursorSpotlight on landing (barely-there crimson glow)
+  - Nav micro-interactions (hover lift, click press, blinking ES_ underscore, group-hover underline draw)
+  - `/stack` → `/toolkit` rename (tab label + route + metadata + copy)
+  - `.link-underline` utility + global prefers-reduced-motion shim
+  - Decision: loadup sequence is a DIFFERENT animation from spec §4 compile sequence. Both can coexist — loadup is an overlay that plays once per session before any page; compile sequence (deferred to Phase 3) is the mono→sans name crossfade on landing hero itself.
