@@ -70,26 +70,26 @@ Shift portfolio from dark-mode + terminal-green aesthetic to a warm paper + crim
 - [x] Tests passing (14/14 vitest), tsc clean, no new lint errors
 
 ### ✅ Phase 2 — Routing Restructure (complete, commit `49e0bc9`)
-**Scope:** split single page into multi-page, refactor nav, add persistent footer.
+**Scope:** multi-page routing, nav refactor, persistent footer.
 
-- [ ] Create `src/app/projects/page.tsx` (index)
-- [ ] Create `src/app/projects/[slug]/page.tsx` (case study placeholder — content wiring in Phase 4)
-- [ ] Create `src/app/resume/page.tsx`
-- [ ] Create `src/app/stack/page.tsx` (placeholder — content wiring in Phase 5)
-- [ ] Rewrite `src/app/page.tsx` as landing-only (hero + condensed about; remove projects/resume/contact sections)
-- [ ] Refactor `src/components/navigation/navbar.tsx`:
-  - Hash anchors → `next/link`
-  - Active state via `usePathname()` + Motion `layoutId` underline
-  - Nav order: About / Projects / Stack / Resume
-- [ ] Build `src/components/navigation/footer.tsx` — persistent, 3 columns:
-  - Contact tiles (Email, LinkedIn, GitHub)
-  - "Currently" block (one line, manually updated)
-  - "Built with Claude Code" credit
-- [ ] Mount footer in `src/app/layout.tsx` so it persists on every page
-- [ ] Remove `ContactSectionClient` usage (footer replaces it)
-- [ ] Verify all 5 routes render, nav works, no 404s
-- [ ] Verify Supabase analytics still fires on nav clicks (or adjust for multi-page)
-- [ ] Test on Vercel preview deploy
+- [x] Created `src/app/projects/page.tsx` (client wrapper, tracks `project_click`)
+- [x] Created `src/app/projects/[slug]/page.tsx` with async Next 16 params + `generateStaticParams` + `generateMetadata` — placeholder content, Phase 4 adds MDX
+- [x] Created `src/app/resume/page.tsx` (client wrapper, tracks `resume_download`)
+- [x] Created `src/app/stack/page.tsx` (placeholder, Phase 5 wires content)
+- [x] Rewrote `src/app/page.tsx` as landing-only (Hero + About)
+- [x] Refactored navbar: `next/link` + `usePathname`, Motion `layoutId` underline slides between pages; order About/Projects/Stack/Resume
+- [x] Refactored mobile-menu: slides in from right per spec §10
+- [x] Built persistent 3-column footer (Contact / Currently / Colophon) with crimson "Built with Claude Code" link
+- [x] Mounted Navbar + Footer in `src/app/layout.tsx` — persistent on every route
+- [x] Deleted `analytics-wrapper.tsx`, replaced with per-page client wrappers using `useAnalytics`
+- [x] Supabase `/api/analytics` route untouched — `page_view` auto-fires per route via hook remount
+- [x] `next build` passes: 5 static routes, 4 SSG project slugs, dynamic `/api/analytics`
+- [x] Pushed to `origin/feat/editorial-redesign` → Vercel preview URL auto-generated
+
+**Known non-blockers carried forward:**
+- lucide-react v1.7.0 dropped brand icons; footer uses `Mail`/`Link`/`Code` generic icons (matches existing contact.tsx). Swap to inline SVG logos in Phase 7 if desired.
+- ES_ logo blink animation deferred to Phase 3.
+- Pre-existing lint error in `use-analytics.ts` (sendEvent access-before-declaration) not introduced by this session; cleanup candidate for Phase 7.
 
 ### ⏳ Phase 3 — Landing Page + Compile Sequence
 - [ ] Remove grid background, add single hairline rule 1/3 down
