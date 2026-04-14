@@ -1,15 +1,11 @@
-import { Navbar } from '@/components/navigation/navbar';
-import { Footer } from '@/components/navigation/footer';
-import { AnalyticsWrapper } from '@/components/sections/analytics-wrapper';
+import { HeroSection } from '@/components/sections/hero';
+import { AboutSection } from '@/components/sections/about';
 
 export default function Home() {
   return (
-    <>
-      <Navbar />
-      <main id="main-content">
-        <AnalyticsWrapper />
-      </main>
-      <Footer />
-    </>
+    <main id="main-content" className="flex-1">
+      <HeroSection />
+      <AboutSection />
+    </main>
   );
 }
