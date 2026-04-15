@@ -3,15 +3,17 @@
 **Owner:** Evan Stachowiak
 **Spec source:** `C:\Users\estac\Downloads\portfolio-redesign-spec.md`
 **Started:** 2026-04-14
-**Current status:** Session 1 complete — Phase 1 ✅ + Phase 2 ✅ + motion preview work shipped
+**Current status:** Session 2 complete — Phases 1 ✅ + 2 ✅ + 3 ✅
 **Working branch:** `feat/editorial-redesign` (pushed to origin)
 **Key commits:**
 - `188a08e` — Phase 1 tokens
 - `49e0bc9` — Phase 2 routing
 - `f2d448c` — loadup sequence, parallax hero, cursor spotlight, /stack → /toolkit rename, whitespace tightening, link-underline utility
 - `2edad6d` — nav hover/click micro-interactions + blinking ES_ underscore, cursor-spotlight opacity dialled back
+- `80b58d8` — roadmap patch (Session 1 summary)
+- _Session 2 commit forthcoming_ — Phase 3: compile sequence, hero rewrite, condensed About
 
-**Next session starts at:** Phase 3 (true compile sequence per spec §4 + hero copy/layout rewrite) OR Phase 4 (projects MDX + card redesign). Pick based on priority.
+**Next session starts at:** Phase 4 (projects MDX + card redesign) OR Phase 5 (`/toolkit` — needs user content).
 
 ---
 
@@ -96,37 +98,39 @@ Shift portfolio from dark-mode + terminal-green aesthetic to a warm paper + crim
 - ES_ logo blink animation — done in `2edad6d`.
 - Pre-existing lint error in `use-analytics.ts` (sendEvent access-before-declaration) not introduced by this session; cleanup candidate for Phase 7.
 
-### 🟡 Phase 3 — Landing Page + Compile Sequence (partial)
+### ✅ Phase 3 — Landing Page + Compile Sequence (complete, Session 2)
 
-**Shipped as preview in Session 1 (`f2d448c`, `2edad6d`):**
+**Shipped in Session 1 (`f2d448c`, `2edad6d`):**
 - [x] Hero shrunk to `min-h-[78vh]` + subtle parallax on scroll (0.3x) + scroll chevron removed
 - [x] CTA "View My Work" navigates to `/projects`
-- [x] **LoadupSequence** overlay: paper-on-paper terminal boot with 6 staggered lines + blinking crimson cursor, plays once per session (sessionStorage gate), skippable on any input, respects `prefers-reduced-motion`. NOT yet the full spec §4 compile sequence — that uses a mono→sans crossfade on the name itself.
-- [x] **CursorSpotlight** on landing — subtle 2.8% crimson radial glow tracks pointer (disabled on touch + reduced-motion)
+- [x] **LoadupSequence** overlay: paper-on-paper terminal boot with 6 staggered lines + blinking crimson cursor, plays once per session (sessionStorage gate), skippable on any input, respects `prefers-reduced-motion`.
+- [x] **CursorSpotlight** on landing — subtle 2.8% crimson radial glow tracks pointer
 - [x] ES_ logo: blinking crimson underscore + hover lift + click press-down
 - [x] Nav links: hover lifts + crimson underline draws L→R, click press-down + scale 97%
 
-**Still to do for full Phase 3:**
-- [ ] Remove grid background, add single hairline rule 1/3 down
-- [ ] Hero: left-aligned, EVAN / STACHOWIAK stacked, ~5.5rem desktop
-- [ ] New tagline (pick from spec §6.4)
-- [ ] New meta line: `SYRACUSE IMT '27 / ISO 9001 AUDITOR / AI-ENGINEERING`
-- [ ] CTA: "Projects →"
-- [ ] **Compile-sequence animation** (spec §4):
-  - 0.0–0.4s: paper fade in
-  - 0.4–0.8s: hairline grid fade in at 6% from top-left
-  - 0.8–1.2s: crimson underline draws horizontally
-  - 1.2–1.8s: name types in JetBrains Mono → crossfades to General Sans
-  - 1.8–2.2s: tagline fade up 8px
-  - 2.2–2.6s: meta + CTA fade in
-  - 2.6s: blinking crimson cursor at tagline end
-  - `sessionStorage` gate (first visit per session only)
-  - Keypress/click skips to final state
+**Shipped in Session 2:**
+- [x] Single hairline rule between hero and about section (`src/app/page.tsx`)
+- [x] Hero rewrite: EVAN / STACHOWIAK stacked, left-aligned, h1 uses globals' `clamp(3rem, 6vw, 5.5rem)`
+- [x] Tagline picked: **"From ISO audits to AI agents — I build the systems in between."** (spec §6.4 option 3 — most differentiated for the IMT + ISO + AI positioning)
+- [x] Meta line: `SYRACUSE IMT '27 / ISO 9001 AUDITOR / AI-ENGINEERING`
+- [x] CTA: "Projects →" (crimson link-underline, replaces the bordered button)
+- [x] **Compile-sequence animation** (spec §4) built in `hero.tsx` as `CompileSequence` sub-component:
+  - Hairline grid @ 6% fades in + clip-path draws from top-left (T+400ms)
+  - Crimson underline draws L→R under name (T+800ms)
+  - Name types in JetBrains Mono with blinking crimson cursor (T+1200ms)
+  - Mono → General Sans crossfade over 200ms (T+1700ms)
+  - Tagline fades up 8px (T+1800ms)
+  - Meta + CTA fade in (T+2200ms)
+  - Blinking crimson cursor lingers at end of tagline (T+2600ms)
+  - `sessionStorage` key `es-compile-played-v1` — plays once per session
+  - Keydown / pointerdown skips instantly to final state
   - `prefers-reduced-motion` → skip entirely, render final state
-- [ ] Condense About to 3 paragraphs
-- [ ] Pull "identify an inefficiency, model the problem quantitatively…" as blockquote
-- [ ] Remove skills sidebar from landing
-- [ ] Remove scroll-down chevron
+  - When LoadupSequence will play (first visit), compile sequence offsets by 1400ms so it starts _after_ loadup fades
+- [x] Condensed About to 3 paragraphs + pull quote (`src/components/sections/about.tsx`)
+- [x] "identify an inefficiency, model the problem quantitatively…" pulled as crimson-bordered blockquote between paragraphs 2 and 3
+- [x] Skills sidebar removed from landing About (data kept in `about.ts` for resume reuse)
+- [x] Copy edits per spec §13 applied to `landingAbout` data in `src/data/about.ts`
+- [x] Build passes: 14 routes, TypeScript clean; 14/14 vitest tests green; zero new lint errors (3 pre-existing errors remain — Phase 7 cleanup)
 
 ### ⏳ Phase 4 — Projects System
 - [ ] Add `@next/mdx` + content loader (verify Next.js 16 MDX docs first)
@@ -237,3 +241,9 @@ Key files to re-read at session start:
   - `/stack` → `/toolkit` rename (tab label + route + metadata + copy)
   - `.link-underline` utility + global prefers-reduced-motion shim
   - Decision: loadup sequence is a DIFFERENT animation from spec §4 compile sequence. Both can coexist — loadup is an overlay that plays once per session before any page; compile sequence (deferred to Phase 3) is the mono→sans name crossfade on landing hero itself.
+- **2026-04-15 — Session 2** — Phase 3 closed out:
+  - Hero fully rewritten: stacked left-aligned EVAN/STACHOWIAK, new tagline + meta line, "Projects →" CTA, full spec §4 compile sequence (mono→sans crossfade, underline draw, hairline grid fade-in, offset to start after loadup fades).
+  - About condensed to 3 paragraphs with crimson-bordered pull quote; skills sidebar removed.
+  - Copy edits per spec §13 applied; `landingAbout` data extracted.
+  - `bg-hairline-grid` utility + `cursor-blink` keyframe added to `globals.css`.
+  - Build + tests clean; no new lint errors beyond the 3 pre-existing issues listed for Phase 7.

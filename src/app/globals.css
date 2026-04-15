@@ -168,6 +168,24 @@
   .link-underline:focus-visible {
     background-size: 100% 1px;
   }
+
+  /* Faint hairline grid used during compile sequence (spec §4.2) */
+  .bg-hairline-grid {
+    background-image:
+      linear-gradient(to right, var(--text-primary) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--text-primary) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  /* Blinking crimson cursor (spec §4.7) — 1.06s steps */
+  @keyframes blink-crimson {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  .cursor-blink {
+    animation: blink-crimson 1.06s steps(1) infinite;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

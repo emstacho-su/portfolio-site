@@ -4,8 +4,7 @@ import { motion, useInView } from 'motion/react';
 import { useRef } from 'react';
 import { Section } from '@/components/ui/section';
 import { Reveal } from '@/components/ui/reveal';
-import { AboutSkills } from './about-skills';
-import { aboutParagraphs } from '@/data/about';
+import { landingAbout } from '@/data/about';
 import { EASE } from '@/lib/animation';
 
 export function AboutSection() {
@@ -13,40 +12,48 @@ export function AboutSection() {
   const isHeadingInView = useInView(headingRef, { once: true, margin: '-80px' });
 
   return (
-    <Section id="about">
+    <Section id="about" className="max-w-[900px]">
       {/* Heading with animated underline */}
       <div ref={headingRef} className="mb-10">
         <Reveal>
-          <h2 className="font-mono text-2xl md:text-3xl text-crimson">
-            About Me
+          <h2 className="font-sans text-3xl md:text-4xl text-foreground">
+            About
           </h2>
         </Reveal>
         <motion.div
           initial={{ scaleX: 0 }}
           animate={isHeadingInView ? { scaleX: 1 } : undefined}
-          transition={{ duration: 0.8, delay: 0.3, ease: EASE.OUT }}
-          className="h-px bg-gradient-to-r from-crimson/60 via-crimson/20 to-transparent mt-3 origin-left"
+          transition={{ duration: 0.6, delay: 0.2, ease: EASE.OUT }}
+          className="h-[2px] bg-crimson mt-3 origin-left w-24"
         />
       </div>
 
-      {/* Two-column: paragraphs left, skills right — bottoms aligned */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-stretch">
-        {/* Paragraphs */}
-        <div className="space-y-5">
-          {aboutParagraphs.map((paragraph, i) => (
-            <Reveal key={i} direction={i % 2 === 0 ? 'left' : 'right'} delay={i * 0.12}>
-              <p className="text-foreground/85 leading-relaxed text-base">
-                {paragraph}
-              </p>
-            </Reveal>
-          ))}
-        </div>
-
-        {/* Skills — right column, bottom-aligned with text */}
-        <Reveal delay={0.2}>
-          <AboutSkills />
-        </Reveal>
+      {/* First two paragraphs */}
+      <div className="space-y-6">
+        {landingAbout.paragraphs.slice(0, 2).map((paragraph, i) => (
+          <Reveal key={i} delay={i * 0.1}>
+            <p className="text-foreground leading-[1.65] prose-body">
+              {paragraph}
+            </p>
+          </Reveal>
+        ))}
       </div>
+
+      {/* Pull quote — left-hairline rule + oversized serif-esque treatment */}
+      <Reveal delay={0.15}>
+        <blockquote className="my-10 pl-6 border-l-2 border-crimson max-w-[44rem]">
+          <p className="font-sans text-xl sm:text-2xl md:text-3xl text-foreground leading-[1.3] tracking-tight">
+            &ldquo;{landingAbout.pullQuote}&rdquo;
+          </p>
+        </blockquote>
+      </Reveal>
+
+      {/* Closing paragraph */}
+      <Reveal delay={0.1}>
+        <p className="text-foreground leading-[1.65] prose-body">
+          {landingAbout.paragraphs[2]}
+        </p>
+      </Reveal>
     </Section>
   );
 }
