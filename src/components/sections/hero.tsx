@@ -51,7 +51,7 @@ export function HeroSection() {
     <section
       ref={sectionRef}
       id="hero"
-      className="min-h-[78vh] flex flex-col justify-center px-6 relative pt-16 overflow-hidden"
+      className="min-h-[78vh] flex flex-col items-center justify-center px-6 relative pt-16 overflow-hidden text-center"
     >
       {mounted && (
         <motion.div
@@ -162,7 +162,7 @@ function CompileSequence({ play }: CompileSequenceProps) {
         {/* Crimson underline draws L→R where the name will land (spec §4.3) */}
         <motion.div
           aria-hidden="true"
-          className="h-[2px] bg-crimson origin-left mb-8"
+          className="h-[2px] bg-crimson origin-left mb-8 mx-auto"
           style={{ width: 'clamp(6rem, 18vw, 12rem)' }}
           initial={false}
           animate={{ scaleX: step >= 2 ? 1 : 0 }}
@@ -200,7 +200,7 @@ function CompileSequence({ play }: CompileSequenceProps) {
 
         {/* Tagline with trailing blinking cursor (spec §4.5, §4.7) */}
         <motion.p
-          className="mt-10 text-lg sm:text-xl md:text-2xl text-foreground max-w-[40rem] prose-body"
+          className="mt-10 text-lg sm:text-xl md:text-2xl text-foreground max-w-[40rem] mx-auto prose-body"
           initial={false}
           animate={{
             opacity: step >= 5 ? 1 : 0,

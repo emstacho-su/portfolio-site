@@ -67,12 +67,12 @@ export function LoadupSequence() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: FADE_OUT_S, ease: [0.4, 0, 0.2, 1] }}
-          className="fixed inset-0 z-[100] bg-background flex items-center justify-center"
+          className="fixed inset-0 z-[100] bg-background flex items-start justify-start"
           role="status"
           aria-live="polite"
           aria-label="Loading"
         >
-          <pre className="font-mono text-xs sm:text-sm text-text-primary leading-6 w-full max-w-[520px] px-8">
+          <pre className="font-mono text-xs sm:text-sm text-text-primary leading-6 pt-6 pl-6 sm:pt-8 sm:pl-8">
             {SCRIPT.map((line, i) => (
               <motion.div
                 key={i}
