@@ -34,7 +34,8 @@ const SIREN_OPACITY = [0.35, 1, 0.5, 1, 0.35];
 const SIREN_SCALE = [0.92, 1.12, 0.96, 1.12, 0.92];
 const SIREN_TIMES = [0, 0.18, 0.5, 0.72, 1];
 const SIREN_DURATION = 3.6;
-const RADAR_DURATION = 3.2;
+const RADAR_DURATION = 5;
+const RADAR_SCALE_MAX = 2.6;
 
 export function InterestedCTA() {
   const reduced = useReducedMotion();
@@ -111,10 +112,7 @@ export function InterestedCTA() {
   useEffect(() => () => stopScramble(), []);
 
   return (
-    <div className="flex flex-col items-center gap-3 py-8 md:py-12">
-      {/* Status decoration above the button — mono CLI prompt vibe */}
-      <StatusTag reduced={reduced} />
-
+    <div className="flex flex-col items-center gap-1.5 py-8 md:py-12">
       <Link
         ref={linkRef}
         href="/interested"
@@ -124,13 +122,13 @@ export function InterestedCTA() {
         aria-label="Interested — see projects and resume"
         className="group relative inline-block focus:outline-none"
       >
-        {/* Radar rings — three staggered, emanating outward on siren rhythm,
+        {/* Radar rings — three staggered, emanating outward on a slow cycle,
             clipped to the same octagonal shape as the button. */}
         {!reduced && (
           <>
             <RadarRing delay={0} />
-            <RadarRing delay={0.6} />
-            <RadarRing delay={1.2} />
+            <RadarRing delay={RADAR_DURATION / 3} />
+            <RadarRing delay={(RADAR_DURATION * 2) / 3} />
           </>
         )}
 
@@ -250,6 +248,9 @@ export function InterestedCTA() {
           </span>
         </motion.span>
       </Link>
+
+      {/* Status decoration below the button — mono CLI prompt vibe */}
+      <StatusTag reduced={reduced} />
     </div>
   );
 }
@@ -280,7 +281,7 @@ function RadarRing({ delay }: { delay: number }) {
       className="absolute inset-0 border-2 border-crimson pointer-events-none"
       style={{ clipPath: CHAMFER_CLIP }}
       initial={{ scale: 1, opacity: 0 }}
-      animate={{ scale: [1, 1.85], opacity: [0.85, 0] }}
+      animate={{ scale: [1, RADAR_SCALE_MAX], opacity: [0.85, 0] }}
       transition={{
         duration: RADAR_DURATION,
         delay,
