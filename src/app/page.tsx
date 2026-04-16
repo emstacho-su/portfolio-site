@@ -1,5 +1,6 @@
 import { HeroSection } from '@/components/sections/hero';
 import { AboutSection } from '@/components/sections/about';
+import { InterestedCTA } from '@/components/sections/interested-cta';
 import { CursorSpotlight } from '@/components/fx/cursor-spotlight';
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
           <div className="hairline-rule" />
         </div>
         <AboutSection />
+        <InterestedCTA />
       </main>
     </>
   );
