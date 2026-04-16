@@ -16,8 +16,7 @@ const SCRAMBLE_TICK_MS = 38;
 const MAGNETIC_PULL_X = 10;
 const MAGNETIC_PULL_Y = 7;
 
-// Octagonal chamfered-corner shape used on the button AND on the emanating
-// radar rings so they match. 10px cut on each corner.
+// Octagonal chamfered-corner shape for the button surface + inner glow.
 const CHAMFER_CLIP = `polygon(
   10px 0%,
   calc(100% - 10px) 0%,
@@ -29,13 +28,49 @@ const CHAMFER_CLIP = `polygon(
   0% 10px
 )`;
 
-// Siren keyframes: two hard beats per ~0.9s cycle (bee-boo, bee-boo).
+// Siren pulse rhythm — two beats per cycle, slow.
 const SIREN_OPACITY = [0.35, 1, 0.5, 1, 0.35];
 const SIREN_SCALE = [0.92, 1.12, 0.96, 1.12, 0.92];
 const SIREN_TIMES = [0, 0.18, 0.5, 0.72, 1];
 const SIREN_DURATION = 3.6;
-const RADAR_DURATION = 5;
-const RADAR_SCALE_MAX = 2.6;
+
+// Vegas marquee settings — total chase cycle in seconds. Keep in sync with
+// marquee-bulb animation duration in globals.css.
+const MARQUEE_CYCLE_S = 1.9;
+
+// Bulb positions around the perimeter of the sign, clockwise from top-left.
+// Coords are percentages of a 20:8 aspect container; (100%, 50%) ≈ arrow tip.
+// Order matters — chase follows this sequence via animation-delay.
+const BULB_POSITIONS: readonly { x: number; y: number }[] = [
+  // Top edge, left → right
+  { x: 6, y: 10 },
+  { x: 16, y: 10 },
+  { x: 26, y: 10 },
+  { x: 36, y: 10 },
+  { x: 46, y: 10 },
+  { x: 56, y: 10 },
+  { x: 66, y: 10 },
+  { x: 76, y: 10 },
+  // Upper-right diagonal toward tip
+  { x: 84, y: 19 },
+  { x: 91, y: 33 },
+  // Tip
+  { x: 96, y: 50 },
+  // Lower-right diagonal away from tip
+  { x: 91, y: 67 },
+  { x: 84, y: 81 },
+  // Bottom edge, right → left
+  { x: 76, y: 90 },
+  { x: 66, y: 90 },
+  { x: 56, y: 90 },
+  { x: 46, y: 90 },
+  { x: 36, y: 90 },
+  { x: 26, y: 90 },
+  { x: 16, y: 90 },
+  { x: 6, y: 90 },
+  // Left edge center
+  { x: 2, y: 50 },
+];
 
 export function InterestedCTA() {
   const reduced = useReducedMotion();
@@ -112,7 +147,10 @@ export function InterestedCTA() {
   useEffect(() => () => stopScramble(), []);
 
   return (
-    <div className="flex justify-center py-8 md:py-12">
+    <div className="flex items-center justify-center gap-4 md:gap-10 py-8 md:py-12">
+      {/* Left marquee — arrow points right, toward the button */}
+      <MarqueeArrow direction="right" />
+
       <Link
         ref={linkRef}
         href="/interested"
@@ -122,16 +160,6 @@ export function InterestedCTA() {
         aria-label="Interested — see projects and resume"
         className="group relative inline-block focus:outline-none"
       >
-        {/* Radar rings — three staggered, emanating outward on a slow cycle,
-            clipped to the same octagonal shape as the button. */}
-        {!reduced && (
-          <>
-            <RadarRing delay={0} />
-            <RadarRing delay={RADAR_DURATION / 3} />
-            <RadarRing delay={(RADAR_DURATION * 2) / 3} />
-          </>
-        )}
-
         {/* Outer breathing halo pulsed on siren rhythm */}
         {!reduced && (
           <motion.span
@@ -269,26 +297,136 @@ export function InterestedCTA() {
           </span>
         </motion.span>
       </Link>
+
+      {/* Right marquee — arrow points left, toward the button */}
+      <MarqueeArrow direction="left" />
     </div>
   );
 }
 
 /* ---------- Decorative sub-components ---------- */
 
-function RadarRing({ delay }: { delay: number }) {
+interface MarqueeArrowProps {
+  direction: 'left' | 'right';
+}
+
+/**
+ * A 1960s Vegas-style marquee arrow sign: rectangular body with a triangular
+ * point, dark crimson backing with brass trim, and a ring of warm tungsten
+ * bulbs chasing around the perimeter in the direction the arrow points (so
+ * light visibly flows toward the button on both sides).
+ *
+ * Rendering split:
+ *   - SVG layer = sign shape + trim + rivets (vector, scales crisply)
+ *   - HTML layer = individual bulbs + halos (positioned %, CSS-animated for
+ *     richer box-shadow glow than SVG filter can give cheaply)
+ *
+ * For the `direction="left"` variant we flip the entire sign horizontally
+ * with scaleX(-1); because the bulb chase sequence is defined clockwise, the
+ * mirror naturally reverses the visual chase direction — so both signs
+ * appear to feed light toward the button.
+ */
+function MarqueeArrow({ direction }: MarqueeArrowProps) {
+  const flip = direction === 'left' ? 'scaleX(-1)' : 'none';
+
   return (
-    <motion.span
+    <div
       aria-hidden="true"
-      className="absolute inset-0 border-2 border-crimson pointer-events-none"
-      style={{ clipPath: CHAMFER_CLIP }}
-      initial={{ scale: 1, opacity: 0 }}
-      animate={{ scale: [1, RADAR_SCALE_MAX], opacity: [0.85, 0] }}
-      transition={{
-        duration: RADAR_DURATION,
-        delay,
-        repeat: Infinity,
-        ease: 'easeOut',
-      }}
-    />
+      className="hidden sm:block relative shrink-0 w-[140px] md:w-[180px] lg:w-[210px] aspect-[20/8]"
+      style={{ transform: flip }}
+    >
+      {/* Sign backing — SVG for crisp arrow-flag geometry.
+          viewBox 0 0 200 80, arrow point at x=196 y=40. All polygons fit
+          inside the viewBox (no transform offsets). */}
+      <svg
+        viewBox="0 0 200 80"
+        className="absolute inset-0 w-full h-full overflow-visible"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="sign-body" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#4A1A1E" />
+            <stop offset="50%" stopColor="#3A1016" />
+            <stop offset="100%" stopColor="#2A0A10" />
+          </linearGradient>
+          <linearGradient id="sign-trim" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#E0B266" />
+            <stop offset="55%" stopColor="#A47A2E" />
+            <stop offset="100%" stopColor="#6B4E1C" />
+          </linearGradient>
+        </defs>
+
+        {/* Outer brass trim frame */}
+        <polygon
+          points="2,5 168,5 196,40 168,75 2,75"
+          fill="url(#sign-trim)"
+        />
+        {/* Inner sign body (dark crimson) */}
+        <polygon
+          points="6,10 166,10 190,40 166,70 6,70"
+          fill="url(#sign-body)"
+        />
+        {/* Pinstripe inset decoration */}
+        <polygon
+          points="11,14 163,14 185,40 163,66 11,66"
+          fill="none"
+          stroke="#B8893C"
+          strokeWidth="0.5"
+          strokeDasharray="1.5 2"
+          opacity="0.55"
+        />
+
+        {/* Corner rivets — double circles for a hardware look */}
+        {[
+          [7, 8],
+          [165, 8],
+          [7, 72],
+          [165, 72],
+        ].map(([cx, cy], i) => (
+          <g key={i} transform={`translate(${cx}, ${cy})`}>
+            <circle r="2" fill="#1A0608" />
+            <circle r="1.3" fill="#A47A2E" />
+            <circle cx="-0.4" cy="-0.4" r="0.5" fill="#F4D88C" />
+          </g>
+        ))}
+      </svg>
+
+      {/* Bulbs — DIVs on top of the SVG so we can use CSS box-shadow glow */}
+      {BULB_POSITIONS.map((pos, i) => {
+        const delay = -(i / BULB_POSITIONS.length) * MARQUEE_CYCLE_S;
+        return (
+          <div key={i}>
+            {/* Soft outer halo (separate element = can blur/scale independently) */}
+            <span
+              aria-hidden="true"
+              className="marquee-bulb-halo absolute rounded-full"
+              style={{
+                left: `${pos.x}%`,
+                top: `${pos.y}%`,
+                width: '16px',
+                height: '16px',
+                background:
+                  'radial-gradient(circle, rgba(255,200,100,0.8) 0%, rgba(255,160,50,0.35) 50%, transparent 75%)',
+                filter: 'blur(3px)',
+                animationDelay: `${delay}s`,
+              }}
+            />
+            {/* Bulb body */}
+            <span
+              aria-hidden="true"
+              className="marquee-bulb absolute rounded-full"
+              style={{
+                left: `${pos.x}%`,
+                top: `${pos.y}%`,
+                width: '7px',
+                height: '7px',
+                transform: 'translate(-50%, -50%)',
+                animationDelay: `${delay}s`,
+              }}
+            />
+          </div>
+        );
+      })}
+    </div>
   );
 }
