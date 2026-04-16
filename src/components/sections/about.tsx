@@ -3,6 +3,7 @@
 import {
   motion,
   useScroll,
+  useSpring,
   useTransform,
   useReducedMotion,
   type MotionValue,
@@ -67,16 +68,26 @@ function SlideBlock({ children, from, className }: SlideBlockProps) {
   });
 
   const offset = from === 'left' ? -140 : 140;
-  const xMotion: MotionValue<number> = useTransform(
+
+  // Entry only — slide in from the side as the section enters the viewport
+  // from the bottom, then hold in place. No exit animation on scroll-past-top.
+  // Extended entry range (0 → 0.4) makes the slide feel unhurried.
+  const xRaw: MotionValue<number> = useTransform(
     scrollYProgress,
-    [0, 0.18, 0.78, 1],
-    [offset, 0, 0, offset]
+    [0, 0.4],
+    [offset, 0],
+    { clamp: true }
   );
-  const opacityMotion: MotionValue<number> = useTransform(
+  const opacityRaw: MotionValue<number> = useTransform(
     scrollYProgress,
-    [0, 0.15, 0.82, 1],
-    [0, 1, 1, 0]
+    [0, 0.3],
+    [0, 1],
+    { clamp: true }
   );
+
+  // Spring-smooth the raw scroll-linked values for a softer settle.
+  const xMotion = useSpring(xRaw, { stiffness: 55, damping: 22, mass: 1 });
+  const opacityMotion = useSpring(opacityRaw, { stiffness: 70, damping: 24, mass: 1 });
 
   const style = prefersReducedMotion
     ? undefined
