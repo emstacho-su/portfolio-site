@@ -1,20 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useReducedMotion,
-} from 'motion/react';
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
 const LABEL = 'Interested?';
-const SCRAMBLE_CHARS = '!@#$%^&*<>/?[]{}|=+-_~';
-const SCRAMBLE_DURATION_MS = 520;
-const SCRAMBLE_TICK_MS = 38;
-const MAGNETIC_PULL_X = 10;
-const MAGNETIC_PULL_Y = 7;
 
 // Octagonal chamfered-corner shape for the button surface + inner glow.
 const CHAMFER_CLIP = `polygon(
@@ -34,180 +23,67 @@ const SIREN_SCALE = [0.92, 1.12, 0.96, 1.12, 0.92];
 const SIREN_TIMES = [0, 0.18, 0.5, 0.72, 1];
 const SIREN_DURATION = 3.6;
 
-// Vegas marquee settings — total chase cycle in seconds. Keep in sync with
-// marquee-bulb animation duration in globals.css.
+// Marquee chase cycle, in seconds. Keep in sync with globals.css keyframes.
 const MARQUEE_CYCLE_S = 1.9;
 
-// Bulb positions around the perimeter of the sign, clockwise from top-left.
-// Coords are percentages of a 20:8 aspect container; (100%, 50%) ≈ arrow tip.
-// Order matters — chase follows this sequence via animation-delay.
-const BULB_POSITIONS: readonly { x: number; y: number }[] = [
-  // Top edge, left → right
-  { x: 6, y: 10 },
-  { x: 16, y: 10 },
-  { x: 26, y: 10 },
-  { x: 36, y: 10 },
-  { x: 46, y: 10 },
-  { x: 56, y: 10 },
-  { x: 66, y: 10 },
-  { x: 76, y: 10 },
-  // Upper-right diagonal toward tip
-  { x: 84, y: 19 },
-  { x: 91, y: 33 },
-  // Tip
-  { x: 96, y: 50 },
-  // Lower-right diagonal away from tip
-  { x: 91, y: 67 },
-  { x: 84, y: 81 },
-  // Bottom edge, right → left
-  { x: 76, y: 90 },
-  { x: 66, y: 90 },
-  { x: 56, y: 90 },
-  { x: 46, y: 90 },
-  { x: 36, y: 90 },
-  { x: 26, y: 90 },
-  { x: 16, y: 90 },
-  { x: 6, y: 90 },
-  // Left edge center
-  { x: 2, y: 50 },
-];
+// Bulbs along the curved underside of a semi-circle sign (flat top, arc
+// bottom). Evenly distributed across the arc from left endpoint to right.
+const ARC_BULB_COUNT = 14;
+
+function buildArcBulbs(count: number): { x: number; y: number }[] {
+  // Using a 100x100 viewBox for the arc component; center at (50, 0), radius
+  // 46 (horizontal) / 92 (vertical) so the bulb ring is slightly inset from
+  // the visible arc edge. Parametrized from α=π (left) to α=0 (right).
+  return Array.from({ length: count }, (_, i) => {
+    const t = i / (count - 1);
+    const angle = Math.PI * (1 - t);
+    return {
+      x: 50 + 46 * Math.cos(angle),
+      y: 92 * Math.sin(angle),
+    };
+  });
+}
+
+const ARC_BULB_POSITIONS: readonly { x: number; y: number }[] =
+  buildArcBulbs(ARC_BULB_COUNT);
 
 export function InterestedCTA() {
   const reduced = useReducedMotion();
-  const linkRef = useRef<HTMLAnchorElement>(null);
-
-  // Magnetic pull --------------------------------------------------------
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const springX = useSpring(mouseX, { stiffness: 260, damping: 22, mass: 0.7 });
-  const springY = useSpring(mouseY, { stiffness: 260, damping: 22, mass: 0.7 });
-
-  const handleMouseMove = (e: MouseEvent<HTMLAnchorElement>) => {
-    if (reduced) return;
-    const rect = linkRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const dx = (e.clientX - centerX) / (rect.width / 2);
-    const dy = (e.clientY - centerY) / (rect.height / 2);
-    mouseX.set(dx * MAGNETIC_PULL_X);
-    mouseY.set(dy * MAGNETIC_PULL_Y);
-  };
-
-  const resetMagnet = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
-
-  // Scramble -------------------------------------------------------------
-  const [displayText, setDisplayText] = useState(LABEL);
-  const scrambleTimerRef = useRef<number | null>(null);
-
-  const stopScramble = () => {
-    if (scrambleTimerRef.current !== null) {
-      window.clearInterval(scrambleTimerRef.current);
-      scrambleTimerRef.current = null;
-    }
-  };
-
-  const startScramble = () => {
-    stopScramble();
-    const start = performance.now();
-    scrambleTimerRef.current = window.setInterval(() => {
-      const elapsed = performance.now() - start;
-      const progress = Math.min(elapsed / SCRAMBLE_DURATION_MS, 1);
-      const resolvedCount = Math.floor(progress * LABEL.length);
-
-      const next = LABEL.split('')
-        .map((ch, i) => {
-          if (i < resolvedCount || ch === ' ') return ch;
-          return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
-        })
-        .join('');
-      setDisplayText(next);
-
-      if (progress >= 1) {
-        stopScramble();
-        setDisplayText(LABEL);
-      }
-    }, SCRAMBLE_TICK_MS);
-  };
-
-  const handleMouseEnter = () => {
-    if (reduced) return;
-    startScramble();
-  };
-
-  const handleMouseLeave = () => {
-    resetMagnet();
-    stopScramble();
-    setDisplayText(LABEL);
-  };
-
-  useEffect(() => () => stopScramble(), []);
 
   return (
-    <div className="flex items-center justify-center gap-4 md:gap-10 py-8 md:py-12">
-      {/* Left marquee — arrow points right, toward the button */}
-      <MarqueeArrow direction="right" />
-
-      <Link
-        ref={linkRef}
-        href="/interested"
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        aria-label="Interested — see projects and resume"
-        className="group relative inline-block focus:outline-none"
-      >
-        {/* Outer breathing halo pulsed on siren rhythm */}
-        {!reduced && (
-          <motion.span
-            aria-hidden="true"
-            className="absolute -inset-10 bg-crimson/40 blur-3xl pointer-events-none"
-            animate={{ opacity: SIREN_OPACITY, scale: SIREN_SCALE }}
-            transition={{
-              duration: SIREN_DURATION,
-              times: SIREN_TIMES,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-        )}
-
-        {/* Inner tight glow also on siren rhythm (tighter scale) */}
-        {!reduced && (
-          <motion.span
-            aria-hidden="true"
-            className="absolute -inset-1.5 bg-crimson/60 blur-md pointer-events-none"
-            style={{ clipPath: CHAMFER_CLIP }}
-            animate={{ opacity: SIREN_OPACITY }}
-            transition={{
-              duration: SIREN_DURATION,
-              times: SIREN_TIMES,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-        )}
-
-        {/* Button surface — chamfered octagon, magnetic pull applied */}
-        <motion.span
-          style={{
-            clipPath: CHAMFER_CLIP,
-            ...(reduced ? {} : { x: springX, y: springY }),
-          }}
-          className="relative z-10 inline-flex flex-col items-start gap-1 px-8 py-3 bg-crimson text-background overflow-hidden shadow-[0_10px_30px_-8px_rgba(179,45,58,0.7)] group-hover:shadow-[0_18px_52px_-6px_rgba(179,45,58,0.95)] transition-shadow duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-background"
-          whileHover={reduced ? undefined : { scale: 1.04 }}
-          whileTap={reduced ? undefined : { scale: 0.96 }}
-          transition={{ type: 'spring', stiffness: 420, damping: 22 }}
+    <div className="relative w-full flex justify-center py-14 md:py-20">
+      <div className="relative">
+        {/* Left marquee arc — upper-left, tilted clockwise, chase flows
+            down-right toward the button */}
+        <div
+          aria-hidden="true"
+          className="hidden sm:block pointer-events-none absolute right-full mr-6 md:mr-10 -top-20 md:-top-24"
+          style={{ transformOrigin: 'bottom right' }}
         >
-          {/* Siren flicker — white flash synced to outer pulse */}
+          <MarqueeArc variant="left" />
+        </div>
+
+        {/* Right marquee arc — mirror of the left */}
+        <div
+          aria-hidden="true"
+          className="hidden sm:block pointer-events-none absolute left-full ml-6 md:ml-10 -top-20 md:-top-24"
+          style={{ transformOrigin: 'bottom left' }}
+        >
+          <MarqueeArc variant="right" />
+        </div>
+
+        {/* Button — no hover interactions, tap scale only */}
+        <Link
+          href="/interested"
+          aria-label="Interested — see projects and resume"
+          className="relative inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-crimson focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+        >
+          {/* Outer breathing halo pulsed on siren rhythm */}
           {!reduced && (
             <motion.span
               aria-hidden="true"
-              className="absolute inset-0 bg-white pointer-events-none"
-              animate={{ opacity: [0, 0.16, 0.04, 0.16, 0] }}
+              className="absolute -inset-10 bg-crimson/40 blur-3xl pointer-events-none"
+              animate={{ opacity: SIREN_OPACITY, scale: SIREN_SCALE }}
               transition={{
                 duration: SIREN_DURATION,
                 times: SIREN_TIMES,
@@ -217,209 +93,211 @@ export function InterestedCTA() {
             />
           )}
 
-          {/* Diagonal shimmer sweep on hover */}
-          <span
-            aria-hidden="true"
-            className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-[900ms] ease-out bg-gradient-to-r from-transparent via-white/45 to-transparent pointer-events-none"
-          />
+          {/* Inner tight glow on siren rhythm */}
+          {!reduced && (
+            <motion.span
+              aria-hidden="true"
+              className="absolute -inset-1.5 bg-crimson/60 blur-md pointer-events-none"
+              style={{ clipPath: CHAMFER_CLIP }}
+              animate={{ opacity: SIREN_OPACITY }}
+              transition={{
+                duration: SIREN_DURATION,
+                times: SIREN_TIMES,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            />
+          )}
 
-          {/* Corner ticks — CLI motif, appear on hover */}
-          <span
-            aria-hidden="true"
-            className="absolute left-2 top-1 h-2 w-2 border-l border-t border-background/0 group-hover:border-background/80 transition-colors duration-300"
-          />
-          <span
-            aria-hidden="true"
-            className="absolute right-2 bottom-1 h-2 w-2 border-r border-b border-background/0 group-hover:border-background/80 transition-colors duration-300"
-          />
-
-          {/* Status line — small mono CLI prompt, sits above the main label */}
-          <span className="relative flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-background/75">
-            <span aria-hidden="true">{'>'}</span>
-            <span>awaiting_input</span>
+          {/* Button surface — chamfered octagon */}
+          <motion.span
+            style={{ clipPath: CHAMFER_CLIP }}
+            className="relative z-10 inline-flex flex-col items-start gap-1 px-8 py-3 bg-crimson text-background overflow-hidden shadow-[0_10px_30px_-8px_rgba(179,45,58,0.7)]"
+            whileTap={reduced ? undefined : { scale: 0.96 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 22 }}
+          >
+            {/* Inner siren flicker */}
             {!reduced && (
               <motion.span
                 aria-hidden="true"
-                className="inline-block h-[9px] w-[5px] bg-background/85"
-                animate={{ opacity: [1, 0, 1] }}
+                className="absolute inset-0 bg-white pointer-events-none"
+                animate={{ opacity: [0, 0.16, 0.04, 0.16, 0] }}
                 transition={{
-                  duration: 1.2,
+                  duration: SIREN_DURATION,
+                  times: SIREN_TIMES,
                   repeat: Infinity,
                   ease: 'easeInOut',
                 }}
               />
             )}
-          </span>
 
-          {/* Main label row: [ label ] → */}
-          <span className="relative flex items-center gap-3">
-            {/* Opening bracket */}
-            <span
-              aria-hidden="true"
-              className="font-mono text-lg text-background/70 group-hover:text-background transition-colors duration-200"
-            >
-              [
+            {/* Status line — small mono CLI prompt */}
+            <span className="relative flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-background/75">
+              <span aria-hidden="true">{'>'}</span>
+              <span>awaiting_input</span>
+              {!reduced && (
+                <motion.span
+                  aria-hidden="true"
+                  className="inline-block h-[9px] w-[5px] bg-background/85"
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{
+                    duration: 1.2,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
+              )}
             </span>
 
-            {/* Label with chromatic aberration ghost layers */}
-            <span className="relative inline-block font-sans text-lg font-medium tracking-[0.06em] group-hover:tracking-[0.16em] transition-[letter-spacing] duration-300 tabular-nums">
+            {/* Main label row */}
+            <span className="relative flex items-center gap-3">
               <span
                 aria-hidden="true"
-                className="absolute inset-0 text-[#67e8f9]/55 mix-blend-screen translate-x-[1.5px] -translate-y-[0.5px] pointer-events-none"
+                className="font-mono text-lg text-background/70"
               >
-                {displayText}
+                [
               </span>
+
+              {/* Label with chromatic aberration ghost layers */}
+              <span className="relative inline-block font-sans text-lg font-medium tracking-[0.06em] tabular-nums">
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 text-[#67e8f9]/55 mix-blend-screen translate-x-[1.5px] -translate-y-[0.5px] pointer-events-none"
+                >
+                  {LABEL}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 text-[#fbbf24]/55 mix-blend-screen -translate-x-[1.5px] translate-y-[0.5px] pointer-events-none"
+                >
+                  {LABEL}
+                </span>
+                <span className="relative">{LABEL}</span>
+              </span>
+
               <span
                 aria-hidden="true"
-                className="absolute inset-0 text-[#fbbf24]/55 mix-blend-screen -translate-x-[1.5px] translate-y-[0.5px] pointer-events-none"
+                className="font-mono text-lg text-background/70"
               >
-                {displayText}
-              </span>
-              <span className="relative" aria-live="off">
-                {displayText}
+                ]
               </span>
             </span>
-
-            {/* Closing bracket */}
-            <span
-              aria-hidden="true"
-              className="font-mono text-lg text-background/70 group-hover:text-background transition-colors duration-200"
-            >
-              ]
-            </span>
-
-            <span
-              aria-hidden="true"
-              className="text-lg font-light transition-transform duration-300 group-hover:translate-x-1.5"
-            >
-              →
-            </span>
-          </span>
-        </motion.span>
-      </Link>
-
-      {/* Right marquee — arrow points left, toward the button */}
-      <MarqueeArrow direction="left" />
+          </motion.span>
+        </Link>
+      </div>
     </div>
   );
 }
 
-/* ---------- Decorative sub-components ---------- */
+/* ---------- Vegas marquee arc ---------- */
 
-interface MarqueeArrowProps {
-  direction: 'left' | 'right';
+interface MarqueeArcProps {
+  variant: 'left' | 'right';
 }
 
 /**
- * A 1960s Vegas-style marquee arrow sign: rectangular body with a triangular
- * point, dark crimson backing with brass trim, and a ring of warm tungsten
- * bulbs chasing around the perimeter in the direction the arrow points (so
- * light visibly flows toward the button on both sides).
+ * Semi-circle marquee sign: flat edge on top, curved arc on bottom, chasing
+ * tungsten bulbs along the arc. Tilted diagonally so it "aims down" at the
+ * button below.
  *
- * Rendering split:
- *   - SVG layer = sign shape + trim + rivets (vector, scales crisply)
- *   - HTML layer = individual bulbs + halos (positioned %, CSS-animated for
- *     richer box-shadow glow than SVG filter can give cheaply)
- *
- * For the `direction="left"` variant we flip the entire sign horizontally
- * with scaleX(-1); because the bulb chase sequence is defined clockwise, the
- * mirror naturally reverses the visual chase direction — so both signs
- * appear to feed light toward the button.
+ * Left variant tilts clockwise, right variant is mirrored via scaleX(-1)
+ * (which also reverses the visual chase direction — both signs end up
+ * flowing bulbs toward the button).
  */
-function MarqueeArrow({ direction }: MarqueeArrowProps) {
-  const flip = direction === 'left' ? 'scaleX(-1)' : 'none';
+function MarqueeArc({ variant }: MarqueeArcProps) {
+  const tilt = variant === 'left' ? 18 : -18;
+  // Right sign: scaleX flips the geometry horizontally AND reverses the
+  // chase direction in DOM order.
+  const transform =
+    variant === 'left'
+      ? `rotate(${tilt}deg)`
+      : `scaleX(-1) rotate(${-tilt}deg)`;
 
   return (
     <div
-      aria-hidden="true"
-      className="hidden sm:block relative shrink-0 w-[140px] md:w-[180px] lg:w-[210px] aspect-[20/8]"
-      style={{ transform: flip }}
+      className="relative w-[130px] md:w-[160px] aspect-[2/1]"
+      style={{ transform, transformOrigin: 'bottom center' }}
     >
-      {/* Sign backing — SVG for crisp arrow-flag geometry.
-          viewBox 0 0 200 80, arrow point at x=196 y=40. All polygons fit
-          inside the viewBox (no transform offsets). */}
+      {/* Sign backing — SVG for the semi-circle shape (flat top, arc bottom).
+          viewBox 0 0 100 50, arc drawn from (0,0) → (100,0) curving down. */}
       <svg
-        viewBox="0 0 200 80"
+        viewBox="0 0 100 50"
         className="absolute inset-0 w-full h-full overflow-visible"
         preserveAspectRatio="none"
       >
         <defs>
-          <linearGradient id="sign-body" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={`arc-body-${variant}`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#4A1A1E" />
-            <stop offset="50%" stopColor="#3A1016" />
-            <stop offset="100%" stopColor="#2A0A10" />
+            <stop offset="60%" stopColor="#321016" />
+            <stop offset="100%" stopColor="#1F070B" />
           </linearGradient>
-          <linearGradient id="sign-trim" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={`arc-trim-${variant}`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#E0B266" />
             <stop offset="55%" stopColor="#A47A2E" />
             <stop offset="100%" stopColor="#6B4E1C" />
           </linearGradient>
         </defs>
 
-        {/* Outer brass trim frame */}
-        <polygon
-          points="2,5 168,5 196,40 168,75 2,75"
-          fill="url(#sign-trim)"
+        {/* Outer brass trim */}
+        <path
+          d="M 0 0 L 100 0 A 50 25 0 0 1 0 0 Z"
+          fill={`url(#arc-trim-${variant})`}
         />
-        {/* Inner sign body (dark crimson) */}
-        <polygon
-          points="6,10 166,10 190,40 166,70 6,70"
-          fill="url(#sign-body)"
+        {/* Inner sign body */}
+        <path
+          d="M 3 1 L 97 1 A 47 23 0 0 1 3 1 Z"
+          fill={`url(#arc-body-${variant})`}
         />
-        {/* Pinstripe inset decoration */}
-        <polygon
-          points="11,14 163,14 185,40 163,66 11,66"
+        {/* Pinstripe */}
+        <path
+          d="M 7 2 L 93 2 A 43 21 0 0 1 7 2 Z"
           fill="none"
           stroke="#B8893C"
-          strokeWidth="0.5"
-          strokeDasharray="1.5 2"
+          strokeWidth="0.25"
+          strokeDasharray="0.8 1.2"
           opacity="0.55"
         />
 
-        {/* Corner rivets — double circles for a hardware look */}
+        {/* Rivets at each end of the flat top edge */}
         {[
-          [7, 8],
-          [165, 8],
-          [7, 72],
-          [165, 72],
+          [5, 0.5],
+          [95, 0.5],
         ].map(([cx, cy], i) => (
           <g key={i} transform={`translate(${cx}, ${cy})`}>
-            <circle r="2" fill="#1A0608" />
-            <circle r="1.3" fill="#A47A2E" />
-            <circle cx="-0.4" cy="-0.4" r="0.5" fill="#F4D88C" />
+            <circle r="1.2" fill="#1A0608" />
+            <circle r="0.8" fill="#A47A2E" />
+            <circle cx="-0.25" cy="-0.25" r="0.25" fill="#F4D88C" />
           </g>
         ))}
       </svg>
 
-      {/* Bulbs — DIVs on top of the SVG so we can use CSS box-shadow glow */}
-      {BULB_POSITIONS.map((pos, i) => {
-        const delay = -(i / BULB_POSITIONS.length) * MARQUEE_CYCLE_S;
+      {/* Bulbs along the arc — HTML divs on top of SVG for rich box-shadow glow */}
+      {ARC_BULB_POSITIONS.map((pos, i) => {
+        const delay = -(i / ARC_BULB_POSITIONS.length) * MARQUEE_CYCLE_S;
         return (
           <div key={i}>
-            {/* Soft outer halo (separate element = can blur/scale independently) */}
             <span
               aria-hidden="true"
               className="marquee-bulb-halo absolute rounded-full"
               style={{
                 left: `${pos.x}%`,
                 top: `${pos.y}%`,
-                width: '16px',
-                height: '16px',
+                width: '14px',
+                height: '14px',
                 background:
-                  'radial-gradient(circle, rgba(255,200,100,0.8) 0%, rgba(255,160,50,0.35) 50%, transparent 75%)',
-                filter: 'blur(3px)',
+                  'radial-gradient(circle, rgba(255,200,100,0.85) 0%, rgba(255,160,50,0.4) 50%, transparent 75%)',
+                filter: 'blur(2.5px)',
                 animationDelay: `${delay}s`,
               }}
             />
-            {/* Bulb body */}
             <span
               aria-hidden="true"
               className="marquee-bulb absolute rounded-full"
               style={{
                 left: `${pos.x}%`,
                 top: `${pos.y}%`,
-                width: '7px',
-                height: '7px',
+                width: '6px',
+                height: '6px',
                 transform: 'translate(-50%, -50%)',
                 animationDelay: `${delay}s`,
               }}
