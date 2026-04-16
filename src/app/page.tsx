@@ -1,16 +1,22 @@
-import { Navbar } from '@/components/navigation/navbar';
-import { Footer } from '@/components/navigation/footer';
-import { AnalyticsWrapper } from '@/components/sections/analytics-wrapper';
+import { HeroSection } from '@/components/sections/hero';
+import { AboutSection } from '@/components/sections/about';
+import { CursorSpotlight } from '@/components/fx/cursor-spotlight';
 
 export default function Home() {
   return (
     <>
-      <div className="noise-overlay" aria-hidden="true" />
-      <Navbar />
-      <main id="main-content">
-        <AnalyticsWrapper />
+      <CursorSpotlight />
+      <main id="main-content" className="flex-1">
+        <HeroSection />
+        {/* Single faint hairline rule separating hero from about (spec §6.1) */}
+        <div
+          aria-hidden="true"
+          className="mx-auto w-full max-w-[1200px] px-6"
+        >
+          <div className="hairline-rule" />
+        </div>
+        <AboutSection />
       </main>
-      <Footer />
     </>
   );
 }

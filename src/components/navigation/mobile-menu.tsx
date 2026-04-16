@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { TIMING } from '@/lib/animation';
@@ -15,16 +16,19 @@ interface MobileMenuProps {
   open: boolean;
   onClose: () => void;
   links: readonly NavLink[];
-  onNavigate: (href: string) => void;
-  activeSection: string;
+  pathname: string;
+}
+
+function isActive(pathname: string, href: string): boolean {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 export function MobileMenu({
   open,
   onClose,
   links,
-  onNavigate,
-  activeSection,
+  pathname,
 }: MobileMenuProps) {
   useEffect(() => {
     if (open) {
@@ -41,11 +45,14 @@ export function MobileMenu({
     <AnimatePresence>
       {open && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '100%' }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           className="fixed inset-0 z-50 bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation"
         >
           <button
             onClick={onClose}
@@ -56,27 +63,34 @@ export function MobileMenu({
           </button>
 
           <nav className="flex flex-col items-center gap-8">
-            {links.map((link, i) => (
-              <motion.button
-                key={link.href}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{
-                  delay: i * TIMING.MENU_STAGGER,
-                  duration: 0.3,
-                }}
-                onClick={() => onNavigate(link.href)}
-                className={cn(
-                  'font-mono text-2xl transition-colors',
-                  activeSection === link.href
-                    ? 'text-terminal-green'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                {link.label}
-              </motion.button>
-            ))}
+            {links.map((link, i) => {
+              const active = isActive(pathname, link.href);
+              return (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{
+                    delay: i * TIMING.MENU_STAGGER,
+                    duration: 0.3,
+                  }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={onClose}
+                    className={cn(
+                      'font-mono text-2xl transition-colors',
+                      active
+                        ? 'text-crimson'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
+              );
+            })}
           </nav>
         </motion.div>
       )}

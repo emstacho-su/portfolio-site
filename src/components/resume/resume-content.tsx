@@ -14,7 +14,7 @@ export function ResumeContent() {
         <div className="space-y-8">
           {/* Experience */}
           <div>
-            <h3 className="font-mono text-sm text-terminal-green uppercase tracking-wider mb-5">
+            <h3 className="font-mono text-sm text-crimson uppercase tracking-wider mb-5">
               Relevant Experience
             </h3>
             <div className="space-y-6">
@@ -34,7 +34,7 @@ export function ResumeContent() {
 
           {/* Projects */}
           <div>
-            <h3 className="font-mono text-sm text-terminal-green uppercase tracking-wider mb-5">
+            <h3 className="font-mono text-sm text-crimson uppercase tracking-wider mb-5">
               Projects
             </h3>
             <div className="space-y-6">
@@ -55,7 +55,7 @@ export function ResumeContent() {
         <div className="space-y-8">
           {/* Education */}
           <div>
-            <h3 className="font-mono text-sm text-terminal-green uppercase tracking-wider mb-4">
+            <h3 className="font-mono text-sm text-crimson uppercase tracking-wider mb-4">
               Education
             </h3>
             <div>
@@ -68,7 +68,7 @@ export function ResumeContent() {
               <p className="text-sm text-foreground/85 mt-1">
                 {education.degree}
               </p>
-              <p className="font-mono text-xs text-terminal-green/70 mt-1">
+              <p className="font-mono text-xs text-crimson/70 mt-1">
                 {education.expectedDate}
               </p>
               <div className="mt-3">
@@ -94,7 +94,7 @@ export function ResumeContent() {
 
           {/* Skills */}
           <div>
-            <h3 className="font-mono text-sm text-terminal-green uppercase tracking-wider mb-4">
+            <h3 className="font-mono text-sm text-crimson uppercase tracking-wider mb-4">
               Skills
             </h3>
             <div className="space-y-4">
@@ -123,14 +123,14 @@ export function ResumeContent() {
 
           {/* Certifications */}
           <div>
-            <h3 className="font-mono text-sm text-terminal-green uppercase tracking-wider mb-4">
+            <h3 className="font-mono text-sm text-crimson uppercase tracking-wider mb-4">
               Certifications & Awards
             </h3>
             <ul className="space-y-2">
               {certifications.map((cert) => (
                 <li
                   key={cert}
-                  className="text-sm text-foreground/75 pl-3 relative before:content-['✓'] before:absolute before:left-0 before:text-terminal-green/60 before:text-xs"
+                  className="text-sm text-foreground/75 pl-3 relative before:content-['✓'] before:absolute before:left-0 before:text-crimson/60 before:text-xs"
                 >
                   {cert}
                 </li>
@@ -142,7 +142,7 @@ export function ResumeContent() {
 
           {/* Interests */}
           <div>
-            <h3 className="font-mono text-sm text-terminal-green uppercase tracking-wider mb-3">
+            <h3 className="font-mono text-sm text-crimson uppercase tracking-wider mb-3">
               Interests
             </h3>
             <div className="flex flex-wrap gap-1.5">
