@@ -1,59 +1,95 @@
 'use client';
 
-import { motion, useInView } from 'motion/react';
-import { useRef } from 'react';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+  type MotionValue,
+} from 'motion/react';
+import { useRef, type ReactNode } from 'react';
 import { Section } from '@/components/ui/section';
-import { Reveal } from '@/components/ui/reveal';
 import { landingAbout } from '@/data/about';
 import { EASE } from '@/lib/animation';
 
 export function AboutSection() {
-  const headingRef = useRef<HTMLDivElement>(null);
-  const isHeadingInView = useInView(headingRef, { once: true, margin: '-80px' });
-
   return (
-    <Section id="about" className="max-w-[900px]">
-      {/* Heading with animated underline */}
-      <div ref={headingRef} className="mb-10">
-        <Reveal>
-          <h2 className="font-sans text-3xl md:text-4xl text-foreground">
-            About
-          </h2>
-        </Reveal>
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={isHeadingInView ? { scaleX: 1 } : undefined}
-          transition={{ duration: 0.6, delay: 0.2, ease: EASE.OUT }}
-          className="h-[2px] bg-crimson mt-3 origin-left w-24"
-        />
-      </div>
+    <Section id="about" className="max-w-[1200px] py-20 md:py-28">
+      <SlideBlock from="left" className="mb-12 md:mb-14">
+        <h2 className="font-sans text-4xl md:text-5xl lg:text-6xl text-foreground tracking-tight">
+          About
+        </h2>
+        <div className="h-[2px] bg-crimson mt-4 w-32" />
+      </SlideBlock>
 
-      {/* First two paragraphs */}
-      <div className="space-y-6">
+      <div className="space-y-8 md:space-y-10">
         {landingAbout.paragraphs.slice(0, 2).map((paragraph, i) => (
-          <Reveal key={i} delay={i * 0.1}>
-            <p className="text-foreground leading-[1.65] prose-body">
+          <SlideBlock key={i} from="left">
+            <p className="text-lg sm:text-xl text-foreground leading-[1.7] max-w-[58rem]">
               {paragraph}
             </p>
-          </Reveal>
+          </SlideBlock>
         ))}
       </div>
 
-      {/* Pull quote — left-hairline rule + oversized serif-esque treatment */}
-      <Reveal delay={0.15}>
-        <blockquote className="my-10 pl-6 border-l-2 border-crimson max-w-[44rem]">
-          <p className="font-sans text-xl sm:text-2xl md:text-3xl text-foreground leading-[1.3] tracking-tight">
+      <SlideBlock from="right" className="my-14 md:my-16">
+        <blockquote className="pl-8 border-l-2 border-crimson max-w-[52rem]">
+          <p className="font-sans text-2xl sm:text-3xl md:text-4xl text-foreground leading-[1.25] tracking-tight">
             &ldquo;{landingAbout.pullQuote}&rdquo;
           </p>
         </blockquote>
-      </Reveal>
+      </SlideBlock>
 
-      {/* Closing paragraph */}
-      <Reveal delay={0.1}>
-        <p className="text-foreground leading-[1.65] prose-body">
+      <SlideBlock from="left">
+        <p className="text-lg sm:text-xl text-foreground leading-[1.7] max-w-[58rem]">
           {landingAbout.paragraphs[2]}
         </p>
-      </Reveal>
+      </SlideBlock>
     </Section>
+  );
+}
+
+interface SlideBlockProps {
+  children: ReactNode;
+  from: 'left' | 'right';
+  className?: string;
+}
+
+// Scroll-linked slide. Content shoots in from the chosen side as it enters
+// the viewport, and slides back out the same side as it leaves near the
+// footer. Tracks scroll position continuously rather than a one-shot trigger.
+function SlideBlock({ children, from, className }: SlideBlockProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
+
+  const offset = from === 'left' ? -140 : 140;
+  const xMotion: MotionValue<number> = useTransform(
+    scrollYProgress,
+    [0, 0.18, 0.78, 1],
+    [offset, 0, 0, offset]
+  );
+  const opacityMotion: MotionValue<number> = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.82, 1],
+    [0, 1, 1, 0]
+  );
+
+  const style = prefersReducedMotion
+    ? undefined
+    : { x: xMotion, opacity: opacityMotion };
+
+  return (
+    <motion.div
+      ref={ref}
+      style={style}
+      transition={{ ease: EASE.OUT }}
+      className={className}
+    >
+      {children}
+    </motion.div>
   );
 }
