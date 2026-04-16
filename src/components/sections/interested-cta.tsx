@@ -33,7 +33,8 @@ const CHAMFER_CLIP = `polygon(
 const SIREN_OPACITY = [0.35, 1, 0.5, 1, 0.35];
 const SIREN_SCALE = [0.92, 1.12, 0.96, 1.12, 0.92];
 const SIREN_TIMES = [0, 0.18, 0.5, 0.72, 1];
-const SIREN_DURATION = 0.9;
+const SIREN_DURATION = 3.6;
+const RADAR_DURATION = 3.2;
 
 export function InterestedCTA() {
   const reduced = useReducedMotion();
@@ -128,8 +129,8 @@ export function InterestedCTA() {
         {!reduced && (
           <>
             <RadarRing delay={0} />
-            <RadarRing delay={0.3} />
             <RadarRing delay={0.6} />
+            <RadarRing delay={1.2} />
           </>
         )}
 
@@ -249,9 +250,6 @@ export function InterestedCTA() {
           </span>
         </motion.span>
       </Link>
-
-      {/* Hazard-stripe caption underneath */}
-      <HazardCaption reduced={reduced} />
     </div>
   );
 }
@@ -268,32 +266,9 @@ function StatusTag({ reduced }: { reduced: boolean | null }) {
           aria-hidden="true"
           className="inline-block h-2 w-[6px] bg-crimson"
           animate={{ opacity: [1, 0, 1] }}
-          transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
         />
       )}
-    </div>
-  );
-}
-
-function HazardCaption({ reduced }: { reduced: boolean | null }) {
-  return (
-    <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.3em] text-tertiary/80">
-      <span aria-hidden="true" className="h-px w-6 bg-tertiary/40" />
-      <span>signal detected</span>
-      {!reduced && (
-        <motion.span
-          aria-hidden="true"
-          className="inline-block h-1 w-1 rounded-full bg-crimson"
-          animate={{ opacity: [0.4, 1, 0.4] }}
-          transition={{
-            duration: SIREN_DURATION,
-            times: SIREN_TIMES,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      )}
-      <span aria-hidden="true" className="h-px w-6 bg-tertiary/40" />
     </div>
   );
 }
@@ -307,7 +282,7 @@ function RadarRing({ delay }: { delay: number }) {
       initial={{ scale: 1, opacity: 0 }}
       animate={{ scale: [1, 1.85], opacity: [0.85, 0] }}
       transition={{
-        duration: 1.6,
+        duration: RADAR_DURATION,
         delay,
         repeat: Infinity,
         ease: 'easeOut',
