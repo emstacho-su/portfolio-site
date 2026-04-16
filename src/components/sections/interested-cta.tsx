@@ -112,7 +112,7 @@ export function InterestedCTA() {
   useEffect(() => () => stopScramble(), []);
 
   return (
-    <div className="flex flex-col items-center gap-1.5 py-8 md:py-12">
+    <div className="flex justify-center py-8 md:py-12">
       <Link
         ref={linkRef}
         href="/interested"
@@ -169,7 +169,7 @@ export function InterestedCTA() {
             clipPath: CHAMFER_CLIP,
             ...(reduced ? {} : { x: springX, y: springY }),
           }}
-          className="relative z-10 inline-flex items-center gap-3 px-8 py-3 bg-crimson text-background overflow-hidden shadow-[0_10px_30px_-8px_rgba(179,45,58,0.7)] group-hover:shadow-[0_18px_52px_-6px_rgba(179,45,58,0.95)] transition-shadow duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-background"
+          className="relative z-10 inline-flex flex-col items-start gap-1 px-8 py-3 bg-crimson text-background overflow-hidden shadow-[0_10px_30px_-8px_rgba(179,45,58,0.7)] group-hover:shadow-[0_18px_52px_-6px_rgba(179,45,58,0.95)] transition-shadow duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-background"
           whileHover={reduced ? undefined : { scale: 1.04 }}
           whileTap={reduced ? undefined : { scale: 0.96 }}
           transition={{ type: 'spring', stiffness: 420, damping: 22 }}
@@ -205,74 +205,75 @@ export function InterestedCTA() {
             className="absolute right-2 bottom-1 h-2 w-2 border-r border-b border-background/0 group-hover:border-background/80 transition-colors duration-300"
           />
 
-          {/* Opening bracket */}
-          <span
-            aria-hidden="true"
-            className="relative font-mono text-lg text-background/70 group-hover:text-background transition-colors duration-200"
-          >
-            [
+          {/* Status line — small mono CLI prompt, sits above the main label */}
+          <span className="relative flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-background/75">
+            <span aria-hidden="true">{'>'}</span>
+            <span>awaiting_input</span>
+            {!reduced && (
+              <motion.span
+                aria-hidden="true"
+                className="inline-block h-[9px] w-[5px] bg-background/85"
+                animate={{ opacity: [1, 0, 1] }}
+                transition={{
+                  duration: 1.2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              />
+            )}
           </span>
 
-          {/* Label with chromatic aberration ghost layers */}
-          <span className="relative inline-block font-sans text-lg font-medium tracking-[0.06em] group-hover:tracking-[0.16em] transition-[letter-spacing] duration-300 tabular-nums">
+          {/* Main label row: [ label ] → */}
+          <span className="relative flex items-center gap-3">
+            {/* Opening bracket */}
             <span
               aria-hidden="true"
-              className="absolute inset-0 text-[#67e8f9]/55 mix-blend-screen translate-x-[1.5px] -translate-y-[0.5px] pointer-events-none"
+              className="font-mono text-lg text-background/70 group-hover:text-background transition-colors duration-200"
             >
-              {displayText}
+              [
             </span>
+
+            {/* Label with chromatic aberration ghost layers */}
+            <span className="relative inline-block font-sans text-lg font-medium tracking-[0.06em] group-hover:tracking-[0.16em] transition-[letter-spacing] duration-300 tabular-nums">
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 text-[#67e8f9]/55 mix-blend-screen translate-x-[1.5px] -translate-y-[0.5px] pointer-events-none"
+              >
+                {displayText}
+              </span>
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 text-[#fbbf24]/55 mix-blend-screen -translate-x-[1.5px] translate-y-[0.5px] pointer-events-none"
+              >
+                {displayText}
+              </span>
+              <span className="relative" aria-live="off">
+                {displayText}
+              </span>
+            </span>
+
+            {/* Closing bracket */}
             <span
               aria-hidden="true"
-              className="absolute inset-0 text-[#fbbf24]/55 mix-blend-screen -translate-x-[1.5px] translate-y-[0.5px] pointer-events-none"
+              className="font-mono text-lg text-background/70 group-hover:text-background transition-colors duration-200"
             >
-              {displayText}
+              ]
             </span>
-            <span className="relative" aria-live="off">
-              {displayText}
+
+            <span
+              aria-hidden="true"
+              className="text-lg font-light transition-transform duration-300 group-hover:translate-x-1.5"
+            >
+              →
             </span>
-          </span>
-
-          {/* Closing bracket */}
-          <span
-            aria-hidden="true"
-            className="relative font-mono text-lg text-background/70 group-hover:text-background transition-colors duration-200"
-          >
-            ]
-          </span>
-
-          <span
-            aria-hidden="true"
-            className="relative text-lg font-light transition-transform duration-300 group-hover:translate-x-1.5"
-          >
-            →
           </span>
         </motion.span>
       </Link>
-
-      {/* Status decoration below the button — mono CLI prompt vibe */}
-      <StatusTag reduced={reduced} />
     </div>
   );
 }
 
 /* ---------- Decorative sub-components ---------- */
-
-function StatusTag({ reduced }: { reduced: boolean | null }) {
-  return (
-    <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-crimson/80">
-      <span aria-hidden="true">{'>'}</span>
-      <span>awaiting_input</span>
-      {!reduced && (
-        <motion.span
-          aria-hidden="true"
-          className="inline-block h-2 w-[6px] bg-crimson"
-          animate={{ opacity: [1, 0, 1] }}
-          transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      )}
-    </div>
-  );
-}
 
 function RadarRing({ delay }: { delay: number }) {
   return (
