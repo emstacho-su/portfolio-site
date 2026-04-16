@@ -13,14 +13,33 @@ const LABEL = 'Interested?';
 const SCRAMBLE_CHARS = '!@#$%^&*<>/?[]{}|=+-_~';
 const SCRAMBLE_DURATION_MS = 520;
 const SCRAMBLE_TICK_MS = 38;
-const MAGNETIC_PULL_X = 10; // max horizontal drift in px
-const MAGNETIC_PULL_Y = 7; // max vertical drift in px
+const MAGNETIC_PULL_X = 10;
+const MAGNETIC_PULL_Y = 7;
+
+// Octagonal chamfered-corner shape used on the button AND on the emanating
+// radar rings so they match. 10px cut on each corner.
+const CHAMFER_CLIP = `polygon(
+  10px 0%,
+  calc(100% - 10px) 0%,
+  100% 10px,
+  100% calc(100% - 10px),
+  calc(100% - 10px) 100%,
+  10px 100%,
+  0% calc(100% - 10px),
+  0% 10px
+)`;
+
+// Siren keyframes: two hard beats per ~0.9s cycle (bee-boo, bee-boo).
+const SIREN_OPACITY = [0.35, 1, 0.5, 1, 0.35];
+const SIREN_SCALE = [0.92, 1.12, 0.96, 1.12, 0.92];
+const SIREN_TIMES = [0, 0.18, 0.5, 0.72, 1];
+const SIREN_DURATION = 0.9;
 
 export function InterestedCTA() {
   const reduced = useReducedMotion();
   const linkRef = useRef<HTMLAnchorElement>(null);
 
-  // --- Magnetic pull: track cursor relative to button center, spring-smooth ---
+  // Magnetic pull --------------------------------------------------------
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const springX = useSpring(mouseX, { stiffness: 260, damping: 22, mass: 0.7 });
@@ -43,7 +62,7 @@ export function InterestedCTA() {
     mouseY.set(0);
   };
 
-  // --- Scramble: cycle chars, resolve left-to-right over SCRAMBLE_DURATION_MS ---
+  // Scramble -------------------------------------------------------------
   const [displayText, setDisplayText] = useState(LABEL);
   const scrambleTimerRef = useRef<number | null>(null);
 
@@ -91,7 +110,10 @@ export function InterestedCTA() {
   useEffect(() => () => stopScramble(), []);
 
   return (
-    <div className="flex justify-center py-16 md:py-24">
+    <div className="flex flex-col items-center gap-3 py-8 md:py-12">
+      {/* Status decoration above the button — mono CLI prompt vibe */}
+      <StatusTag reduced={reduced} />
+
       <Link
         ref={linkRef}
         href="/interested"
@@ -99,46 +121,72 @@ export function InterestedCTA() {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         aria-label="Interested — see projects and resume"
-        className="group relative inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-crimson focus-visible:ring-offset-4 focus-visible:ring-offset-background rounded-sm"
+        className="group relative inline-block focus:outline-none"
       >
-        {/* Outer breathing halo — big diffuse bloom */}
+        {/* Radar rings — three staggered, emanating outward on siren rhythm,
+            clipped to the same octagonal shape as the button. */}
+        {!reduced && (
+          <>
+            <RadarRing delay={0} />
+            <RadarRing delay={0.3} />
+            <RadarRing delay={0.6} />
+          </>
+        )}
+
+        {/* Outer breathing halo pulsed on siren rhythm */}
         {!reduced && (
           <motion.span
             aria-hidden="true"
-            className="absolute -inset-8 rounded-md bg-crimson/35 blur-3xl pointer-events-none"
-            animate={{
-              opacity: [0.35, 0.7, 0.35],
-              scale: [0.9, 1.08, 0.9],
+            className="absolute -inset-10 bg-crimson/40 blur-3xl pointer-events-none"
+            animate={{ opacity: SIREN_OPACITY, scale: SIREN_SCALE }}
+            transition={{
+              duration: SIREN_DURATION,
+              times: SIREN_TIMES,
+              repeat: Infinity,
+              ease: 'easeInOut',
             }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
           />
         )}
 
-        {/* Inner tight glow — crisper halo hugging the edge */}
+        {/* Inner tight glow also on siren rhythm (tighter scale) */}
         {!reduced && (
           <motion.span
             aria-hidden="true"
-            className="absolute -inset-1 rounded-sm bg-crimson/50 blur-md pointer-events-none"
-            animate={{ opacity: [0.4, 0.75, 0.4] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute -inset-1.5 bg-crimson/60 blur-md pointer-events-none"
+            style={{ clipPath: CHAMFER_CLIP }}
+            animate={{ opacity: SIREN_OPACITY }}
+            transition={{
+              duration: SIREN_DURATION,
+              times: SIREN_TIMES,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
           />
         )}
 
-        {/* Button surface — magnetic pull applied via spring-smoothed translate */}
+        {/* Button surface — chamfered octagon, magnetic pull applied */}
         <motion.span
-          style={reduced ? undefined : { x: springX, y: springY }}
-          className="relative z-10 inline-flex items-center gap-3 px-10 py-4 bg-crimson text-background overflow-hidden rounded-sm shadow-[0_8px_24px_-8px_rgba(179,45,58,0.55)] group-hover:shadow-[0_14px_44px_-6px_rgba(179,45,58,0.9)] transition-shadow duration-300"
+          style={{
+            clipPath: CHAMFER_CLIP,
+            ...(reduced ? {} : { x: springX, y: springY }),
+          }}
+          className="relative z-10 inline-flex items-center gap-3 px-8 py-3 bg-crimson text-background overflow-hidden shadow-[0_10px_30px_-8px_rgba(179,45,58,0.7)] group-hover:shadow-[0_18px_52px_-6px_rgba(179,45,58,0.95)] transition-shadow duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-background"
           whileHover={reduced ? undefined : { scale: 1.04 }}
           whileTap={reduced ? undefined : { scale: 0.96 }}
           transition={{ type: 'spring', stiffness: 420, damping: 22 }}
         >
-          {/* Subtle inner flicker synced to outer pulse */}
+          {/* Siren flicker — white flash synced to outer pulse */}
           {!reduced && (
             <motion.span
               aria-hidden="true"
               className="absolute inset-0 bg-white pointer-events-none"
-              animate={{ opacity: [0, 0.09, 0] }}
-              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+              animate={{ opacity: [0, 0.16, 0.04, 0.16, 0] }}
+              transition={{
+                duration: SIREN_DURATION,
+                times: SIREN_TIMES,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
             />
           )}
 
@@ -148,26 +196,49 @@ export function InterestedCTA() {
             className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-[900ms] ease-out bg-gradient-to-r from-transparent via-white/45 to-transparent pointer-events-none"
           />
 
-          {/* Animated corner brackets — CLI terminal motif */}
+          {/* Corner ticks — CLI motif, appear on hover */}
           <span
             aria-hidden="true"
-            className="absolute left-2 top-1 h-2 w-2 border-l border-t border-background/0 group-hover:border-background/70 transition-colors duration-300"
+            className="absolute left-2 top-1 h-2 w-2 border-l border-t border-background/0 group-hover:border-background/80 transition-colors duration-300"
           />
           <span
             aria-hidden="true"
-            className="absolute right-2 bottom-1 h-2 w-2 border-r border-b border-background/0 group-hover:border-background/70 transition-colors duration-300"
+            className="absolute right-2 bottom-1 h-2 w-2 border-r border-b border-background/0 group-hover:border-background/80 transition-colors duration-300"
           />
 
-          {/*
-            Label renders displayText (scrambles on hover, resolves L→R).
-            font-variant-numeric + tabular-nums prevents width wobble as
-            characters cycle through different glyph widths.
-          */}
+          {/* Opening bracket */}
           <span
-            aria-live="off"
-            className="relative font-sans text-lg font-medium tracking-[0.04em] group-hover:tracking-[0.14em] transition-[letter-spacing] duration-300 tabular-nums"
+            aria-hidden="true"
+            className="relative font-mono text-lg text-background/70 group-hover:text-background transition-colors duration-200"
           >
-            {displayText}
+            [
+          </span>
+
+          {/* Label with chromatic aberration ghost layers */}
+          <span className="relative inline-block font-sans text-lg font-medium tracking-[0.06em] group-hover:tracking-[0.16em] transition-[letter-spacing] duration-300 tabular-nums">
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 text-[#67e8f9]/55 mix-blend-screen translate-x-[1.5px] -translate-y-[0.5px] pointer-events-none"
+            >
+              {displayText}
+            </span>
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 text-[#fbbf24]/55 mix-blend-screen -translate-x-[1.5px] translate-y-[0.5px] pointer-events-none"
+            >
+              {displayText}
+            </span>
+            <span className="relative" aria-live="off">
+              {displayText}
+            </span>
+          </span>
+
+          {/* Closing bracket */}
+          <span
+            aria-hidden="true"
+            className="relative font-mono text-lg text-background/70 group-hover:text-background transition-colors duration-200"
+          >
+            ]
           </span>
 
           <span
@@ -178,6 +249,69 @@ export function InterestedCTA() {
           </span>
         </motion.span>
       </Link>
+
+      {/* Hazard-stripe caption underneath */}
+      <HazardCaption reduced={reduced} />
     </div>
+  );
+}
+
+/* ---------- Decorative sub-components ---------- */
+
+function StatusTag({ reduced }: { reduced: boolean | null }) {
+  return (
+    <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-crimson/80">
+      <span aria-hidden="true">{'>'}</span>
+      <span>awaiting_input</span>
+      {!reduced && (
+        <motion.span
+          aria-hidden="true"
+          className="inline-block h-2 w-[6px] bg-crimson"
+          animate={{ opacity: [1, 0, 1] }}
+          transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      )}
+    </div>
+  );
+}
+
+function HazardCaption({ reduced }: { reduced: boolean | null }) {
+  return (
+    <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.3em] text-tertiary/80">
+      <span aria-hidden="true" className="h-px w-6 bg-tertiary/40" />
+      <span>signal detected</span>
+      {!reduced && (
+        <motion.span
+          aria-hidden="true"
+          className="inline-block h-1 w-1 rounded-full bg-crimson"
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{
+            duration: SIREN_DURATION,
+            times: SIREN_TIMES,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      )}
+      <span aria-hidden="true" className="h-px w-6 bg-tertiary/40" />
+    </div>
+  );
+}
+
+function RadarRing({ delay }: { delay: number }) {
+  return (
+    <motion.span
+      aria-hidden="true"
+      className="absolute inset-0 border-2 border-crimson pointer-events-none"
+      style={{ clipPath: CHAMFER_CLIP }}
+      initial={{ scale: 1, opacity: 0 }}
+      animate={{ scale: [1, 1.85], opacity: [0.85, 0] }}
+      transition={{
+        duration: 1.6,
+        delay,
+        repeat: Infinity,
+        ease: 'easeOut',
+      }}
+    />
   );
 }
