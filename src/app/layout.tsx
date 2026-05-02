@@ -5,6 +5,7 @@ import { SkipLink } from '@/components/ui/skip-link';
 import { Navbar } from '@/components/navigation/navbar';
 import { Footer } from '@/components/navigation/footer';
 import { LoadupSequence } from '@/components/fx/loadup-sequence';
+import { BootProvider } from '@/lib/boot-context';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -49,12 +50,14 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <SkipLink />
-        <LoadupSequence />
-        <AnimationProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </AnimationProvider>
+        <BootProvider>
+          <LoadupSequence />
+          <AnimationProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </AnimationProvider>
+        </BootProvider>
       </body>
     </html>
   );

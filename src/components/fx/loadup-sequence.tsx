@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useBootMarkReady } from '@/lib/boot-context';
 
 const SCRIPT = [
   'initializing portfolio v2.0',
@@ -20,6 +21,7 @@ const SESSION_KEY = 'es-loadup-played-v1';
 export function LoadupSequence() {
   // null = deciding; true = show; false = hide
   const [show, setShow] = useState<boolean | null>(null);
+  const markReady = useBootMarkReady();
 
   useEffect(() => {
     const prefersReduced = window.matchMedia(
@@ -27,10 +29,12 @@ export function LoadupSequence() {
     ).matches;
     if (prefersReduced) {
       setShow(false);
+      markReady();
       return;
     }
     if (sessionStorage.getItem(SESSION_KEY)) {
       setShow(false);
+      markReady();
       return;
     }
     sessionStorage.setItem(SESSION_KEY, '1');
@@ -39,14 +43,20 @@ export function LoadupSequence() {
     // Auto-dismiss after the full sequence plays
     const totalMs =
       (SCRIPT.length * LINE_STAGGER_S + HOLD_BEFORE_FADE_S) * 1000;
-    const timer = window.setTimeout(() => setShow(false), totalMs);
+    const timer = window.setTimeout(() => {
+      setShow(false);
+      markReady();
+    }, totalMs);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [markReady]);
 
   // Skip on first user input
   useEffect(() => {
     if (show !== true) return;
-    const skip = () => setShow(false);
+    const skip = () => {
+      setShow(false);
+      markReady();
+    };
     window.addEventListener('keydown', skip, { once: true });
     window.addEventListener('pointerdown', skip, { once: true });
     window.addEventListener('touchstart', skip, { once: true });
@@ -55,7 +65,7 @@ export function LoadupSequence() {
       window.removeEventListener('pointerdown', skip);
       window.removeEventListener('touchstart', skip);
     };
-  }, [show]);
+  }, [show, markReady]);
 
   if (show === null) return null;
 

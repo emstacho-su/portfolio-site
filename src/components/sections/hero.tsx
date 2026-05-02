@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import Link from 'next/link';
 import { EASE } from '@/lib/animation';
+import ThermodynamicGrid from '@/components/ui/interactive-thermodynamic-grid';
+import { useBootReady } from '@/lib/boot-context';
 
 const TAGLINE = 'From ISO audits to AI agents — I build the systems in between.';
 const META = "SYRACUSE IMT '27 / ISO 9001 AUDITOR / AI-ENGINEERING";
 const NAME_MONO = 'EVAN\nSTACHOWIAK';
 
 const SESSION_KEY = 'es-compile-played-v1';
-const LOADUP_KEY = 'es-loadup-played-v1';
-const LOADUP_OFFSET_MS = 1400;
 
 // Compile-sequence timing (spec §4), ms from compile start
 const T_GRID = 400;
@@ -25,7 +25,20 @@ const T_CURSOR = 2600;
 const TYPE_INTERVAL_MS = 32;
 
 export function HeroSection() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const bootReady = useBootReady();
+
+  return (
+    <section
+      id="hero"
+      className="min-h-[78vh] flex flex-col items-center justify-center px-6 relative pt-16 overflow-hidden text-center"
+    >
+      {bootReady && <HeroContent />}
+    </section>
+  );
+}
+
+function HeroContent() {
+  const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
@@ -33,7 +46,6 @@ export function HeroSection() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const [mounted, setMounted] = useState(false);
   const [play, setPlay] = useState(false);
 
   useEffect(() => {
@@ -41,27 +53,18 @@ export function HeroSection() {
     const alreadyPlayed = sessionStorage.getItem(SESSION_KEY);
     if (!reduced && !alreadyPlayed) {
       sessionStorage.setItem(SESSION_KEY, '1');
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- client capability detection must happen post-mount
       setPlay(true);
     }
-    setMounted(true);
   }, []);
 
   return (
-    <section
+    <motion.div
       ref={sectionRef}
-      id="hero"
-      className="min-h-[78vh] flex flex-col items-center justify-center px-6 relative pt-16 overflow-hidden text-center"
+      style={{ y, opacity }}
+      className="relative w-full max-w-[1200px] mx-auto"
     >
-      {mounted && (
-        <motion.div
-          style={{ y, opacity }}
-          className="relative w-full max-w-[1200px] mx-auto"
-        >
-          <CompileSequence play={play} />
-        </motion.div>
-      )}
-    </section>
+      <CompileSequence play={play} />
+    </motion.div>
   );
 }
 
@@ -79,9 +82,6 @@ function CompileSequence({ play }: CompileSequenceProps) {
   useEffect(() => {
     if (!play) return;
 
-    const loadupWillPlay = !sessionStorage.getItem(LOADUP_KEY);
-    const offset = loadupWillPlay ? LOADUP_OFFSET_MS : 0;
-
     const timers: number[] = [];
     let typeInterval: number | null = null;
     let cancelled = false;
@@ -98,18 +98,18 @@ function CompileSequence({ play }: CompileSequenceProps) {
       }, TYPE_INTERVAL_MS);
     };
 
-    timers.push(window.setTimeout(() => setStep(1), T_GRID + offset));
-    timers.push(window.setTimeout(() => setStep(2), T_UNDERLINE + offset));
+    timers.push(window.setTimeout(() => setStep(1), T_GRID));
+    timers.push(window.setTimeout(() => setStep(2), T_UNDERLINE));
     timers.push(
       window.setTimeout(() => {
         setStep(3);
         startTyping();
-      }, T_TYPE_START + offset)
+      }, T_TYPE_START)
     );
-    timers.push(window.setTimeout(() => setStep(4), T_CROSSFADE + offset));
-    timers.push(window.setTimeout(() => setStep(5), T_TAGLINE + offset));
-    timers.push(window.setTimeout(() => setStep(6), T_META_CTA + offset));
-    timers.push(window.setTimeout(() => setStep(7), T_CURSOR + offset));
+    timers.push(window.setTimeout(() => setStep(4), T_CROSSFADE));
+    timers.push(window.setTimeout(() => setStep(5), T_TAGLINE));
+    timers.push(window.setTimeout(() => setStep(6), T_META_CTA));
+    timers.push(window.setTimeout(() => setStep(7), T_CURSOR));
 
     const cleanup = () => {
       timers.forEach(window.clearTimeout);
@@ -146,17 +146,19 @@ function CompileSequence({ play }: CompileSequenceProps) {
 
   return (
     <div className="relative">
-      {/* Hairline grid — draws from top-left, settles at 6% opacity (spec §4.2) */}
+      {/* Thermodynamic heat grid — reveals via clip-path, interactive at step 2 */}
       <motion.div
         aria-hidden="true"
-        className="absolute -inset-x-12 -inset-y-20 bg-hairline-grid pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         initial={false}
         animate={{
-          opacity: step >= 1 ? 0.06 : 0,
+          opacity: step >= 1 ? 1 : 0,
           clipPath: step >= 1 ? 'inset(0 0% 0% 0)' : 'inset(0 100% 100% 0)',
         }}
         transition={t(0.4)}
-      />
+      >
+        <ThermodynamicGrid resolution={18} coolingFactor={0.94} interactive={step >= 2} />
+      </motion.div>
 
       <div className="relative">
         {/* Crimson underline draws L→R where the name will land (spec §4.3) */}
