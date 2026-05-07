@@ -389,6 +389,77 @@ export const vaultCategories: VaultCategory[] = [
   },
 ];
 
+// Plugins & MCP — sourced from ~/.claude/plugins/installed_plugins.json
+// (4 marketplaces, 16 plugins enabled). MCP servers are stdio surfaces
+// each plugin can boot.
+export interface PluginEntry {
+  name: string;
+  version: string;
+}
+
+export interface MarketplaceEntry {
+  source: string;
+  title: string;
+  plugins: PluginEntry[];
+  note?: string;
+}
+
+export const marketplaces: MarketplaceEntry[] = [
+  {
+    source: 'github: anthropics/claude-plugins-official',
+    title: 'Official marketplace',
+    plugins: [
+      { name: 'playwright', version: 'unknown' },
+      { name: 'figma', version: '2.1.30' },
+      { name: 'context7', version: 'unknown' },
+      { name: 'security-guidance', version: 'unknown' },
+      { name: 'linear', version: 'unknown' },
+      { name: 'github', version: 'unknown' },
+      { name: 'supabase', version: '0.1.6' },
+      { name: 'frontend-design', version: 'unknown' },
+      { name: 'vercel', version: '0.42.1' },
+    ],
+  },
+  {
+    source: 'github: anthropics/claude-code',
+    title: 'Code marketplace',
+    plugins: [
+      { name: 'commit-commands', version: '1.0.0' },
+      { name: 'code-review', version: '1.0.0' },
+      { name: 'feature-dev', version: '1.0.0' },
+      { name: 'hookify', version: '0.1.0' },
+      { name: 'security-guidance', version: '1.0.0' },
+    ],
+  },
+  {
+    source: 'github: obra/superpowers',
+    title: 'Superpowers',
+    plugins: [{ name: 'superpowers', version: '5.1.0' }],
+    note:
+      'Superpowers ships skills via plugin layout but they are also copied into ~/.claude/skills/ so they appear in the active skill registry. Without that copy step they showed as installed but never auto-triggered.',
+  },
+  {
+    source: 'github: mksglu/context-mode',
+    title: 'Context-mode',
+    plugins: [{ name: 'context-mode', version: '1.0.111' }],
+  },
+];
+
+export interface McpServerEntry {
+  name: string;
+  scope: string;
+}
+
+export const mcpServers: McpServerEntry[] = [
+  { name: 'Supabase', scope: '10 tools' },
+  { name: 'Vercel', scope: 'deploy / logs / projects' },
+  { name: 'Figma', scope: 'canvas write' },
+  { name: 'Linear', scope: 'issues + projects' },
+  { name: 'Playwright', scope: 'browser' },
+  { name: 'Context7', scope: 'live docs' },
+  { name: 'claude.ai cloud', scope: 'Gmail / Calendar / Drive / Microsoft 365' },
+];
+
 export const stats: HarnessStat[] = [
   { value: '10', label: 'Layers' },
   { value: '7', label: 'Hook events' },
