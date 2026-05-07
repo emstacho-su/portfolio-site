@@ -20,6 +20,12 @@ export interface HarnessLayer {
   index: number;
   name: string;
   oneLiner: string;
+  /** 2–3 sentence detail surfaced when the layer is expanded in the Architecture tab. */
+  description: string;
+  /** File paths or globs that physically house this layer. Mono-rendered. */
+  files: string[];
+  /** IDs of other layers this one talks to. Renders as a "Related" pill list. */
+  related: string[];
   badges: string[];
   subsystem: LayerSubsystem;
 }
@@ -31,6 +37,10 @@ export const layers: HarnessLayer[] = [
     name: 'CLI host',
     oneLiner:
       'Claude Code itself — the terminal harness that loads system prompts, dispatches tools, and brokers every other layer.',
+    description:
+      'Reads ~/.claude/settings.json on launch, mounts the model (Opus 4.7 / Sonnet 4.6 / Haiku 4.5), and owns the conversation loop and the context window. Every other layer attaches via tools, hooks, plugins, or skills — none of them run without the host.',
+    files: ['~/.claude/settings.json', '~/.claude/CLAUDE.md', '~/.claude/rules/'],
+    related: ['workflow', 'hook-pipeline', 'skill-packs'],
     badges: ['Claude Code', 'Opus 4.7', 'Sonnet 4.6'],
     subsystem: 'host',
   },
@@ -40,6 +50,10 @@ export const layers: HarnessLayer[] = [
     name: 'Workflow',
     oneLiner:
       'Spec-driven phase orchestration. Drafts a plan, verifies it, executes atomically, and validates against the goal.',
+    description:
+      'GSD wraps every non-trivial task in phases that produce markdown artifacts (SPEC, DISCUSS, PLAN, EXECUTE, VERIFICATION, SHIP). Each phase persists state to .planning/phases/<n>/, so a context reset reloads cleanly. Atomic per-task commits keep the diff reviewable.',
+    files: ['~/.claude/get-shit-done/', '.planning/phases/<n>/PLAN.md', '.planning/phases/<n>/VERIFICATION.md'],
+    related: ['host', 'storage', 'skill-packs'],
     badges: ['GSD', '/gsd-* commands', 'PLAN.md / VERIFICATION.md'],
     subsystem: 'workflow',
   },
@@ -49,6 +63,10 @@ export const layers: HarnessLayer[] = [
     name: 'Persistent memory',
     oneLiner:
       'Claude-mem: auto-records every tool call and turn summary, then injects a session index at SessionStart so prior decisions survive restarts.',
+    description:
+      'A bun worker on localhost:37778 captures observations via the hook pipeline, indexes them in SQLite + FTS5, and exposes a web dashboard. At SessionStart it injects a compact recent-context summary into the system prompt — the model reads "what we did last time" instead of paying tokens to re-discover.',
+    files: ['~/AppData/Local/claude-mem/', '~/.claude/plugins/claude-mem/', 'localhost:37778/health'],
+    related: ['hook-pipeline', 'storage', 'auto-memory'],
     badges: ['claude-mem', 'bun', 'localhost:37778'],
     subsystem: 'memory',
   },
@@ -58,6 +76,10 @@ export const layers: HarnessLayer[] = [
     name: 'Auto-memory',
     oneLiner:
       'Curated markdown facts — user role, feedback rules, project state, references. Slow-decaying signal; the part of memory I edit by hand.',
+    description:
+      'Lives in flat markdown files indexed by MEMORY.md and loaded into the system prompt at session start. Holds the deliberate, durable facts: user profile, validated approaches, project deadlines, external pointers. Reviewable in git diffs, unlike the auto-captured persistent-memory store.',
+    files: ['~/.claude/projects/<dir>/memory/MEMORY.md', 'user_*.md, feedback_*.md, project_*.md, reference_*.md'],
+    related: ['persistent-memory', 'host'],
     badges: ['~/.claude/projects/.../memory/', 'MEMORY.md'],
     subsystem: 'memory',
   },
@@ -67,6 +89,10 @@ export const layers: HarnessLayer[] = [
     name: 'Context discipline',
     oneLiner:
       'Context-mode runs commands in a sandboxed subprocess, indexes the output in FTS5, and surfaces only the printed summary to the model.',
+    description:
+      'Bash output, MCP responses, and large file reads route through ctx_execute / ctx_execute_file / ctx_batch_execute. The full output is stored in a per-session SQLite DB; only the explicitly printed summary lines enter the conversation context. The PreToolUse hook reminds the model to use it.',
+    files: ['~/.claude/plugins/cache/mksglu__context-mode/', 'pretooluse.mjs', '~/.context-mode/'],
+    related: ['hook-pipeline', 'storage', 'host'],
     badges: ['context-mode', 'FTS5', 'BM25'],
     subsystem: 'context',
   },
@@ -76,6 +102,10 @@ export const layers: HarnessLayer[] = [
     name: 'Skill packs',
     oneLiner:
       'Always-on skills inject domain expertise; vaulted skills load on demand. Behavior shaping through markdown, not config.',
+    description:
+      '71 always-on skills (superpowers, GSD core, frontend-design, etc.) feed their frontmatter descriptions into every system prompt. 94 vaulted skills sit at ~/.claude/skill-vault/ and load only when grep-looked-up via SKILL-INDEX.md — saves ~5K tokens of session-start description bloat.',
+    files: ['~/.claude/skills/', '~/.claude/skill-vault/', '~/.claude/SKILL-INDEX.md'],
+    related: ['host', 'plugins'],
     badges: ['superpowers', 'frontend-design', 'SKILL-INDEX.md'],
     subsystem: 'skills',
   },
@@ -85,6 +115,10 @@ export const layers: HarnessLayer[] = [
     name: 'Plugins',
     oneLiner:
       'Marketplace MCP integrations — design tools, infra control planes, browser automation, ticketing.',
+    description:
+      'Marketplaces are git repos; plugins are namespaced subfolders. Each plugin can ship skills, commands, agents, and MCP servers. Cached at ~/.claude/plugins/cache/, registered in installed_plugins.json, toggled via enabledPlugins. 16 plugins enabled today across four marketplaces.',
+    files: ['~/.claude/plugins/installed_plugins.json', '~/.claude/plugins/cache/<marketplace>/<plugin>/<v>/'],
+    related: ['mcp-servers', 'skill-packs', 'host'],
     badges: ['figma', 'supabase', 'vercel', 'playwright', 'hookify', 'commit-commands'],
     subsystem: 'plugins',
   },
@@ -94,6 +128,10 @@ export const layers: HarnessLayer[] = [
     name: 'Hook pipeline',
     oneLiner:
       'Lifecycle scripts fired by Claude Code at deterministic points — observation capture, context guidance, gate enforcement.',
+    description:
+      '22 scripts wired across 7 events (SessionStart / UserPromptSubmit / PreToolUse / PostToolUse / PreCompact / Stop / SessionEnd). Scripts can validate (block the call), inject context (modify the prompt), or just observe (write to memory). Three owners share the surface: claude-mem, GSD, context-mode.',
+    files: ['~/.claude/settings.json (hooks block)', '~/.claude/plugins/claude-mem/hooks/', '~/.claude/get-shit-done/hooks/'],
+    related: ['persistent-memory', 'context-discipline', 'workflow', 'host'],
     badges: ['7 events', '22 scripts', 'PreToolUse → SessionEnd'],
     subsystem: 'hooks',
   },
@@ -103,6 +141,10 @@ export const layers: HarnessLayer[] = [
     name: 'MCP servers',
     oneLiner:
       'Stdio-based servers spawned per session by the plugin loader. Provide tool surfaces for the model that wouldn’t fit in the prompt.',
+    description:
+      'Each plugin can boot one or more MCP servers as stdio subprocesses. Tools from each server appear in the model\'s tool list namespaced by plugin. Heavy hitters: Supabase (10 tools), Vercel (deploy/logs/projects), Figma (canvas write), Linear, Playwright, Context7, plus claude.ai cloud (Gmail / Calendar / Drive / 365).',
+    files: ['<plugin>/.mcp.json', 'spawned at SessionStart per enabledPlugins'],
+    related: ['plugins', 'host'],
     badges: ['15+ servers', 'stdio', 'per-plugin namespace'],
     subsystem: 'mcp',
   },
@@ -112,6 +154,10 @@ export const layers: HarnessLayer[] = [
     name: 'Storage',
     oneLiner:
       'SQLite with WAL for the observation log, FTS5 for keyword retrieval, Chroma for vector retrieval. All on LocalAppData, never synced.',
+    description:
+      'The persistent backbone. SQLite + WAL holds observations; FTS5 is the BM25 keyword index; Chroma is the vector index. After the OneDrive corruption pattern, all of it lives in %LOCALAPPDATA%\\claude-mem\\ — explicitly outside any cloud-synced folder.',
+    files: ['%LOCALAPPDATA%\\claude-mem\\claude-mem.db', '%LOCALAPPDATA%\\claude-mem\\chroma\\'],
+    related: ['persistent-memory', 'context-discipline', 'auto-memory'],
     badges: ['SQLite + WAL', 'FTS5', 'Chroma', '%LOCALAPPDATA%'],
     subsystem: 'storage',
   },

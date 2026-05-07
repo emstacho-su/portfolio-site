@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import { layers, inventory, hookEvents, colophon, stats } from '@/data/harness';
-import { HarnessDiagramIsland } from './_components/HarnessDiagramIsland';
 import { InventoryTable } from './_components/InventoryTable';
 import { HooksTimeline } from './_components/HooksTimeline';
 import { MigrationCallout } from './_components/MigrationCallout';
 import { HarnessTabs } from './_components/HarnessTabs';
+import { ArchitectureTab } from './_components/ArchitectureTab';
 
 export const metadata: Metadata = {
   title: 'Harness | Evan Stachowiak',
@@ -81,7 +81,7 @@ export default function HarnessPage() {
       {/* DASHBOARD: 6-tab nav. Each panel filled in P2-T3 through P2-T8. */}
       <HarnessTabs
         panels={{
-          arch: <TabStub label="Architecture" target="P2-T3" />,
+          arch: <ArchitectureTab layers={layers} />,
           hooks: <TabStub label="Hooks Pipeline" target="P2-T4" />,
           skills: <TabStub label="Skills Map" target="P2-T5" />,
           plugins: <TabStub label="Plugins & MCP" target="P2-T6" />,
@@ -92,28 +92,7 @@ export default function HarnessPage() {
 
       <SectionRule />
 
-      {/* §1 THE 10 LAYERS */}
-      <section
-        id="layers"
-        aria-labelledby="layers-heading"
-        className="py-16 md:py-20"
-      >
-        <SectionEyebrow>§1</SectionEyebrow>
-        <h2 id="layers-heading" className="mt-2">
-          The 10 layers
-        </h2>
-        <p className="prose-body text-foreground/85 mt-6">
-          The harness is layered, not monolithic. Each layer plays a single
-          role, talks to its neighbors through a thin interface, and is
-          replaceable in isolation. Listed bottom-up — host first, storage
-          last.
-        </p>
-        <HarnessDiagramIsland layers={layers} />
-      </section>
-
-      <SectionRule />
-
-      {/* §2 LOCALHOST INVENTORY */}
+      {/* §2 LOCALHOST INVENTORY (relocates into Memory Layer tab in P2-T7) */}
       <section
         id="inventory"
         aria-labelledby="inventory-heading"
