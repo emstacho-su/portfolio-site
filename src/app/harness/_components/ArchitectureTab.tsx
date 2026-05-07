@@ -90,7 +90,7 @@ export function ArchitectureTab({ layers }: ArchitectureTabProps) {
 
                 <span
                   className={`font-mono text-sm self-start tabular-nums transition-colors duration-150 ${
-                    isOpen ? 'text-crimson font-semibold' : 'text-muted-foreground'
+                    isOpen ? 'text-foreground font-semibold' : 'text-muted-foreground'
                   }`}
                   aria-hidden="true"
                 >
@@ -111,10 +111,8 @@ export function ArchitectureTab({ layers }: ArchitectureTabProps) {
                     {layer.badges.map((badge) => (
                       <li
                         key={badge}
-                        className={`font-mono text-[10px] tracking-wide px-2 py-1 border transition-colors duration-150 ${
-                          isOpen
-                            ? 'border-crimson text-foreground'
-                            : 'border-hairline text-muted-foreground'
+                        className={`font-mono text-[10px] tracking-wide px-2 py-1 border border-hairline transition-colors duration-150 ${
+                          isOpen ? 'text-foreground' : 'text-muted-foreground'
                         }`}
                       >
                         {badge}
@@ -126,7 +124,7 @@ export function ArchitectureTab({ layers }: ArchitectureTabProps) {
                 <span
                   aria-hidden="true"
                   className={`font-mono text-xs text-muted-foreground self-start mt-1 transition-transform duration-150 ${
-                    isOpen ? 'rotate-90 text-crimson' : ''
+                    isOpen ? 'rotate-90' : ''
                   }`}
                 >
                   ▶

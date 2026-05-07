@@ -21,8 +21,7 @@ export function SkillsTab({ alwaysOn, vault }: SkillsTabProps) {
         {/* ALWAYS-ON */}
         <section className="border border-hairline rounded-md p-6 bg-background">
           <header className="flex items-baseline justify-between mb-2">
-            <h3 className="font-sans text-base font-semibold text-foreground inline-flex items-center gap-2">
-              <span aria-hidden="true" className="inline-block w-2 h-2 rounded-full bg-crimson" />
+            <h3 className="font-sans text-base font-semibold text-foreground">
               Always-on packs
             </h3>
             <span className="font-mono text-[11px] text-muted-foreground">
@@ -74,8 +73,7 @@ export function SkillsTab({ alwaysOn, vault }: SkillsTabProps) {
         {/* VAULT */}
         <section className="border border-hairline rounded-md p-6 bg-background">
           <header className="flex items-baseline justify-between mb-2">
-            <h3 className="font-sans text-base font-semibold text-foreground inline-flex items-center gap-2">
-              <span aria-hidden="true" className="inline-block w-2 h-2 rounded-full bg-crimson" />
+            <h3 className="font-sans text-base font-semibold text-foreground">
               Vault — on demand
             </h3>
             <span className="font-mono text-[11px] text-muted-foreground">

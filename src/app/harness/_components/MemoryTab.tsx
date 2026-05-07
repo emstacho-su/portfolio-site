@@ -92,8 +92,7 @@ export function MemoryTab({ inventory }: MemoryTabProps) {
           artifact. All three belong with the memory subsystem. */}
       <section className="mt-10 border border-hairline rounded-md p-6 bg-background">
         <header className="flex items-baseline justify-between mb-4">
-          <h3 className="font-sans text-base font-semibold text-foreground inline-flex items-center gap-2">
-            <span aria-hidden="true" className="inline-block w-2 h-2 rounded-full bg-crimson" />
+          <h3 className="font-sans text-base font-semibold text-foreground">
             Localhost inventory
           </h3>
           <span className="font-mono text-[11px] text-muted-foreground">
@@ -121,8 +120,7 @@ function MemoryCard({ data }: MemoryCardProps) {
   return (
     <article className="border border-hairline rounded-md p-6 bg-background">
       <header className="mb-4">
-        <h3 className="font-sans text-lg font-semibold text-foreground inline-flex items-center gap-2">
-          <span aria-hidden="true" className="inline-block w-2 h-2 rounded-full bg-crimson" />
+        <h3 className="font-sans text-lg font-semibold text-foreground">
           {data.name}
         </h3>
         <p className="font-mono text-xs text-muted-foreground mt-1">
@@ -162,8 +160,7 @@ interface CalloutProps {
 function Callout({ title, children }: CalloutProps) {
   return (
     <div className="border border-hairline rounded-md p-5 bg-surface/40">
-      <h4 className="font-sans text-sm font-semibold text-foreground inline-flex items-center gap-2 mb-2">
-        <span aria-hidden="true" className="inline-block w-1.5 h-1.5 rounded-full bg-crimson" />
+      <h4 className="font-sans text-sm font-semibold text-foreground mb-2">
         {title}
       </h4>
       <p className="text-[13px] text-foreground/85 leading-relaxed">

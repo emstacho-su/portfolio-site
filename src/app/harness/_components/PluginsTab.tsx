@@ -67,8 +67,7 @@ export function PluginsTab({ marketplaces, mcpServers }: PluginsTabProps) {
 
       <section className="mt-10 border border-hairline rounded-md p-6 bg-background">
         <header className="flex items-baseline justify-between mb-4">
-          <h3 className="font-sans text-base font-semibold text-foreground inline-flex items-center gap-2">
-            <span aria-hidden="true" className="inline-block w-2 h-2 rounded-full bg-crimson" />
+          <h3 className="font-sans text-base font-semibold text-foreground">
             MCP servers — exposed via plugin connections
           </h3>
           <span className="font-mono text-[11px] text-muted-foreground">

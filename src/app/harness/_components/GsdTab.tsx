@@ -55,8 +55,7 @@ export function GsdTab({ phases, situations }: GsdTabProps) {
       </ol>
 
       <section className="mt-10">
-        <h3 className="font-sans text-base font-semibold text-foreground mb-4 inline-flex items-center gap-2">
-          <span aria-hidden="true" className="inline-block w-2 h-2 rounded-full bg-crimson" />
+        <h3 className="font-sans text-base font-semibold text-foreground mb-4">
           Situational dispatch
         </h3>
         <p className="text-sm text-muted-foreground mb-4">
@@ -129,8 +128,7 @@ interface CalloutProps {
 function Callout({ title, children }: CalloutProps) {
   return (
     <div className="border border-hairline rounded-md p-5 bg-surface/40">
-      <h4 className="font-sans text-sm font-semibold text-foreground inline-flex items-center gap-2 mb-2">
-        <span aria-hidden="true" className="inline-block w-1.5 h-1.5 rounded-full bg-crimson" />
+      <h4 className="font-sans text-sm font-semibold text-foreground mb-2">
         {title}
       </h4>
       <div className="text-[13px] text-foreground/85 leading-relaxed">

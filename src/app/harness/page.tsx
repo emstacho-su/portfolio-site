@@ -54,9 +54,8 @@ export default function HarnessPage() {
     >
       {/* HERO */}
       <section className="py-16 md:py-20">
-        <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground mb-4 inline-flex items-center gap-2">
-          <span aria-hidden="true" className="inline-block w-1.5 h-1.5 rounded-full bg-crimson" />
-          <span>Field Notes — 2026-05-07</span>
+        <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground mb-4">
+          Field Notes — 2026-05-07
         </p>
         <h1 className="mb-6">
           The harness <em className="italic font-normal text-crimson">behind</em> the portfolio.
@@ -70,7 +69,6 @@ export default function HarnessPage() {
 
         {/* Stat strip — 6 numbers that size the harness in one glance. */}
         <div className="mt-12">
-          <div aria-hidden="true" className="h-px w-24 bg-crimson mb-6" />
           <ul
             role="list"
             aria-label="Harness sizing"
