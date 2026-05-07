@@ -18,12 +18,12 @@ export function MigrationCallout({ kind, title, children }: MigrationCalloutProp
       role="note"
       className="my-8 border-l-2 border-crimson pl-5 py-1 max-w-[64ch]"
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-tertiary mb-1">
+      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-1">
         {KIND_LABEL[kind]}
       </p>
-      <h4 className="font-sans text-base font-semibold text-foreground mb-2">
+      <h3 className="font-sans text-base font-semibold text-foreground mb-2">
         {title}
-      </h4>
+      </h3>
       <div className="text-sm text-foreground/85 leading-relaxed">
         {children}
       </div>

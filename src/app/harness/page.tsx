@@ -38,7 +38,7 @@ export default function HarnessPage() {
     >
       {/* HERO */}
       <section className="py-16 md:py-20">
-        <p className="font-mono text-xs uppercase tracking-[0.18em] text-tertiary mb-4">
+        <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground mb-4">
           Field Notes — 2026-05-07
         </p>
         <h1 className="mb-6">The harness behind the portfolio.</h1>
@@ -89,7 +89,7 @@ export default function HarnessPage() {
         </p>
         <figure>
           <InventoryTable rows={inventory} />
-          <figcaption className="font-mono text-[11px] text-tertiary mt-4 leading-relaxed">
+          <figcaption className="font-mono text-[11px] text-muted-foreground mt-4 leading-relaxed">
             Captured 2026-05-07. Other listeners on the box (Bonjour, Steam,
             Superhuman) are not part of the harness.
           </figcaption>
@@ -312,7 +312,7 @@ export default function HarnessPage() {
             <p className="font-mono text-sm text-foreground/85">
               {colophon.capturedOn}
             </p>
-            <p className="font-mono text-xs text-tertiary mt-3 leading-relaxed">
+            <p className="font-mono text-xs text-muted-foreground mt-3 leading-relaxed">
               Memory dashboard at{' '}
               <span className="text-foreground/85">
                 {colophon.dashboardUrl}
@@ -340,7 +340,7 @@ interface SectionEyebrowProps {
 
 function SectionEyebrow({ children }: SectionEyebrowProps) {
   return (
-    <p className="font-mono text-xs uppercase tracking-[0.18em] text-tertiary">
+    <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
       {children}
     </p>
   );
@@ -354,7 +354,7 @@ interface ColophonColumnProps {
 function ColophonColumn({ label, children }: ColophonColumnProps) {
   return (
     <div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-tertiary mb-3">
+      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-3">
         {label}
       </p>
       {children}

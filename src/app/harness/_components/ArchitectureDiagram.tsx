@@ -91,7 +91,7 @@ export function ArchitectureDiagram({ layers }: ArchitectureDiagramProps) {
 
               <span
                 className={`font-mono text-sm self-start tabular-nums transition-colors duration-150 ${
-                  isActive ? 'text-crimson font-semibold' : 'text-tertiary'
+                  isActive ? 'text-crimson font-semibold' : 'text-muted-foreground'
                 }`}
                 aria-hidden="true"
               >
@@ -112,7 +112,7 @@ export function ArchitectureDiagram({ layers }: ArchitectureDiagramProps) {
                       className={`font-mono text-[10px] tracking-wide px-2 py-1 border transition-colors duration-150 ${
                         isActive
                           ? 'border-crimson text-foreground'
-                          : 'border-hairline text-tertiary'
+                          : 'border-hairline text-muted-foreground'
                       }`}
                     >
                       {badge}
@@ -141,7 +141,7 @@ export function ArchitectureDiagram({ layers }: ArchitectureDiagramProps) {
               exit={reduce ? { opacity: 1 } : { opacity: 0, y: -4 }}
               transition={reduce ? { duration: 0 } : { duration: 0.18, ease: [0, 0, 0.2, 1] }}
             >
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-tertiary mb-2">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
                 Layer {String(active.index).padStart(2, '0')} · {active.subsystem}
               </p>
               <h4 className="font-sans text-lg font-semibold text-foreground mb-3">
@@ -158,7 +158,7 @@ export function ArchitectureDiagram({ layers }: ArchitectureDiagramProps) {
               animate={{ opacity: 1 }}
               exit={reduce ? { opacity: 1 } : { opacity: 0 }}
               transition={reduce ? { duration: 0 } : { duration: 0.18 }}
-              className="font-mono text-xs text-tertiary"
+              className="font-mono text-xs text-muted-foreground"
             >
               Hover or tab through a layer to read its description.
             </motion.p>

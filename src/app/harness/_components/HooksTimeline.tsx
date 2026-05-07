@@ -40,10 +40,10 @@ export function HooksTimeline({ events }: HooksTimelineProps) {
             <p className="font-mono text-xs font-semibold text-foreground tracking-tight">
               {event.name}
             </p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-tertiary mt-1">
+            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground mt-1">
               {event.scriptCount} script{event.scriptCount === 1 ? '' : 's'}
               {idx < events.length - 1 ? ' · ' : ''}
-              <span className="text-tertiary">
+              <span className="text-muted-foreground">
                 {event.owners.map((o) => OWNER_LABEL[o]).join(' · ')}
               </span>
             </p>

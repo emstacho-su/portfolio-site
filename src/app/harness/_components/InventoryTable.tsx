@@ -49,7 +49,7 @@ export function InventoryTable({ rows }: InventoryTableProps) {
                     className={
                       row.status === 'active'
                         ? 'text-foreground'
-                        : 'text-tertiary'
+                        : 'text-muted-foreground'
                     }
                   >
                     {STATUS_LABEL[row.status]}
@@ -76,7 +76,7 @@ function ColHeader({ children, className = '' }: ColHeaderProps) {
   return (
     <th
       scope="col"
-      className={`font-mono text-[10px] uppercase tracking-[0.14em] text-tertiary py-2 pr-4 ${className}`}
+      className={`font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground py-2 pr-4 ${className}`}
     >
       {children}
     </th>
