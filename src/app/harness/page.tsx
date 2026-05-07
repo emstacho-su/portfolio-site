@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { layers, inventory, hookEvents, colophon } from '@/data/harness';
-import { LayerCardList } from './_components/LayerCardList';
+import { HarnessDiagramIsland } from './_components/HarnessDiagramIsland';
 import { InventoryTable } from './_components/InventoryTable';
 import { HooksTimeline } from './_components/HooksTimeline';
 import { MigrationCallout } from './_components/MigrationCallout';
@@ -54,7 +54,7 @@ export default function HarnessPage() {
           replaceable in isolation. Listed bottom-up — host first, storage
           last.
         </p>
-        <LayerCardList layers={layers} />
+        <HarnessDiagramIsland layers={layers} />
       </section>
 
       <SectionRule />
