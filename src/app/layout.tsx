@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import { jetbrainsMono } from '@/lib/fonts';
 import { AnimationProvider } from './providers/animation-provider';
+import { LenisProvider } from './providers/lenis-provider';
 import { SkipLink } from '@/components/ui/skip-link';
 import { Navbar } from '@/components/navigation/navbar';
 import { Footer } from '@/components/navigation/footer';
-import { LoadupSequence } from '@/components/fx/loadup-sequence';
+import { HeroLoader } from '@/components/fx/hero-loader';
 import { BootProvider } from '@/lib/boot-context';
 import './globals.css';
 
@@ -51,12 +52,16 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <SkipLink />
         <BootProvider>
-          <LoadupSequence />
-          <AnimationProvider>
-            <Navbar />
-            {children}
-            <Footer />
-          </AnimationProvider>
+          {/* Cinematic loader: dark pre-load → cream sweep → name stamp → handoff. */}
+          <HeroLoader />
+          {/* Lenis smooth scroll — gated internally on bootReady. */}
+          <LenisProvider>
+            <AnimationProvider>
+              <Navbar />
+              {children}
+              <Footer />
+            </AnimationProvider>
+          </LenisProvider>
         </BootProvider>
       </body>
     </html>
