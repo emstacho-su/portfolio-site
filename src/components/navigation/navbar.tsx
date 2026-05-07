@@ -12,7 +12,7 @@ import { Menu } from 'lucide-react';
 const NAV_LINKS = [
   { label: 'About', href: '/' },
   { label: 'Projects', href: '/projects' },
-  { label: 'Toolkit', href: '/toolkit' },
+  { label: 'Harness', href: '/harness' },
   { label: 'Resume', href: '/resume' },
 ] as const;
 
