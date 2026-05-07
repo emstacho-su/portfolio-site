@@ -9,15 +9,11 @@ export function GsdTab({ phases, situations }: GsdTabProps) {
   return (
     <div>
       <header className="mb-10">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
-          06 / GSD Workflow
-        </p>
         <h2 className="mb-3">Spec → Discuss → Plan → Execute → Verify → Ship.</h2>
         <p className="prose-body text-foreground/85 mt-3">
           Each phase produces a markdown artifact in{' '}
           <code className="font-mono text-sm">.planning/phases/&lt;n&gt;/</code>
-          . Atomic commits per task. Checkpoints survive context resets — the
-          phase manifest is reloaded on resume.
+          . Atomic commits, resumable across context resets.
         </p>
       </header>
 

@@ -55,15 +55,9 @@ export function HooksTab({ events }: HooksTabProps) {
   return (
     <div>
       <header className="mb-10">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
-          02 / Hooks Pipeline
-        </p>
         <h2 className="mb-3">Seven lifecycle events. Twenty-two scripts.</h2>
         <p className="prose-body text-foreground/85 mt-3">
-          Each lifecycle event fires zero or more scripts in parallel. Scripts
-          can validate inputs (block the call), inject context (modify the
-          prompt), or just observe (write to memory). Read order is left to
-          right.
+          Each event fires zero or more scripts in parallel — read left to right.
         </p>
       </header>
 

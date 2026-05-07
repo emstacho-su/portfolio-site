@@ -9,14 +9,9 @@ export function PluginsTab({ marketplaces, mcpServers }: PluginsTabProps) {
   return (
     <div>
       <header className="mb-10">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
-          04 / Plugins &amp; MCP
-        </p>
         <h2 className="mb-3">Four marketplaces. Sixteen enabled plugins.</h2>
         <p className="prose-body text-foreground/85 mt-3">
-          Marketplaces are git repos, plugins are namespaced subfolders. Each
-          plugin can ship skills, commands, agents, and MCP servers. Toggled
-          via{' '}
+          Plugins ship skills, commands, agents, and MCP servers — toggled in{' '}
           <code className="font-mono text-sm">
             ~/.claude/settings.json → enabledPlugins
           </code>

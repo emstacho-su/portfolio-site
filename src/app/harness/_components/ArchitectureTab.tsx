@@ -52,14 +52,9 @@ export function ArchitectureTab({ layers }: ArchitectureTabProps) {
   return (
     <div>
       <header className="mb-8">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
-          01 / Architecture
-        </p>
         <h2 className="mb-3">Ten layers, host first.</h2>
         <p className="prose-body text-foreground/85 mt-3">
-          Each layer plays a single role and talks to its neighbors through a
-          thin interface. Click a row to open its detail — files on disk and
-          related layers it talks to.
+          Click a row to open its detail — files on disk and related layers.
         </p>
       </header>
 

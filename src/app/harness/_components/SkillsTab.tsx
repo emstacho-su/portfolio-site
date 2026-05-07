@@ -9,16 +9,11 @@ export function SkillsTab({ alwaysOn, vault }: SkillsTabProps) {
   return (
     <div>
       <header className="mb-10">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
-          03 / Skills Map
-        </p>
         <h2 className="mb-3">Always-on triggers automatically. Vault loads on demand.</h2>
         <p className="prose-body text-foreground/85 mt-3">
-          Frontmatter descriptions of every skill in{' '}
-          <code className="font-mono text-sm">~/.claude/skills/</code> get fed
-          into the system prompt at session start. The vault sits beside it,
-          not loaded — accessed via the{' '}
-          <code className="font-mono text-sm">SKILL-INDEX.md</code> grep flow.
+          Always-on skills feed every system prompt; vaulted skills are
+          grep-loaded via{' '}
+          <code className="font-mono text-sm">SKILL-INDEX.md</code>.
         </p>
       </header>
 

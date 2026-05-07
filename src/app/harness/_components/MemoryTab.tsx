@@ -61,14 +61,10 @@ export function MemoryTab({ inventory }: MemoryTabProps) {
   return (
     <div>
       <header className="mb-10">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
-          05 / Memory Layer
-        </p>
         <h2 className="mb-3">Two systems. One automatic, one curated.</h2>
         <p className="prose-body text-foreground/85 mt-3">
-          claude-mem watches everything via hooks; auto-memory holds the small,
-          slow-decaying truths the model needs at session start. They don&apos;t
-          compete — they record different things at different cadences.
+          claude-mem watches everything via hooks; auto-memory holds the
+          slow-decaying truths. Different cadences, different jobs.
         </p>
       </header>
 
