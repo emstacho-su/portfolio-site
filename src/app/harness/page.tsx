@@ -93,7 +93,7 @@ export default function HarnessPage() {
         </div>
       </section>
 
-      {/* DASHBOARD: 6-tab nav. Each panel filled in P2-T3 through P2-T8. */}
+      {/* DASHBOARD — 6 sticky tabs, content panels follow. */}
       <HarnessTabs
         panels={{
           arch: <ArchitectureTab layers={layers} />,
@@ -107,13 +107,13 @@ export default function HarnessPage() {
 
       <SectionRule />
 
-      {/* §3 THE MIGRATION */}
+      {/* §1 THE MIGRATION (editorial — first inline section after the dashboard) */}
       <section
         id="migration"
         aria-labelledby="migration-heading"
         className="py-16 md:py-20"
       >
-        <SectionEyebrow>§3</SectionEyebrow>
+        <SectionEyebrow>§1</SectionEyebrow>
         <h2 id="migration-heading" className="mt-2">
           The migration
         </h2>
@@ -199,13 +199,13 @@ export default function HarnessPage() {
 
       <SectionRule />
 
-      {/* §4 THE CHROMA ORPHAN BUG */}
+      {/* §2 THE CHROMA ORPHAN BUG */}
       <section
         id="chroma-orphan"
         aria-labelledby="chroma-orphan-heading"
         className="py-16 md:py-20"
       >
-        <SectionEyebrow>§4</SectionEyebrow>
+        <SectionEyebrow>§2</SectionEyebrow>
         <h2 id="chroma-orphan-heading" className="mt-2">
           The chroma orphan
         </h2>
@@ -269,13 +269,13 @@ export default function HarnessPage() {
 
       <SectionRule />
 
-      {/* §6 COLOPHON */}
+      {/* §3 COLOPHON */}
       <section
         id="colophon"
         aria-labelledby="colophon-heading"
         className="py-16 md:py-20"
       >
-        <SectionEyebrow>§6</SectionEyebrow>
+        <SectionEyebrow>§3</SectionEyebrow>
         <h2 id="colophon-heading" className="mt-2">
           Colophon
         </h2>
