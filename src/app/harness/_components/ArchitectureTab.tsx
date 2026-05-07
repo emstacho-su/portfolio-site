@@ -56,6 +56,12 @@ export function ArchitectureTab({ layers }: ArchitectureTabProps) {
         <p className="prose-body text-foreground/85 mt-3">
           Click a row to open its detail — files on disk and related layers.
         </p>
+        <p className="prose-body text-foreground/75 mt-4 italic leading-[1.7]">
+          Layered, not monolithic, because monolithic stacks fail in lockstep.
+          The first time the chroma vector store locked up because OneDrive was
+          holding a file handle, the whole memory pipeline went down. Layers are
+          how I stay recoverable — each piece replaceable when something breaks.
+        </p>
       </header>
 
       <ol

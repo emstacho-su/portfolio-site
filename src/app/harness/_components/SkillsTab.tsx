@@ -15,6 +15,13 @@ export function SkillsTab({ alwaysOn, vault }: SkillsTabProps) {
           grep-loaded via{' '}
           <code className="font-mono text-sm">SKILL-INDEX.md</code>.
         </p>
+        <p className="prose-body text-foreground/75 mt-4 italic leading-[1.7]">
+          Splitting always-on from vault was a token-budget call. Loading 165
+          skill descriptions into every session start added ~5K tokens of context
+          before the conversation even started. Vaulting trades that for a
+          two-call grep when a skill is actually needed — same coverage, far
+          less startup overhead.
+        </p>
       </header>
 
       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">

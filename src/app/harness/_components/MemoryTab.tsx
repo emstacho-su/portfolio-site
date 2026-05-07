@@ -66,6 +66,13 @@ export function MemoryTab({ inventory }: MemoryTabProps) {
           claude-mem watches everything via hooks; auto-memory holds the
           slow-decaying truths. Different cadences, different jobs.
         </p>
+        <p className="prose-body text-foreground/75 mt-4 italic leading-[1.7]">
+          Two systems because automatic capture and manual curation both fail
+          in different ways. claude-mem catches every turn but drifts on stale
+          data. Auto-memory holds the deliberate facts that survive cleanups
+          but misses what I forgot to write down. Together they cross-check —
+          neither alone is enough after losing work to enough context resets.
+        </p>
       </header>
 
       <div className="grid gap-4 md:grid-cols-2">
