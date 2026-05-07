@@ -52,9 +52,6 @@ export default function HarnessPage() {
     >
       {/* HERO */}
       <section className="py-16 md:py-20">
-        <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground mb-4">
-          Field Notes — 2026-05-07
-        </p>
         <h1 className="mb-6">
           The harness <em className="italic font-normal text-crimson">behind</em> the portfolio.
         </h1>
