@@ -17,6 +17,13 @@ export function PluginsTab({ marketplaces, mcpServers }: PluginsTabProps) {
           </code>
           .
         </p>
+        <p className="prose-body text-foreground/75 mt-4 italic leading-[1.7]">
+          Plugins exist because context-switching out of Claude Code to run
+          Vercel CLI, Supabase migrations, Figma writes, or Playwright tests
+          is friction. MCP exposes all of it as native tools inside the same
+          conversation — fewer round-trips, no re-priming the model on what I
+          was doing.
+        </p>
       </header>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

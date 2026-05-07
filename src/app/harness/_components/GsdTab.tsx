@@ -15,6 +15,13 @@ export function GsdTab({ phases, situations }: GsdTabProps) {
           <code className="font-mono text-sm">.planning/phases/&lt;n&gt;/</code>
           . Atomic commits, resumable across context resets.
         </p>
+        <p className="prose-body text-foreground/75 mt-4 italic leading-[1.7]">
+          Without a workflow layer every feature started vague and ended as a
+          tangled diff. GSD turns &ldquo;I want X&rdquo; into a structured paper
+          trail — atomic commits, verification reports, the kind of skeleton
+          that lets a 22-commit branch survive review without the reviewer
+          having to reconstruct intent.
+        </p>
       </header>
 
       <ol

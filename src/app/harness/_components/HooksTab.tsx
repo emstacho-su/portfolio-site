@@ -59,6 +59,12 @@ export function HooksTab({ events }: HooksTabProps) {
         <p className="prose-body text-foreground/85 mt-3">
           Each event fires zero or more scripts in parallel — read left to right.
         </p>
+        <p className="prose-body text-foreground/75 mt-4 italic leading-[1.7]">
+          Hooks instead of in-prompt instructions because anything that has to
+          happen every turn shouldn&apos;t compete with the model&apos;s
+          attention. CLAUDE.md is for principles; hooks are for behaviors.
+          Both invisible until they fire — but only one of them is deterministic.
+        </p>
       </header>
 
       <div className="flex flex-wrap gap-x-6 gap-y-2 px-4 py-3 border border-hairline rounded mb-8 font-mono text-xs text-muted-foreground">
