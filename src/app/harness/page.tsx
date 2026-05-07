@@ -4,6 +4,7 @@ import { HarnessDiagramIsland } from './_components/HarnessDiagramIsland';
 import { InventoryTable } from './_components/InventoryTable';
 import { HooksTimeline } from './_components/HooksTimeline';
 import { MigrationCallout } from './_components/MigrationCallout';
+import { HarnessTabs } from './_components/HarnessTabs';
 
 export const metadata: Metadata = {
   title: 'Harness | Evan Stachowiak',
@@ -76,6 +77,18 @@ export default function HarnessPage() {
           </ul>
         </div>
       </section>
+
+      {/* DASHBOARD: 6-tab nav. Each panel filled in P2-T3 through P2-T8. */}
+      <HarnessTabs
+        panels={{
+          arch: <TabStub label="Architecture" target="P2-T3" />,
+          hooks: <TabStub label="Hooks Pipeline" target="P2-T4" />,
+          skills: <TabStub label="Skills Map" target="P2-T5" />,
+          plugins: <TabStub label="Plugins & MCP" target="P2-T6" />,
+          memory: <TabStub label="Memory Layer" target="P2-T7" />,
+          gsd: <TabStub label="GSD Workflow" target="P2-T8" />,
+        }}
+      />
 
       <SectionRule />
 
@@ -370,6 +383,19 @@ function SectionEyebrow({ children }: SectionEyebrowProps) {
     <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
       {children}
     </p>
+  );
+}
+
+interface TabStubProps {
+  label: string;
+  target: string;
+}
+
+function TabStub({ label, target }: TabStubProps) {
+  return (
+    <div className="font-mono text-xs text-muted-foreground py-8">
+      {label} content lands in {target}.
+    </div>
   );
 }
 
