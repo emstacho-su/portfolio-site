@@ -293,6 +293,102 @@ export interface HarnessStat {
   label: string;
 }
 
+// Skills Map data — sourced from ~/.claude/skills/ (always-on) and
+// ~/.claude/skill-vault/ (on-demand). Counts are static snapshots.
+export interface SkillPack {
+  id: string;
+  name: string;
+  count: string;
+  description: string;
+  examples: string[];
+}
+
+export const alwaysOnPacks: SkillPack[] = [
+  {
+    id: 'superpowers',
+    name: 'Superpowers',
+    count: '14',
+    description:
+      'TDD-first workflow + collaboration. Auto-trigger before code, before fixes, before claims of "done".',
+    examples: [
+      'brainstorming',
+      'test-driven-development',
+      'systematic-debugging',
+      'writing-plans',
+      'executing-plans',
+      'verification-before-completion',
+    ],
+  },
+  {
+    id: 'gsd-core',
+    name: 'GSD core',
+    count: '13',
+    description:
+      'Phase-driven workflow daily driver. Discuss → plan → execute → verify → ship.',
+    examples: [
+      'gsd-progress',
+      'gsd-plan-phase',
+      'gsd-discuss-phase',
+      'gsd-execute-phase',
+      'gsd-debug',
+      'gsd-resume-work',
+    ],
+  },
+  {
+    id: 'context-mode',
+    name: 'Context-mode',
+    count: '1',
+    description:
+      'Doctrine skill: route large outputs through ctx_execute sandbox. Admin tools (ctx-doctor, ctx-stats) vaulted.',
+    examples: ['context-mode'],
+  },
+  {
+    id: 'continuous-learning',
+    name: 'Continuous learning',
+    count: '2',
+    description:
+      'v2.1 auto-detects current project via git remote, scopes instincts per repo. Universal patterns auto-promote.',
+    examples: ['continuous-learning-v2', 'continuous-learning'],
+  },
+  {
+    id: 'general',
+    name: 'General quality + design + meta',
+    count: '~41',
+    description:
+      'TDD trio (tdd, tdd-workflow, tdd-guide), diagnose, verification-loop, coding-standards, backend/frontend-patterns, taste-skill, soft-skill, ui-ux-pro-max, design-forge, eval-harness, learn, evolve…',
+    examples: [],
+  },
+];
+
+export interface VaultCategory {
+  path: string;
+  count: string;
+  examples: string;
+}
+
+export const vaultCategories: VaultCategory[] = [
+  {
+    path: 'languages/',
+    count: '30',
+    examples: 'rust-*, golang-*, kotlin-*, springboot-*, django-*, laravel-*, python-*, perl-*, c++/cmake, postgres, clickhouse',
+  },
+  {
+    path: 'gsd-admin/',
+    count: '52',
+    examples: 'audits, codebase mapping, cleanup, ingest-docs, milestone admin, ns aliases, plan variants, workstream/thread mgmt',
+  },
+  {
+    path: 'design-content/',
+    count: '6',
+    examples: 'brand, banner-design, design (omnibus), design-system, slides, frontend-slides',
+  },
+  {
+    path: 'admin-utilities/',
+    count: '6',
+    examples: 'ctx-doctor, ctx-insight, ctx-purge, ctx-stats, ctx-upgrade, context-mode-ops',
+  },
+];
+
 export const stats: HarnessStat[] = [
   { value: '10', label: 'Layers' },
   { value: '7', label: 'Hook events' },

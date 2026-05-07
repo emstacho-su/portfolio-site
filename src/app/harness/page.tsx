@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
-import { layers, inventory, hookEvents, colophon, stats } from '@/data/harness';
+import { layers, inventory, hookEvents, colophon, stats, alwaysOnPacks, vaultCategories } from '@/data/harness';
 import { InventoryTable } from './_components/InventoryTable';
 import { MigrationCallout } from './_components/MigrationCallout';
 import { HarnessTabs } from './_components/HarnessTabs';
 import { ArchitectureTab } from './_components/ArchitectureTab';
 import { HooksTab } from './_components/HooksTab';
+import { SkillsTab } from './_components/SkillsTab';
 
 export const metadata: Metadata = {
   title: 'Harness | Evan Stachowiak',
@@ -83,7 +84,7 @@ export default function HarnessPage() {
         panels={{
           arch: <ArchitectureTab layers={layers} />,
           hooks: <HooksTab events={hookEvents} />,
-          skills: <TabStub label="Skills Map" target="P2-T5" />,
+          skills: <SkillsTab alwaysOn={alwaysOnPacks} vault={vaultCategories} />,
           plugins: <TabStub label="Plugins & MCP" target="P2-T6" />,
           memory: <TabStub label="Memory Layer" target="P2-T7" />,
           gsd: <TabStub label="GSD Workflow" target="P2-T8" />,
