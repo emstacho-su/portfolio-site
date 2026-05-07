@@ -9,6 +9,20 @@ export const metadata: Metadata = {
   title: 'Harness | Evan Stachowiak',
   description:
     'Field notes on the 10-layer Claude Code harness behind this portfolio — architecture, the OneDrive→AppData migration, and a chroma orphan bug.',
+  openGraph: {
+    type: 'article',
+    siteName: 'Evan Stachowiak',
+    title: 'The harness behind the portfolio.',
+    description:
+      'Field notes on the 10-layer Claude Code harness — architecture, migration, and a chroma orphan bug.',
+    publishedTime: '2026-05-07',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'The harness behind the portfolio.',
+    description:
+      'Field notes on the 10-layer Claude Code harness — architecture, migration, and a chroma orphan bug.',
+  },
 };
 
 // force-static: this page is purely build-time content. If a future maintainer
