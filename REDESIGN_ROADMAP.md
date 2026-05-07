@@ -144,13 +144,8 @@ Shift portfolio from dark-mode + terminal-green aesthetic to a warm paper + crim
 - [ ] Build case-study page template in `src/app/projects/[slug]/page.tsx`
 - [ ] Design custom MDX components (pull quote, decision callout, comparison table)
 
-### ⏳ Phase 5 — `/toolkit` Page (SIGNATURE)
-_(Route renamed from `/stack` in commit `f2d448c`. "The Toolkit" is the page heading.)_
-- [ ] Create `src/data/toolkit.ts` (hardware, daily drivers, Claude stack, workflow)
-- [ ] Sections: Hardware / Daily Drivers / The Claude Stack / Workflow / Writing
-- [ ] Terminal-style code blocks (mono, `--bg-surface`, crimson syntax accents)
-- [ ] 2-3 short writing pieces (**OPEN: user needs to provide content**)
-- [ ] Sticky TOC or long-scroll layout
+### ✅ Phase 5 — Retargeted as `/harness` (complete)
+_(Phase 5 was originally the `/toolkit` "signature" page. It was retargeted as `/harness` — a focused field-notes piece on the 10-layer Claude Code harness, the OneDrive→AppData migration, and the chroma orphan bug — and shipped on branch `feat/harness-page`. The Hardware / Daily Drivers / Writing surfaces from the original `/toolkit` plan are deferred and may live elsewhere later. See `.planning/phases/01-harness-page/PLAN.md` for the build plan.)_
 
 ### ⏳ Phase 6 — Resume Page + PDF
 - [ ] Two-column layout (main + sidebar)
