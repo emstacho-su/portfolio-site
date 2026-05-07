@@ -114,9 +114,12 @@ describe('HarnessTabs', () => {
     );
   });
 
-  it('renders the count badge from TAB_DEFS', () => {
+  it('renders the numbered prefix from TAB_DEFS without a count badge', () => {
     renderWithStubs();
     const archTab = screen.getByRole('tab', { name: /Architecture/ });
-    expect(within(archTab).getByText('10 layers')).toBeInTheDocument();
+    // Number prefix is shown ('01.'); count badges were intentionally
+    // dropped — the hero stat strip already carries those numbers.
+    expect(within(archTab).getByText('01.')).toBeInTheDocument();
+    expect(within(archTab).queryByText('10 layers')).toBeNull();
   });
 });

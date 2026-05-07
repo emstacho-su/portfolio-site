@@ -2,15 +2,16 @@
 
 import { useCallback, useRef, useState, type ReactNode } from 'react';
 
-// Tab definitions live alongside the component (not in src/data/harness.ts) because
-// the count strings are display-coupled to the panel content.
+// Tab definitions. Counts are intentionally omitted here — the hero stat
+// strip already shows the harness-wide numbers; duplicating them in the
+// nav added 18 micro-elements to a single bar without new information.
 export const TAB_DEFS = [
-  { id: 'arch', num: '01', label: 'Architecture', count: '10 layers' },
-  { id: 'hooks', num: '02', label: 'Hooks Pipeline', count: '7 events' },
-  { id: 'skills', num: '03', label: 'Skills Map', count: '165' },
-  { id: 'plugins', num: '04', label: 'Plugins & MCP', count: '16 + 7' },
-  { id: 'memory', num: '05', label: 'Memory Layer', count: '2 systems' },
-  { id: 'gsd', num: '06', label: 'GSD Workflow', count: '6 phases' },
+  { id: 'arch', num: '01', label: 'Architecture' },
+  { id: 'hooks', num: '02', label: 'Hooks Pipeline' },
+  { id: 'skills', num: '03', label: 'Skills Map' },
+  { id: 'plugins', num: '04', label: 'Plugins & MCP' },
+  { id: 'memory', num: '05', label: 'Memory Layer' },
+  { id: 'gsd', num: '06', label: 'GSD Workflow' },
 ] as const;
 
 export type HarnessTabId = (typeof TAB_DEFS)[number]['id'];
@@ -83,13 +84,6 @@ export function HarnessTabs({ panels }: HarnessTabsProps) {
               >
                 <span className="font-semibold">{tab.num}.</span>
                 <span>{tab.label}</span>
-                <span
-                  className={`text-[10px] tracking-tight ${
-                    isActive ? 'text-crimson' : 'text-muted-foreground/70'
-                  }`}
-                >
-                  {tab.count}
-                </span>
               </button>
             );
           })}
