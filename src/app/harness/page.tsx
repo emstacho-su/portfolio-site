@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { layers, inventory, hookEvents, colophon } from '@/data/harness';
+import { layers, inventory, hookEvents, colophon, stats } from '@/data/harness';
 import { HarnessDiagramIsland } from './_components/HarnessDiagramIsland';
 import { InventoryTable } from './_components/InventoryTable';
 import { HooksTimeline } from './_components/HooksTimeline';
@@ -38,16 +38,43 @@ export default function HarnessPage() {
     >
       {/* HERO */}
       <section className="py-16 md:py-20">
-        <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground mb-4">
-          Field Notes — 2026-05-07
+        <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground mb-4 inline-flex items-center gap-2">
+          <span aria-hidden="true" className="inline-block w-1.5 h-1.5 rounded-full bg-crimson" />
+          <span>Field Notes — 2026-05-07</span>
         </p>
-        <h1 className="mb-6">The harness behind the portfolio.</h1>
+        <h1 className="mb-6">
+          The harness <em className="italic font-normal text-crimson">behind</em> the portfolio.
+        </h1>
         <p className="text-lg sm:text-xl text-foreground/85 leading-[1.6] max-w-[60ch]">
           What runs on localhost when I open Claude Code: a ten-layer agentic
           dev stack I built up over a week. Here is the architecture, the
           migration that made it stable, and the bug that took two sessions
           to find.
         </p>
+
+        {/* Stat strip — 6 numbers that size the harness in one glance. */}
+        <div className="mt-12">
+          <div aria-hidden="true" className="h-px w-24 bg-crimson mb-6" />
+          <ul
+            role="list"
+            aria-label="Harness sizing"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-px bg-hairline border border-hairline"
+          >
+            {stats.map((s) => (
+              <li
+                key={s.label}
+                className="bg-background px-4 py-5 flex flex-col gap-1.5"
+              >
+                <span className="font-mono text-3xl font-semibold tabular-nums text-foreground tracking-tight leading-none">
+                  {s.value}
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                  {s.label}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       <SectionRule />

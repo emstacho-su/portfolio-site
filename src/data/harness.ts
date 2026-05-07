@@ -239,3 +239,19 @@ export const colophon: Colophon = {
   dashboardUrl: 'http://localhost:37778',
   atlasUrl: 'http://localhost:8765',
 };
+
+// Hero stat strip — six numbers that size the harness in one glance.
+// Values are sourced from the live snapshot of the harness as of capturedOn.
+export interface HarnessStat {
+  value: string;
+  label: string;
+}
+
+export const stats: HarnessStat[] = [
+  { value: '10', label: 'Layers' },
+  { value: '7', label: 'Hook events' },
+  { value: '22', label: 'Hook scripts' },
+  { value: '15+', label: 'MCP + plugins' },
+  { value: '3', label: 'Ports' },
+  { value: '6', label: 'GSD phases' },
+];
