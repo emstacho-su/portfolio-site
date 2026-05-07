@@ -10,13 +10,13 @@ import {
   marketplaces,
   mcpServers,
 } from '@/data/harness';
-import { InventoryTable } from './_components/InventoryTable';
 import { MigrationCallout } from './_components/MigrationCallout';
 import { HarnessTabs } from './_components/HarnessTabs';
 import { ArchitectureTab } from './_components/ArchitectureTab';
 import { HooksTab } from './_components/HooksTab';
 import { SkillsTab } from './_components/SkillsTab';
 import { PluginsTab } from './_components/PluginsTab';
+import { MemoryTab } from './_components/MemoryTab';
 
 export const metadata: Metadata = {
   title: 'Harness | Evan Stachowiak',
@@ -97,35 +97,10 @@ export default function HarnessPage() {
           hooks: <HooksTab events={hookEvents} />,
           skills: <SkillsTab alwaysOn={alwaysOnPacks} vault={vaultCategories} />,
           plugins: <PluginsTab marketplaces={marketplaces} mcpServers={mcpServers} />,
-          memory: <TabStub label="Memory Layer" target="P2-T7" />,
+          memory: <MemoryTab inventory={inventory} />,
           gsd: <TabStub label="GSD Workflow" target="P2-T8" />,
         }}
       />
-
-      <SectionRule />
-
-      {/* §2 LOCALHOST INVENTORY (relocates into Memory Layer tab in P2-T7) */}
-      <section
-        id="inventory"
-        aria-labelledby="inventory-heading"
-        className="py-16 md:py-20"
-      >
-        <SectionEyebrow>§2</SectionEyebrow>
-        <h2 id="inventory-heading" className="mt-2">
-          Localhost inventory
-        </h2>
-        <p className="prose-body text-foreground/85 mt-6 mb-8">
-          Every harness service is loopback-only. Three ports, two services
-          plus one zombie reservation. No inbound network access required.
-        </p>
-        <figure>
-          <InventoryTable rows={inventory} />
-          <figcaption className="font-mono text-[11px] text-muted-foreground mt-4 leading-relaxed">
-            Captured 2026-05-07. Other listeners on the box (Bonjour, Steam,
-            Superhuman) are not part of the harness.
-          </figcaption>
-        </figure>
-      </section>
 
       <SectionRule />
 
