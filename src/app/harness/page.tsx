@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import { layers, inventory, hookEvents, colophon, stats } from '@/data/harness';
 import { InventoryTable } from './_components/InventoryTable';
-import { HooksTimeline } from './_components/HooksTimeline';
 import { MigrationCallout } from './_components/MigrationCallout';
 import { HarnessTabs } from './_components/HarnessTabs';
 import { ArchitectureTab } from './_components/ArchitectureTab';
+import { HooksTab } from './_components/HooksTab';
 
 export const metadata: Metadata = {
   title: 'Harness | Evan Stachowiak',
@@ -82,7 +82,7 @@ export default function HarnessPage() {
       <HarnessTabs
         panels={{
           arch: <ArchitectureTab layers={layers} />,
-          hooks: <TabStub label="Hooks Pipeline" target="P2-T4" />,
+          hooks: <HooksTab events={hookEvents} />,
           skills: <TabStub label="Skills Map" target="P2-T5" />,
           plugins: <TabStub label="Plugins & MCP" target="P2-T6" />,
           memory: <TabStub label="Memory Layer" target="P2-T7" />,
@@ -275,26 +275,6 @@ export default function HarnessPage() {
             at the &ldquo;subprocess closed unexpectedly&rdquo; branch.
           </p>
         </div>
-      </section>
-
-      <SectionRule />
-
-      {/* §5 HOOK PIPELINE */}
-      <section
-        id="hooks"
-        aria-labelledby="hooks-heading"
-        className="py-16 md:py-20"
-      >
-        <SectionEyebrow>§5</SectionEyebrow>
-        <h2 id="hooks-heading" className="mt-2">
-          Hook pipeline
-        </h2>
-        <p className="prose-body text-foreground/85 mt-6 mb-12">
-          Claude Code fires lifecycle events at deterministic points. Three
-          owners — claude-mem, GSD, context-mode — register handlers per
-          event. 22 scripts across 7 events as of 2026-05-07.
-        </p>
-        <HooksTimeline events={hookEvents} />
       </section>
 
       <SectionRule />
