@@ -460,6 +460,88 @@ export const mcpServers: McpServerEntry[] = [
   { name: 'claude.ai cloud', scope: 'Gmail / Calendar / Drive / Microsoft 365' },
 ];
 
+// GSD workflow — six phases, each producing a markdown artifact in
+// .planning/phases/<n>/. Each is invocable as a slash command.
+export interface GsdPhase {
+  num: string;
+  name: string;
+  command: string;
+  output: string;
+}
+
+export const gsdPhases: GsdPhase[] = [
+  { num: 'phase 01', name: 'Spec', command: '/gsd-spec-phase', output: 'SPEC.md' },
+  { num: 'phase 02', name: 'Discuss', command: '/gsd-discuss-phase', output: 'DISCUSS.md' },
+  {
+    num: 'phase 03',
+    name: 'Plan',
+    command: '/gsd-plan-phase',
+    output: 'PLAN.md + RESEARCH.md',
+  },
+  {
+    num: 'phase 04',
+    name: 'Execute',
+    command: '/gsd-execute-phase',
+    output: 'commits + state.json',
+  },
+  {
+    num: 'phase 05',
+    name: 'Verify',
+    command: '/gsd-verify-work',
+    output: 'VERIFICATION.md',
+  },
+  { num: 'phase 06', name: 'Ship', command: '/gsd-ship', output: 'PR + REVIEW.md' },
+];
+
+export interface GsdSituation {
+  situation: string;
+  command: string;
+  why: string;
+}
+
+export const gsdSituations: GsdSituation[] = [
+  {
+    situation: 'New feature, intent clear',
+    command: '/gsd-plan-phase',
+    why: 'Skip discuss; go straight to a plan with research + verification loop',
+  },
+  {
+    situation: 'New feature, intent unclear',
+    command: '/gsd-discuss-phase',
+    why: 'Adaptive questioning extracts the spec from your head',
+  },
+  {
+    situation: 'Quick task, want structure',
+    command: '/gsd-quick',
+    why: 'Atomic commits + state tracking, no optional agents',
+  },
+  {
+    situation: 'Trivial inline task',
+    command: '/gsd-fast',
+    why: 'No subagents, no planning overhead',
+  },
+  {
+    situation: 'Bug',
+    command: '/gsd-debug',
+    why: 'Persistent state across context resets',
+  },
+  {
+    situation: 'Lost / unsure',
+    command: '/gsd-progress',
+    why: 'Situational dispatcher — figures out where you are',
+  },
+  {
+    situation: 'Resume after pause',
+    command: '/gsd-resume-work',
+    why: 'Reloads phase manifest + last checkpoint',
+  },
+  {
+    situation: 'Need past decisions',
+    command: 'mem-search',
+    why: "Don't re-research — the answer is probably already in memory",
+  },
+];
+
 export const stats: HarnessStat[] = [
   { value: '10', label: 'Layers' },
   { value: '7', label: 'Hook events' },

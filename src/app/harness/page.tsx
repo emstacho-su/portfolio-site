@@ -9,6 +9,8 @@ import {
   vaultCategories,
   marketplaces,
   mcpServers,
+  gsdPhases,
+  gsdSituations,
 } from '@/data/harness';
 import { MigrationCallout } from './_components/MigrationCallout';
 import { HarnessTabs } from './_components/HarnessTabs';
@@ -17,6 +19,7 @@ import { HooksTab } from './_components/HooksTab';
 import { SkillsTab } from './_components/SkillsTab';
 import { PluginsTab } from './_components/PluginsTab';
 import { MemoryTab } from './_components/MemoryTab';
+import { GsdTab } from './_components/GsdTab';
 
 export const metadata: Metadata = {
   title: 'Harness | Evan Stachowiak',
@@ -98,7 +101,7 @@ export default function HarnessPage() {
           skills: <SkillsTab alwaysOn={alwaysOnPacks} vault={vaultCategories} />,
           plugins: <PluginsTab marketplaces={marketplaces} mcpServers={mcpServers} />,
           memory: <MemoryTab inventory={inventory} />,
-          gsd: <TabStub label="GSD Workflow" target="P2-T8" />,
+          gsd: <GsdTab phases={gsdPhases} situations={gsdSituations} />,
         }}
       />
 
@@ -329,19 +332,6 @@ function SectionEyebrow({ children }: SectionEyebrowProps) {
     <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
       {children}
     </p>
-  );
-}
-
-interface TabStubProps {
-  label: string;
-  target: string;
-}
-
-function TabStub({ label, target }: TabStubProps) {
-  return (
-    <div className="font-mono text-xs text-muted-foreground py-8">
-      {label} content lands in {target}.
-    </div>
   );
 }
 
