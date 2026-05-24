@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-02-PLAN.md (single-page architecture, six redirects, scrollspy nav, shared Lenis/GSAP ticker)
-last_updated: "2026-05-24T22:49:34.052Z"
+stopped_at: "Completed 02-03-PLAN.md (content and data layer: extended Project model + featured set, approved about narrative, retargeted hero copy, inline resume rebuild)"
+last_updated: "2026-05-24T23:02:49.097Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 2
   completed_phases: 0
   total_plans: 7
-  completed_plans: 2
-  percent: 29
+  completed_plans: 3
+  percent: 43
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/ROADMAP.md and .planning/REDESIGN-SPEC.md (updated 2026-05-24)
 ## Current Position
 
 Phase: 02 (single-page-portfolio-redesign) — EXECUTING
-Plan: 3 of 7
+Plan: 4 of 7
 Status: Ready to execute
 Last activity: 2026-05-24
 
-Progress: [███░░░░░░░] 29%
+Progress: [████░░░░░░] 43%
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [███░░░░░░░] 29%
 |------|----------|-------|-------|
 | Phase 02 P01 | 35min | 3 tasks | 11 files |
 | Phase 02 P02-02 | 8min | 3 tasks | 13 files |
+| Phase 02 P02-03 | 13min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,10 @@ Phase 2 locked decisions (D-01..D-24) live in `.planning/phases/02-single-page-p
 - [Phase ?]: [Phase 2 / 02-02]: Legacy routes use permanent:true (HTTP 308) redirects to /?s=<section>; literal 301 (statusCode) not used as no stakeholder mandated it (RESEARCH Open Q2).
 - [Phase ?]: [Phase 2 / 02-02]: Lenis runs autoRaf:false sharing one rAF clock with gsap.ticker (ScrollTrigger backbone for Wave 3); ticker guards null lenis under reduced motion; boot-gate and reduced-motion destroy branch unchanged.
 - [Phase ?]: [Phase 2 / 02-02]: Harness section is a placeholder anchor stub (id=harness) until Wave 2 / 02-04 fills the six pillars; ProjectsSection mounted as the existing real component.
+- [Phase ?]: [Phase 2 / 02-03]: Project model extended to DemoSection[] ordered media (REDESIGN-SPEC 4.3); demos[] is the contract the Wave 3 pop-out (02-05) consumes.
+- [Phase ?]: [Phase 2 / 02-03]: project-card.tsx adapted to the new model (Rule 3) to keep the build green; 02-05 rewrites it into panel + pop-out.
+- [Phase ?]: [Phase 2 / 02-03]: src/data/harness.ts em dashes left for 02-04 (six-pillar trim); logged to deferred-items.md as the harness intended-red.
+- [Phase ?]: [Phase 2 / 02-03]: resume on-page employer is generic ('A manufacturing company'); specifics + phone confined to /resume.pdf (D-20).
 
 ### Pending Todos
 
@@ -98,6 +103,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-05-24T22:49:34.022Z
-Stopped at: Completed 02-02-PLAN.md (single-page architecture, six redirects, scrollspy nav, shared Lenis/GSAP ticker)
+Last session: 2026-05-24T23:02:49.073Z
+Stopped at: Completed 02-03-PLAN.md (content and data layer: extended Project model + featured set, approved about narrative, retargeted hero copy, inline resume rebuild)
 Resume file: None

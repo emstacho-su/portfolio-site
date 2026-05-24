@@ -35,3 +35,10 @@ task in the Polish wave.
 analytics firing order, which is a Rule 4 / Polish-wave concern, not a Wave 0 install
 concern. The plan's Task 1 instruction is explicit: "If any baseline command fails for a
 reason unrelated to the absent install, stop and report rather than editing source."
+
+## Discovered during 02-03 (Wave 2 content & data)
+
+| Item | Owner | Notes |
+|------|-------|-------|
+| `src/data/harness.ts` exports contain U+2014 em dashes (11 strings), failing `em-dash.test.ts > src/data/harness.ts` | 02-04 (harness pillars / D-18) | Pre-existing Wave 0 baseline red (verified via clean-tree stash). `harness.ts` is the tab-era data dump scheduled to be trimmed/replaced into six pillars by 02-04; the em-dash sweep over it turns green once 02-04 rewrites the file. NOT in 02-03's `files_modified`, so left untouched per the scope boundary. |
+| `src/__tests__/components/harness.test.tsx` + `project-popout.test.tsx` raise `TS2503: Cannot find namespace 'JSX'` under a full `tsc --noEmit` | 02-04 / 02-05 | Pre-existing Wave 0 scaffold reds (verified on clean tree). `next build` does NOT surface them (build is green); only a whole-include `tsc --noEmit` does. Owned by the harness (02-04) and pop-out (02-05) plans that implement those components. |
