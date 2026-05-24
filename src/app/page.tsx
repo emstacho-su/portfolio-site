@@ -5,6 +5,10 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useLenis } from 'lenis/react';
 import { HeroSection } from '@/components/sections/hero';
 import { AboutSection } from '@/components/sections/about';
+import { ProjectsSection } from '@/components/sections/projects';
+import { HarnessSection } from '@/components/sections/harness';
+import { ResumeSection } from '@/components/sections/resume';
+import { ContactSection } from '@/components/sections/contact';
 import { CursorSpotlight } from '@/components/fx/cursor-spotlight';
 
 // Navbar height (h-16 = 64px); anchors scroll to sit just below the fixed nav.
@@ -49,6 +53,11 @@ export default function Home() {
           <div className="hairline-rule" />
         </div>
         <AboutSection />
+        <ProjectsSection />
+        <HarnessSection />
+        <ResumeSection />
+        {/* Contact is the final scroll target above the layout footer (D-21). */}
+        <ContactSection />
       </main>
     </>
   );

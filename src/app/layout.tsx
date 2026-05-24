@@ -10,31 +10,31 @@ import { BootProvider } from '@/lib/boot-context';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Evan Stachowiak | Systems Thinker & Technical Builder',
+  title: 'Evan Stachowiak | AI Systems Builder',
   description:
-    'Portfolio of Evan Stachowiak: Syracuse University IMT student building at the intersection of AI, operations, and quantitative systems.',
+    'Portfolio of Evan Stachowiak: I build AI systems with a ground-truth understanding of how real operations work. Syracuse IMT, data science, AI engineering.',
   keywords: [
     'portfolio',
-    'software engineer',
+    'AI engineering',
+    'AI systems',
+    'data science',
     'Syracuse University',
     'IMT',
-    'information security',
-    'full stack developer',
-    'AI engineering',
+    'software engineer',
   ],
   authors: [{ name: 'Evan Stachowiak' }],
   openGraph: {
-    title: 'Evan Stachowiak | Portfolio',
+    title: 'Evan Stachowiak | AI Systems Builder',
     description:
-      'Systems thinker & technical builder: Syracuse University IMT student.',
+      'I build AI systems with a ground-truth understanding of how real operations work.',
     type: 'website',
     siteName: 'Evan Stachowiak',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Evan Stachowiak | Portfolio',
+    title: 'Evan Stachowiak | AI Systems Builder',
     description:
-      'Systems thinker & technical builder: Syracuse University IMT student.',
+      'I build AI systems with a ground-truth understanding of how real operations work.',
   },
   robots: { index: true, follow: true },
 };
