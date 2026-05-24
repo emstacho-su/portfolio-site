@@ -42,3 +42,6 @@ next-env.d.ts
 
 # dev runtime log
 .dev.log
+
+# brainstorm / visual companion mockups (local only)
+.superpowers/
