@@ -35,7 +35,7 @@ function HarnessBody() {
 
       <Reveal delay={0.1}>
         <p className="text-muted-foreground text-sm max-w-2xl mb-10 mt-6">
-          The system engineered around the AI. Not "I use AI," but the
+          The system engineered around the AI. Not &ldquo;I use AI,&rdquo; but the
           retrieval, orchestration, and discipline that turn a model into
           reliable output on real projects.
         </p>

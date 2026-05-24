@@ -10,16 +10,9 @@ export function useAnalytics() {
   const sessionIdRef = useRef<string>('');
   const hasFiredPageView = useRef(false);
 
-  useEffect(() => {
-    sessionIdRef.current = getSessionId();
-
-    // Fire page_view once on mount
-    if (!hasFiredPageView.current) {
-      hasFiredPageView.current = true;
-      sendEvent('page_view');
-    }
-  }, []);
-
+  // Declared before the mount effect that uses it so the reference is valid at
+  // call time (react-hooks/immutability). Stable across renders ([] deps), so
+  // including it in the effect deps below keeps the effect mount-once.
   const sendEvent = useCallback(
     (eventType: EventType, eventTarget?: string) => {
       const payload: AnalyticsEvent = {
@@ -45,6 +38,17 @@ export function useAnalytics() {
     },
     []
   );
+
+  useEffect(() => {
+    sessionIdRef.current = getSessionId();
+
+    // Fire page_view once on mount. The ref guard makes this idempotent even if
+    // the effect re-runs (sendEvent is stable, so in practice it runs once).
+    if (!hasFiredPageView.current) {
+      hasFiredPageView.current = true;
+      sendEvent('page_view');
+    }
+  }, [sendEvent]);
 
   const trackProjectClick = useCallback(
     (projectId: string) => {
