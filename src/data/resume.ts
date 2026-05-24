@@ -1,5 +1,10 @@
 // Source: resume.pdf from context package, extracted 2026-04-02
-// Keep this file in sync with public/resume.pdf when updating
+// Keep this file in sync with public/resume.pdf when updating.
+//
+// Privacy (D-20 / R-21b): employer names rendered on the public page are kept
+// GENERIC ("a manufacturing company"). Specific employer names and the phone
+// number live ONLY on the downloadable /resume.pdf asset, never in this file.
+// No em dashes or en dashes anywhere (D-22): dateRange separators use "to".
 
 export interface ResumeExperience {
   title: string;
@@ -35,37 +40,37 @@ export interface ResumeData {
 
 export const resumeData: ResumeData = {
   highlights: [
-    'Developed Python document automation (python-docx) for ~200 quality documents department-wide',
-    'Conducted 5 ISO 9001:2015 internal audits; nonconformances triggered corrective actions and procedure reviews',
-    'SFSA Schumo Scholarship recipient; presented at SFSA National Conference, Chicago',
-    'Supported 20+ students in HTML/CSS as Teaching Assistant for Front-End Web Development',
+    'Data Science Intern: caught several costing-model errors in week one and automated documentation worth a small team a week of manual effort',
+    'Built Python automation (python-docx) that generated and version-controlled ~200 operations documents department-wide',
+    'Ground-truth operations background in manufacturing quality, used as analytical leverage for building reliable systems',
+    'Supported 20+ students in HTML/CSS as a Teaching Assistant for Front-End Web Development',
   ],
 
   experience: [
     {
-      title: 'Quality Assurance Intern',
-      company: 'E.C. Styberg Engineering',
-      dateRange: 'May 2025 – Aug 2025',
+      title: 'Data Science Intern',
+      company: 'A manufacturing company',
+      dateRange: 'May 2025 to present',
       bullets: [
-        'Developed Python document automation tools (python-docx) to programmatically generate, reformat, and version-control ~200 quality documents department-wide',
-        'Conducted 5 ISO 9001:2015 internal audits, flagging nonconformances that triggered corrective actions and scheduled procedure reviews',
-        'Automated the audit-to-revision workflow, replacing manual document control with systematic version tracking and standardized outputs',
+        'Caught several errors in a production costing model during the first week, preventing downstream pricing and planning impact',
+        'Automated documentation that would have cost a small team a week of manual effort, using Python (python-docx) to generate, reformat, and version-control roughly 200 operations documents department-wide',
+        'Translated ground-truth knowledge of how the operation actually runs into analytical, reliable tooling, treating quality and process work as the data layer rather than as auditing',
       ],
     },
     {
-      title: 'Quality Assurance Intern',
-      company: 'Stainless Engineering',
-      dateRange: 'Apr 2023 – Aug 2023',
+      title: 'Quality and Operations Intern',
+      company: 'A manufacturing company',
+      dateRange: 'Apr 2023 to Aug 2023',
       bullets: [
-        "Overhauled an entire department's document control system, revising procedures, safety documentation, and instructional materials for compliance and clarity",
-        'Revised the quality process manual, optimizing language and accessibility including for Spanish-speaking employees',
-        'Recognized with the SFSA Schumo Scholarship for outstanding contributions; presented at the SFSA National Conference in Chicago',
+        "Overhauled a department's document control system, revising procedures, safety documentation, and instructional materials for clarity and consistency",
+        'Revised the operations process manual, improving language and accessibility including for Spanish-speaking employees',
+        'Recognized with a national scholarship for the contribution and presented the work at a national industry conference',
       ],
     },
     {
       title: 'Teaching Assistant, IST 263',
       company: 'Syracuse University, Front-End Web Development',
-      dateRange: 'Jan 2025 – May 2025',
+      dateRange: 'Jan 2025 to May 2025',
       bullets: [
         'Supported 20+ students in HTML/CSS debugging through one-on-one guidance and example-based instruction',
         'Created supplemental materials translating complex front-end concepts into accessible, step-by-step demonstrations',
@@ -75,28 +80,30 @@ export const resumeData: ResumeData = {
 
   projects: [
     {
-      title: 'SchoolworkTrack',
-      technologies: 'TypeScript, JavaScript, CSS',
+      title: 'Quant Edge Tracker',
+      technologies: 'React 19, TypeScript, Vite, Supabase, Recharts',
+      status: 'In Development',
       bullets: [
-        'Local-first app for assignment and deadline tracking; v1.0 complete with sprint-based development methodology',
+        'Built a sports analytics platform: a data pipeline plus modeling layer that converts market lines into fair, vig-adjusted probabilities',
+        'Tracks closing-line value and model calibration over time and surfaces statistical edges with interactive charts',
       ],
     },
     {
-      title: 'Custom Poker Trainer',
+      title: 'AI News Agent',
+      technologies: 'FastAPI, Claude API, Resend, Fly.io',
+      status: 'Shipped',
+      bullets: [
+        'Shipped an autonomous daily briefing: a hand-rolled agent loop that researches, ranks, and writes a personalized news summary on a schedule',
+        'Added persistent topic memory, per-item Q&A, and budget tracking; later rebuilt on Claude Code Routines and the Resend MCP',
+      ],
+    },
+    {
+      title: 'EV Trainer',
       technologies: 'TypeScript, React, Supabase',
-      status: 'In Development',
+      status: 'Shipped',
       bullets: [
-        'Building a custom poker training application with deterministic backend logic for hand evaluation, pot equity calculation, and decision-tree analysis',
-        'Targeting beginner players with guided instruction combining game theory fundamentals with interactive decision support',
-      ],
-    },
-    {
-      title: 'Algorithmic Trading Strategy Development',
-      technologies: 'Python (Jupyter), C#/NinjaScript',
-      status: 'In Development',
-      bullets: [
-        'Developed and backtested automated trading strategies for ES futures on the NinjaTrader platform',
-        'Implemented quantitative filters including VIX volatility thresholds and opening range breakout patterns',
+        'Built a decision-modeling trainer on applied game theory: expected-value and decision-tree analysis with range and equity computation',
+        'Turned the statistics into interactive, voice-enabled drills; taught myself the stack and shipped the first version in under a week',
       ],
     },
   ],
@@ -156,6 +163,6 @@ export const resumeData: ResumeData = {
     'Quantitative Strategy',
     'Fitness & Nutrition Science',
     'AI Workflow Design',
-    'Poker Theory',
+    'Game Theory',
   ],
 };
