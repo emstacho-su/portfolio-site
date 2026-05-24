@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: "Completed 02-03-PLAN.md (content and data layer: extended Project model + featured set, approved about narrative, retargeted hero copy, inline resume rebuild)"
-last_updated: "2026-05-24T23:02:49.097Z"
+last_updated: "2026-05-24T23:16:52.164Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 2
   completed_phases: 0
   total_plans: 7
-  completed_plans: 3
-  percent: 43
+  completed_plans: 4
+  percent: 57
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/ROADMAP.md and .planning/REDESIGN-SPEC.md (updated 2026-05-24)
 ## Current Position
 
 Phase: 02 (single-page-portfolio-redesign) — EXECUTING
-Plan: 4 of 7
+Plan: 5 of 7
 Status: Ready to execute
 Last activity: 2026-05-24
 
-Progress: [████░░░░░░] 43%
+Progress: [██████░░░░] 57%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [████░░░░░░] 43%
 | Phase 02 P01 | 35min | 3 tasks | 11 files |
 | Phase 02 P02-02 | 8min | 3 tasks | 13 files |
 | Phase 02 P02-03 | 13min | 3 tasks | 7 files |
+| Phase 02 P04 | 13min | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,8 @@ Phase 2 locked decisions (D-01..D-24) live in `.planning/phases/02-single-page-p
 - [Phase ?]: [Phase 2 / 02-03]: project-card.tsx adapted to the new model (Rule 3) to keep the build green; 02-05 rewrites it into panel + pop-out.
 - [Phase ?]: [Phase 2 / 02-03]: src/data/harness.ts em dashes left for 02-04 (six-pillar trim); logged to deferred-items.md as the harness intended-red.
 - [Phase ?]: [Phase 2 / 02-03]: resume on-page employer is generic ('A manufacturing company'); specifics + phone confined to /resume.pdf (D-20).
+- [Phase ?]: 02-04: Supabase page_events.event_type is free-text (no repo-level CHECK/enum DDL); section_view is a code-only enum extension, no migration
+- [Phase ?]: 02-04: harness distilled to a six-entry pillar array in src/data/harness.ts; tab UI and inventory dump removed; section_view fires once per section via use-section-view on the six live ids
 
 ### Pending Todos
 
@@ -103,6 +106,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-05-24T23:02:49.073Z
+Last session: 2026-05-24T23:16:24.746Z
 Stopped at: Completed 02-03-PLAN.md (content and data layer: extended Project model + featured set, approved about narrative, retargeted hero copy, inline resume rebuild)
 Resume file: None

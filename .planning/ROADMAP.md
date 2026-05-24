@@ -67,7 +67,7 @@ Convert the multi-page site into one scrollable page that showcases real project
 - [x] 02-01-PLAN.md (Wave 0) — Foundation: npm install, jsdom IO/media stubs, scaffold all Wave 0 test files, green baseline.
 - [x] 02-02-PLAN.md (Wave 1) — Architecture & routing: compose all sections on `/`, Lenis+GSAP shared ticker, hash-anchor navbar + scrollspy, six redirects to `?s=`, delete legacy routes + Interested CTA.
 - [x] 02-03-PLAN.md (Wave 2) — Content & data: extended project model + featured set, verbatim about narrative, retargeted hero copy, inline resume rebuild, em-dash sweep over data.
-- [ ] 02-04-PLAN.md (Wave 2) — Harness & analytics: six-pillar harness section wired into the page, section_view analytics + use-section-view hook, delete broken tab tests, Supabase column verify.
+- [x] 02-04-PLAN.md (Wave 2) — Harness & analytics: six-pillar harness section wired into the page, section_view analytics + use-section-view hook, delete broken tab tests, Supabase column verify.
 - [ ] 02-05-PLAN.md (Wave 3) — Projects system: stacked GSAP panels, accessible Base UI Dialog pop-out (Lenis pause), scroll-into-view demo video/image, wired into the page.
 - [ ] 02-06-PLAN.md (Wave 4) — Hero grid & polish: full-bleed grid breakout, idle-clear heat tuning, delete dead duplicate grid, reduced-motion audit test.
 - [ ] 02-07-PLAN.md (Wave 5) — Verification gate: build/test/lint green, Vercel preview, Lighthouse perf >= 95 / a11y = 100, manual QA of redirects/analytics/scroll feel (blocking human checkpoint).
