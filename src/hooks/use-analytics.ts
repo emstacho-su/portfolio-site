@@ -64,9 +64,17 @@ export function useAnalytics() {
     [sendEvent]
   );
 
+  const trackSectionView = useCallback(
+    (sectionId: string) => {
+      sendEvent('section_view', sectionId);
+    },
+    [sendEvent]
+  );
+
   return {
     trackProjectClick,
     trackResumeDownload,
     trackContactClick,
+    trackSectionView,
   };
 }

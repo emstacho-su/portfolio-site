@@ -54,14 +54,32 @@ describe('analyticsEventSchema', () => {
     }
   });
 
-  // R-17 / D-05 (Wave 2): the schema must additionally accept 'section_view'
-  // once the enum in src/lib/analytics/types.ts is extended. This case is
-  // SKIPPED in Wave 0 so the baseline stays green (the current enum rejects
-  // 'section_view'); Wave 2 flips `it.skip` -> `it` after extending the tuple.
-  it.skip("accepts 'section_view' once the enum is extended (Wave 2)", () => {
+  // R-17 / D-05 (Wave 2): the schema additionally accepts 'section_view' now that
+  // the enum in src/lib/analytics/types.ts is extended (backward-compatible).
+  it("accepts 'section_view' now that the enum is extended (Wave 2)", () => {
     const result = analyticsEventSchema.safeParse({
       event_type: 'section_view',
       event_target: 'projects',
+      session_id: 'test-session',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  // V5 hardening (threat T-02-08): event_target is bounded so oversized / junk
+  // targets are rejected before they reach Supabase.
+  it('rejects an over-length event_target', () => {
+    const result = analyticsEventSchema.safeParse({
+      event_type: 'section_view',
+      event_target: 'x'.repeat(101),
+      session_id: 'test-session',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts a section_view with a normal-length event_target', () => {
+    const result = analyticsEventSchema.safeParse({
+      event_type: 'section_view',
+      event_target: 'harness',
       session_id: 'test-session',
     });
     expect(result.success).toBe(true);
