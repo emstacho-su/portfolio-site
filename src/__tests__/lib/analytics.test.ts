@@ -54,6 +54,31 @@ describe('analyticsEventSchema', () => {
     }
   });
 
+  // R-17 / D-05 (Wave 2): the schema must additionally accept 'section_view'
+  // once the enum in src/lib/analytics/types.ts is extended. This case is
+  // SKIPPED in Wave 0 so the baseline stays green (the current enum rejects
+  // 'section_view'); Wave 2 flips `it.skip` -> `it` after extending the tuple.
+  it.skip("accepts 'section_view' once the enum is extended (Wave 2)", () => {
+    const result = analyticsEventSchema.safeParse({
+      event_type: 'section_view',
+      event_target: 'projects',
+      session_id: 'test-session',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  // Guard that legacy events still parse after the enum is extended in Wave 2.
+  it('still accepts legacy events alongside the future section_view extension', () => {
+    const legacy = ['page_view', 'project_click', 'resume_download', 'contact_click'];
+    for (const type of legacy) {
+      const result = analyticsEventSchema.safeParse({
+        event_type: type,
+        session_id: 'test-session',
+      });
+      expect(result.success).toBe(true);
+    }
+  });
+
   it('allows optional fields to be omitted', () => {
     const result = analyticsEventSchema.safeParse({
       event_type: 'page_view',
