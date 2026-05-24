@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import Link from 'next/link';
+import { useLenis } from 'lenis/react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { TIMING } from '@/lib/animation';
@@ -16,20 +16,21 @@ interface MobileMenuProps {
   open: boolean;
   onClose: () => void;
   links: readonly NavLink[];
-  pathname: string;
+  // Active section id from scrollspy (without the leading `#`).
+  activeId: string;
 }
 
-function isActive(pathname: string, href: string): boolean {
-  if (href === '/') return pathname === '/';
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
+// Navbar height (h-16 = 64px); scroll the target to sit just below the nav.
+const NAV_OFFSET = -64;
 
 export function MobileMenu({
   open,
   onClose,
   links,
-  pathname,
+  activeId,
 }: MobileMenuProps) {
+  const lenis = useLenis();
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -40,6 +41,16 @@ export function MobileMenu({
       document.body.style.overflow = '';
     };
   }, [open]);
+
+  const handleAnchorClick = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    event.preventDefault();
+    // Close first so the body scroll-lock releases, then scroll to the anchor.
+    onClose();
+    lenis?.scrollTo(href, { offset: NAV_OFFSET });
+  };
 
   return (
     <AnimatePresence>
@@ -64,7 +75,7 @@ export function MobileMenu({
 
           <nav className="flex flex-col items-center gap-8">
             {links.map((link, i) => {
-              const active = isActive(pathname, link.href);
+              const active = activeId === link.href.slice(1);
               return (
                 <motion.div
                   key={link.href}
@@ -76,9 +87,10 @@ export function MobileMenu({
                     duration: 0.3,
                   }}
                 >
-                  <Link
+                  <a
                     href={link.href}
-                    onClick={onClose}
+                    onClick={(event) => handleAnchorClick(event, link.href)}
+                    aria-current={active ? 'true' : undefined}
                     className={cn(
                       'font-mono text-2xl transition-colors',
                       active
@@ -87,7 +99,7 @@ export function MobileMenu({
                     )}
                   >
                     {link.label}
-                  </Link>
+                  </a>
                 </motion.div>
               );
             })}

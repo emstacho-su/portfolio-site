@@ -2,35 +2,57 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useLenis } from 'lenis/react';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { TIMING, EASE } from '@/lib/animation';
+import { useScrollspy } from '@/hooks/use-scrollspy';
 import { MobileMenu } from './mobile-menu';
 import { Menu } from 'lucide-react';
 
+// In-page anchor links (D-02). href values are hashes; the id after `#` is both
+// the scroll target and the scrollspy key.
 const NAV_LINKS = [
-  { label: 'About', href: '/' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'Harness', href: '/harness' },
-  { label: 'Resume', href: '/resume' },
+  { label: 'About', href: '#about' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Harness', href: '#harness' },
+  { label: 'Resume', href: '#resume' },
+  { label: 'Contact', href: '#contact' },
 ] as const;
 
-function isActive(pathname: string, href: string): boolean {
-  if (href === '/') return pathname === '/';
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
+// Every anchored section, in DOM order, for scrollspy (hero is observed so the
+// nav shows nothing active while the hero fills the viewport).
+const SECTION_IDS = [
+  'hero',
+  'about',
+  'projects',
+  'harness',
+  'resume',
+  'contact',
+];
+
+// Navbar height (h-16 = 64px); scroll the target to sit just below the nav.
+const NAV_OFFSET = -64;
 
 export function Navbar() {
-  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const lenis = useLenis();
+  const activeId = useScrollspy(SECTION_IDS);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleAnchorClick = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    event.preventDefault();
+    lenis?.scrollTo(href, { offset: NAV_OFFSET });
+  };
 
   return (
     <>
@@ -63,11 +85,13 @@ export function Navbar() {
 
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => {
-              const active = isActive(pathname, link.href);
+              const active = activeId === link.href.slice(1);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={(event) => handleAnchorClick(event, link.href)}
+                  aria-current={active ? 'true' : undefined}
                   className={cn(
                     'group font-mono text-sm relative py-1 inline-block transition-all duration-200',
                     'hover:-translate-y-[1px] active:translate-y-[1px] active:scale-[0.97]',
@@ -109,7 +133,7 @@ export function Navbar() {
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
         links={NAV_LINKS}
-        pathname={pathname}
+        activeId={activeId}
       />
     </>
   );

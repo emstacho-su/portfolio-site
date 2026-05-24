@@ -1,20 +1,22 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { renderHook, act } from '@testing-library/react';
+import { useScrollspy } from '@/hooks/use-scrollspy';
 
 /**
  * R-14 / D-02: useScrollspy returns the active section id derived from
  * IntersectionObserver entries.
  *
- * The hook (`@/hooks/use-scrollspy`) is created in Wave 1 and does not exist
- * yet, so a top-level static import would crash collection with an
- * import-resolution error. To keep the Wave 0 baseline GREEN and discoverable
- * (`npx vitest list`), the real assertions live in a `describe.skip` block that
- * dynamically imports the hook (never evaluated while skipped). Wave 1 flips
- * `describe.skip` -> `describe` once the hook lands.
+ * jsdom has no real IntersectionObserver; setup.ts installs a stub whose
+ * `observe`/`disconnect` are no-ops and which stores the callback on the
+ * instance. Here we additionally spy on the constructor so the test can grab the
+ * instance the hook builds and drive synthetic entries through its callback,
+ * then assert the hook's returned active id reflects the highest-ratio
+ * intersecting entry.
  *
- * The global IntersectionObserver stub from setup.ts exposes the captured
- * `callback`, so the test below drives entries via `io.callback([...], io)`.
- * The mockMatchMedia helper is copied VERBATIM from the soon-deleted
- * ArchitectureTab.test.tsx and retained here per the Wave 0 contract.
+ * The mockMatchMedia helper is copied VERBATIM from the (now deleted)
+ * ArchitectureTab.test.tsx and retained per the Wave 0 contract. The hook is
+ * layout-driven and does not gate on reduced motion, but the helper is kept for
+ * parity with the other section tests.
  */
 function mockMatchMedia(reducedMotion: boolean): void {
   vi.spyOn(window, 'matchMedia').mockImplementation(
@@ -33,35 +35,100 @@ function mockMatchMedia(reducedMotion: boolean): void {
 }
 void mockMatchMedia;
 
-describe('useScrollspy (R-14)', () => {
-  it('is enumerated by vitest list even before the hook exists', () => {
-    // Sentinel keeps the suite green and discoverable in Wave 0.
-    expect(true).toBe(true);
-  });
+interface CapturedObserver {
+  callback: IntersectionObserverCallback;
+}
+
+// Wrap the global IntersectionObserver (the setup.ts stub) so each test can grab
+// the instance the hook constructs and drive entries through its callback. The
+// replacement must be a real constructor (callable with `new`), so it is a class
+// extending the stub, not an arrow function.
+function captureObserver(): { current: CapturedObserver | null } {
+  const ref: { current: CapturedObserver | null } = { current: null };
+  const RealIO = globalThis.IntersectionObserver;
+  class CapturingObserver extends RealIO {
+    constructor(cb: IntersectionObserverCallback, opts?: IntersectionObserverInit) {
+      super(cb, opts);
+      ref.current = this as unknown as CapturedObserver;
+    }
+  }
+  vi.stubGlobal('IntersectionObserver', CapturingObserver);
+  return ref;
+}
+
+// Build a minimal IntersectionObserverEntry for an id with a given ratio.
+function entryFor(id: string, ratio: number): IntersectionObserverEntry {
+  const target = document.createElement('section');
+  target.id = id;
+  return {
+    target,
+    isIntersecting: ratio > 0,
+    intersectionRatio: ratio,
+    boundingClientRect: {} as DOMRectReadOnly,
+    intersectionRect: {} as DOMRectReadOnly,
+    rootBounds: null,
+    time: 0,
+  };
+}
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
-// Unskip in Wave 1 once src/hooks/use-scrollspy.ts exists, and replace the
-// indirected import below with a real static
-// `import { useScrollspy } from '@/hooks/use-scrollspy'`.
-// NOTE: the specifier is held in a variable (not a string literal) so Vite's
-// transform-time import analysis does NOT try to resolve the not-yet-created
-// module. A plain `await import('@/hooks/use-scrollspy')` crashes COLLECTION
-// (not just the test), which would defeat `describe.skip`. The block is
-// skipped, so this runtime import never executes in Wave 0.
-const SCROLLSPY_MODULE = '@/hooks/use-scrollspy';
-describe.skip('useScrollspy active-id behavior (Wave 1)', () => {
-  it('sets the active id to the most-intersecting section', async () => {
-    const { renderHook } = await import('@testing-library/react');
-    const { useScrollspy } = (await import(/* @vite-ignore */ SCROLLSPY_MODULE)) as {
-      useScrollspy: (ids: string[]) => string;
-    };
+describe('useScrollspy (R-14)', () => {
+  it('defaults to the first id before any intersection', () => {
+    captureObserver();
+    const { result } = renderHook(() =>
+      useScrollspy(['about', 'projects', 'harness'])
+    );
+    expect(result.current).toBe('about');
+  });
 
-    const { result } = renderHook(() => useScrollspy(['about', 'projects', 'harness']));
+  it('sets the active id to the most-intersecting section', () => {
+    const observer = captureObserver();
+    const { result } = renderHook(() =>
+      useScrollspy(['about', 'projects', 'harness'])
+    );
 
-    // The setup.ts stub stores the latest IntersectionObserver instance's
-    // callback; Wave 1 will expose/access it to drive entries, e.g.:
-    //   act(() => io.callback([{ target: el, isIntersecting: true, ... }], io));
-    // and then assert result.current === 'projects'.
-    expect(result.current).toBeDefined();
+    expect(observer.current).not.toBeNull();
+    const io = observer.current!;
+
+    act(() => {
+      io.callback(
+        [
+          entryFor('about', 0.2),
+          entryFor('projects', 0.8),
+          entryFor('harness', 0.1),
+        ],
+        io as unknown as IntersectionObserver
+      );
+    });
+
+    expect(result.current).toBe('projects');
+  });
+
+  it('updates the active id as a later section dominates the viewport', () => {
+    const observer = captureObserver();
+    const { result } = renderHook(() =>
+      useScrollspy(['about', 'projects', 'harness'])
+    );
+    const io = observer.current!;
+
+    act(() => {
+      io.callback(
+        [entryFor('projects', 0.6)],
+        io as unknown as IntersectionObserver
+      );
+    });
+    expect(result.current).toBe('projects');
+
+    act(() => {
+      io.callback(
+        [entryFor('harness', 0.9)],
+        io as unknown as IntersectionObserver
+      );
+    });
+    expect(result.current).toBe('harness');
   });
 });
