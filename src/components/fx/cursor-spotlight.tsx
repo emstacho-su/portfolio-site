@@ -9,18 +9,28 @@ import { useBootReady } from '@/lib/boot-context';
 // sequence finishes so it doesn't compete for memory during startup.
 export function CursorSpotlight() {
   const bootReady = useBootReady();
-  const [enabled, setEnabled] = useState(false);
   const frameRef = useRef<number | null>(null);
   const divRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!bootReady) return;
+  // Device qualification (fine pointer, motion allowed) is synchronous and
+  // stable for the component's life, so compute it once in a lazy initializer
+  // during render instead of via setState in an effect (react.dev "you might
+  // not need an effect"). Guard SSR where matchMedia is absent.
+  const [qualifies] = useState(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return false;
     const coarse = window.matchMedia('(pointer: coarse)').matches;
     const reduced = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
-    if (coarse || reduced) return;
-    setEnabled(true);
+    return !coarse && !reduced;
+  });
+
+  // Enabled only once the boot/loadup sequence has handed off AND the device
+  // qualifies. Derived in render, so no setState-in-effect is needed.
+  const enabled = bootReady && qualifies;
+
+  useEffect(() => {
+    if (!enabled) return;
 
     const onMove = (e: PointerEvent) => {
       if (frameRef.current !== null) {
@@ -37,7 +47,7 @@ export function CursorSpotlight() {
       window.removeEventListener('pointermove', onMove);
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     };
-  }, [bootReady]);
+  }, [enabled]);
 
   if (!enabled) return null;
 

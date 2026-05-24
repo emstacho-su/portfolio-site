@@ -48,16 +48,24 @@ function HeroContent() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const [play, setPlay] = useState(false);
+  // Decide whether to play the compile sequence in a lazy initializer rather
+  // than via setState in an effect (react.dev "you might not need an effect").
+  // The reduced-motion and sessionStorage reads are synchronous. The
+  // SESSION_KEY write side effect stays in the effect below so render is pure.
+  const [play] = useState(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return false;
+    const reduced = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    const alreadyPlayed = sessionStorage.getItem(SESSION_KEY);
+    return !reduced && !alreadyPlayed;
+  });
 
   useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const alreadyPlayed = sessionStorage.getItem(SESSION_KEY);
-    if (!reduced && !alreadyPlayed) {
+    if (play) {
       sessionStorage.setItem(SESSION_KEY, '1');
-      setPlay(true);
     }
-  }, []);
+  }, [play]);
 
   return (
     <motion.div

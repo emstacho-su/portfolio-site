@@ -34,28 +34,38 @@ const EASE_FADE = 'power3.inOut';
 const NAME = 'EVAN STACHOWIAK';
 
 export function HeroLoader() {
-  // null = deciding, true = play, false = skip / done
-  const [show, setShow] = useState<boolean | null>(null);
   const markReady = useBootMarkReady();
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // Decide whether to play the sequence on mount.
-  useEffect(() => {
+  // Decide whether to play in a lazy initializer rather than via setState in an
+  // effect (react.dev "you might not need an effect"). The reduced-motion and
+  // sessionStorage reads are synchronous. null = SSR / pre-mount (renders
+  // nothing, avoiding a hydration mismatch); true = play; false = skip/done.
+  // The sessionStorage writes and markReady() side effects stay in the effect
+  // below so render is pure.
+  const [show, setShow] = useState<boolean | null>(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return null;
     const reduced = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
     const alreadyPlayed = sessionStorage.getItem(LOADER_SESSION_KEY);
+    return reduced || alreadyPlayed ? false : true;
+  });
 
-    if (reduced || alreadyPlayed) {
-      // Skip path: also pre-mark hero compile so it shows static state.
+  // Apply the decision's side effects on mount. No synchronous setState here.
+  useEffect(() => {
+    if (show === false) {
+      // Skip path: pre-mark hero compile so it shows its static state, then
+      // signal boot ready.
       sessionStorage.setItem(HERO_COMPILE_SESSION_KEY, '1');
-      setShow(false);
       markReady();
       return;
     }
-    sessionStorage.setItem(LOADER_SESSION_KEY, '1');
-    setShow(true);
-  }, [markReady]);
+    if (show === true) {
+      // Play path: record that the loader played this session.
+      sessionStorage.setItem(LOADER_SESSION_KEY, '1');
+    }
+  }, [show, markReady]);
 
   // Allow keyboard skip during phases 1–2 (don't break the impact moment).
   useEffect(() => {

@@ -19,28 +19,37 @@ const FADE_OUT_S = 0.45;
 const SESSION_KEY = 'es-loadup-played-v1';
 
 export function LoadupSequence() {
-  // null = deciding; true = show; false = hide
-  const [show, setShow] = useState<boolean | null>(null);
   const markReady = useBootMarkReady();
 
-  useEffect(() => {
+  // Decide whether to play in a lazy initializer rather than via setState in an
+  // effect (react.dev "you might not need an effect"). The reduced-motion and
+  // sessionStorage checks are synchronous reads. null = SSR (renders nothing
+  // until the client mounts, avoiding a hydration mismatch); true = play;
+  // false = skip. The SESSION_KEY write and markReady() side effects stay in
+  // the effect below so render remains pure.
+  const [show, setShow] = useState<boolean | null>(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return null;
     const prefersReduced = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
-    if (prefersReduced) {
-      setShow(false);
-      markReady();
-      return;
-    }
-    if (sessionStorage.getItem(SESSION_KEY)) {
-      setShow(false);
-      markReady();
-      return;
-    }
-    sessionStorage.setItem(SESSION_KEY, '1');
-    setShow(true);
+    if (prefersReduced) return false;
+    if (sessionStorage.getItem(SESSION_KEY)) return false;
+    return true;
+  });
 
-    // Auto-dismiss after the full sequence plays
+  useEffect(() => {
+    // Skip path (reduced motion or already played this session): just signal
+    // boot is ready. No setState here.
+    if (show === false) {
+      markReady();
+      return;
+    }
+    if (show !== true) return;
+
+    // Play path: mark this session played and auto-dismiss after the sequence.
+    // setShow inside the timer callback is asynchronous (not a synchronous
+    // setState in the effect body), which is the allowed pattern.
+    sessionStorage.setItem(SESSION_KEY, '1');
     const totalMs =
       (SCRIPT.length * LINE_STAGGER_S + HOLD_BEFORE_FADE_S) * 1000;
     const timer = window.setTimeout(() => {
@@ -48,7 +57,7 @@ export function LoadupSequence() {
       markReady();
     }, totalMs);
     return () => window.clearTimeout(timer);
-  }, [markReady]);
+  }, [show, markReady]);
 
   // Skip on first user input
   useEffect(() => {
