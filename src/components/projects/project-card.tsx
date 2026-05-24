@@ -45,7 +45,7 @@ export function ProjectCard({ project, onExpand }: ProjectCardProps) {
         'hover:border-crimson/30'
       )}
     >
-      <PlaceholderImage label={project.imageLabel} />
+      <PlaceholderImage label={project.title} />
 
       <div className="p-5">
         {/* Header */}
@@ -55,30 +55,25 @@ export function ProjectCard({ project, onExpand }: ProjectCardProps) {
               {project.title}
             </h3>
             <p className="font-mono text-xs text-muted-foreground">
-              {project.subtitle}
+              {project.hook}
             </p>
           </div>
           <Badge
             variant="outline"
-            className={cn(
-              'font-mono text-[10px] shrink-0',
-              project.status === 'completed'
-                ? 'border-crimson/40 text-crimson'
-                : 'border-crimson/40 text-crimson'
-            )}
+            className="font-mono text-[10px] shrink-0 border-crimson/40 text-crimson"
           >
-            {project.status === 'completed' ? 'Completed' : 'In Progress'}
+            {project.status === 'shipped' ? 'Shipped' : 'In Progress'}
           </Badge>
         </div>
 
-        {/* Description */}
+        {/* Overview */}
         <p className="text-sm text-foreground/75 leading-relaxed mb-4">
-          {project.description}
+          {project.overview}
         </p>
 
         {/* Tech tags */}
         <div className="flex flex-wrap gap-1.5 mb-4">
-          {project.technologies.map((tech) => (
+          {project.tech.map((tech) => (
             <Badge
               key={tech}
               variant="secondary"
@@ -113,9 +108,9 @@ export function ProjectCard({ project, onExpand }: ProjectCardProps) {
             />
           </button>
 
-          {project.githubUrl && (
+          {project.links.repo && (
             <a
-              href={project.githubUrl}
+              href={project.links.repo}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-crimson transition-colors ml-auto"
@@ -136,10 +131,18 @@ export function ProjectCard({ project, onExpand }: ProjectCardProps) {
               transition={{ duration: 0.3 }}
               className="overflow-hidden"
             >
-              <div className="pt-4 mt-4 border-t border-border">
-                <p className="text-sm text-foreground/70 leading-relaxed">
-                  {project.detailedDescription}
-                </p>
+              <div className="pt-4 mt-4 border-t border-border space-y-3">
+                {project.demos.map((demo) => (
+                  <p
+                    key={demo.caption}
+                    className="text-sm text-foreground/70 leading-relaxed"
+                  >
+                    <span className="font-mono text-xs text-crimson/80">
+                      {demo.caption}.
+                    </span>{' '}
+                    {demo.body}
+                  </p>
+                ))}
               </div>
             </motion.div>
           )}

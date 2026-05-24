@@ -36,7 +36,7 @@ describe('projects data model (R-26, D-15)', () => {
     for (const project of projects) {
       for (const field of REQUIRED_FIELDS) {
         expect(
-          project as Record<string, unknown>,
+          project as unknown as Record<string, unknown>,
           `project ${(project as { id?: string }).id ?? '<unknown>'} missing ${field}`
         ).toHaveProperty(field);
       }
@@ -55,6 +55,12 @@ describe('projects data model (R-26, D-15)', () => {
     for (const project of projects) {
       const demos = (project as { demos?: unknown }).demos;
       expect(Array.isArray(demos), `project ${(project as { id?: string }).id} demos is not an array`).toBe(true);
+      // Ordered (used by the Wave 3 pop-out, 02-05) means non-empty with at
+      // least one demo section to walk through in sequence.
+      expect(
+        (demos as unknown[]).length,
+        `project ${(project as { id?: string }).id} has an empty demos[]`
+      ).toBeGreaterThan(0);
       for (const demo of demos as Array<Record<string, unknown>>) {
         expect(['video', 'image']).toContain(demo.type);
         expect(typeof demo.caption).toBe('string');
@@ -77,5 +83,13 @@ describe('featured project set (R-25, D-14)', () => {
   it('is exactly Quant Edge Tracker, AI News Agent, EV Trainer', () => {
     const titles = projects.map((p) => (p as { title?: string }).title);
     expect(titles.sort()).toEqual([...FEATURED_TITLES].sort());
+  });
+
+  it('retires the prior set (GTO Poker / Algo Trading / SchoolworkTrack)', () => {
+    const retired = ['GTO Poker Trainer', 'Algorithmic Futures Trading System', 'SchoolworkTrack', 'bulkDocReformat'];
+    const titles = projects.map((p) => (p as { title?: string }).title);
+    for (const old of retired) {
+      expect(titles, `retired project ${old} is still present`).not.toContain(old);
+    }
   });
 });
