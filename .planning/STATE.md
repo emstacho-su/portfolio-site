@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: "Completed 02-03-PLAN.md (content and data layer: extended Project model + featured set, approved about narrative, retargeted hero copy, inline resume rebuild)"
-last_updated: "2026-05-24T23:25:43.453Z"
+last_updated: "2026-05-24T23:42:04.168Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 2
   completed_phases: 0
   total_plans: 7
-  completed_plans: 5
-  percent: 71
+  completed_plans: 6
+  percent: 86
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/ROADMAP.md and .planning/REDESIGN-SPEC.md (updated 2026-05-24)
 ## Current Position
 
 Phase: 02 (single-page-portfolio-redesign) — EXECUTING
-Plan: 6 of 7
+Plan: 7 of 7
 Status: Ready to execute
 Last activity: 2026-05-24
 
-Progress: [███████░░░] 71%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Progress: [███████░░░] 71%
 | Phase 02 P02-03 | 13min | 3 tasks | 7 files |
 | Phase 02 P04 | 13min | 3 tasks | 9 files |
 | Phase 02 P02-05 | 20min | 3 tasks | 6 files |
+| Phase 02 P02-06 | 30min | 3 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,10 @@ Phase 2 locked decisions (D-01..D-24) live in `.planning/phases/02-single-page-p
 - [Phase ?]: 02-05: ProjectPopout is dual-mode - controlled by the section and uncontrolled in standalone/test use where it renders its own Dialog.Trigger; onOpenChange wrapper strips the Base UI eventDetails arg so it fires with only the boolean
 - [Phase ?]: 02-05: page.tsx needed NO change - 02-04 already mounted the real ProjectsSection, so useSectionView and the id=projects anchor are preserved untouched (D-01/D-02)
 - [Phase ?]: 02-05: Dialog.Viewport captured into state is the IntersectionObserver root for in-dialog video autoplay; ScrollTrigger.refresh runs after bootReady, after document.fonts.ready, and on dialog open inside rAF (Pitfall 3)
+- [Phase ?]: 02-06: full-bleed hero grid via w-screen left-1/2 -translate-x-1/2 breakout + body overflow-x:hidden (no horizontal scrollbar, D-06/T-02-15); dead fx/hero-grid.tsx deleted
+- [Phase ?]: 02-06: grid idle-clear tuned (IDLE_MS=90, IDLE_COOLING=0.72, base coolingFactor 0.90); injectHeat gated on an idle flag so heat cools to clear at rest and re-ignites on move (D-07/R-19)
+- [Phase ?]: 02-06: reduced-motion RTL audit widens mockMatchMedia to motion's bare (prefers-reduced-motion) query and resets motion-dom's module-cached preference per test; canvas grid excluded (no jsdom rAF), verified by code review + Wave 5 manual
+- [Phase ?]: 02-06: Wave 0 RED lint baseline cleared - lint exits 0; the 4 set-state-in-effect fixes use useState lazy initializers (behavior-touching, flagged for 02-07 manual QA: loader/compile/spotlight/analytics)
 
 ### Pending Todos
 
@@ -98,7 +103,7 @@ None.
 
 - [Phase 2]: ~~`node_modules` is absent — Wave 0 (`npm install`) is a hard prerequisite~~ RESOLVED in 02-01: install complete, build/test/lint all run.
 - [Phase 2]: Supabase `page_events.event_type` column constraint unverified (RESEARCH A1) — handled as a verify-then-conditionally-migrate step in plan 02-04, not an assumption.
-- [Phase 2 / 02-01]: Pre-existing RED lint baseline (5 react-hooks errors) must be fixed in 02-06 polish before the 02-07 verification gate; cursor-spotlight.tsx/hero-loader.tsx/loadup-sequence.tsx are NOT touched by any other plan in this phase and need a deliberate cleanup task.
+- [Phase 2 / 02-01]: ~~Pre-existing RED lint baseline (5 react-hooks errors) must be fixed in 02-06 polish before the 02-07 verification gate; cursor-spotlight.tsx/hero-loader.tsx/loadup-sequence.tsx are NOT touched by any other plan in this phase and need a deliberate cleanup task.~~ RESOLVED in 02-06: `npm run lint` now exits 0 (0 errors, 0 warnings). The 4 set-state-in-effect fixes used useState lazy initializers and are behavior-touching with no automated visual coverage - flagged for 02-07 manual QA (loader/compile/cursor-spotlight/analytics; see 02-06-SUMMARY "Needs 02-07 manual QA").
 
 ## Deferred Items
 
@@ -110,6 +115,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-05-24T23:25:14.957Z
+Last session: 2026-05-24T23:41:23.918Z
 Stopped at: Completed 02-03-PLAN.md (content and data layer: extended Project model + featured set, approved about narrative, retargeted hero copy, inline resume rebuild)
 Resume file: None
