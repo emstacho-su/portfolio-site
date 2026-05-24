@@ -23,8 +23,11 @@ export function AboutSection() {
         <div className="h-[2px] bg-crimson mt-4 w-32" />
       </SlideBlock>
 
+      {/* First four paragraphs, then the pull quote, then the closing
+          paragraph. All five paragraphs of the approved narrative render
+          (D-09); each keeps the SlideBlock reduced-motion-gated slide (S-3). */}
       <div className="space-y-8 md:space-y-10">
-        {landingAbout.paragraphs.slice(0, 2).map((paragraph, i) => (
+        {landingAbout.paragraphs.slice(0, 4).map((paragraph, i) => (
           <SlideBlock key={i} from="left">
             <p className="text-lg sm:text-xl text-foreground leading-[1.7] max-w-[58rem]">
               {paragraph}
@@ -43,7 +46,7 @@ export function AboutSection() {
 
       <SlideBlock from="left">
         <p className="text-lg sm:text-xl text-foreground leading-[1.7] max-w-[58rem]">
-          {landingAbout.paragraphs[2]}
+          {landingAbout.paragraphs[4]}
         </p>
       </SlideBlock>
     </Section>

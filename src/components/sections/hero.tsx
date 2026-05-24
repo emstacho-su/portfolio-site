@@ -2,13 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import Link from 'next/link';
+import { useLenis } from 'lenis/react';
 import { EASE } from '@/lib/animation';
 import ThermodynamicGrid from '@/components/ui/interactive-thermodynamic-grid';
 import { useBootReady } from '@/lib/boot-context';
 
-const TAGLINE = 'From ISO audits to AI agents — I build the systems in between.';
-const META = "SYRACUSE IMT '27 / ISO 9001 AUDITOR / AI-ENGINEERING";
+// Retargeted hero copy (D-08, verbatim). Employer kept generic; no em dash.
+const TAGLINE =
+  'I build AI systems with a ground-truth understanding of how real operations work';
+const META = "SYRACUSE IMT '27 / DATA SCIENCE INTERN / AI ENGINEERING";
 const NAME_MONO = 'EVAN\nSTACHOWIAK';
 
 const SESSION_KEY = 'es-compile-played-v1';
@@ -75,6 +77,7 @@ interface CompileSequenceProps {
 function CompileSequence({ play }: CompileSequenceProps) {
   // step 0 = nothing; 1 = grid; 2 = underline; 3 = name typing mono;
   // 4 = crossfade to sans; 5 = tagline; 6 = meta+cta; 7 = cursor + done
+  const lenis = useLenis();
   const [step, setStep] = useState<number>(play ? 0 : 7);
   const [typed, setTyped] = useState<string>(play ? '' : NAME_MONO);
   const [skipped, setSkipped] = useState<boolean>(false);
@@ -229,22 +232,31 @@ function CompileSequence({ play }: CompileSequenceProps) {
           {META}
         </motion.p>
 
-        {/* CTA: "Projects →" (spec §6.6) */}
+        {/* CTA: "Projects →" smooth-scrolls to the in-page #projects section
+            via Lenis (offset -64 = navbar height), matching the navbar anchor
+            behavior. Falls back to the native hash when Lenis is absent
+            (reduced motion destroys the instance). */}
         <motion.div
           className="mt-10"
           initial={false}
           animate={{ opacity: step >= 6 ? 1 : 0 }}
           transition={t(0.4)}
         >
-          <Link
-            href="/projects"
-            className="inline-flex items-center gap-2 font-sans text-base sm:text-lg text-crimson link-underline hover:text-crimson-hover transition-colors"
+          <a
+            href="#projects"
+            onClick={(event) => {
+              if (lenis) {
+                event.preventDefault();
+                lenis.scrollTo('#projects', { offset: -64 });
+              }
+            }}
+            className="group inline-flex items-center gap-2 font-sans text-base sm:text-lg text-crimson link-underline hover:text-crimson-hover transition-colors"
           >
             Projects
             <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5">
               →
             </span>
-          </Link>
+          </a>
         </motion.div>
       </div>
     </div>

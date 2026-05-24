@@ -1,20 +1,23 @@
-export const aboutParagraphs = [
-  "I'm a junior at Syracuse University's School of Information Studies, pursuing a B.S. in Information Management & Technology, concentrating in Infosec. I'm also an ISO 9001:2015 Certified Internal Auditor, a credential I earned while automating quality processes in manufacturing environments.",
-  "My path into tech started on the operations side. During two QA internships at Stainless Engineering and E.C. Styberg Engineering, I overhauled document control systems, conducted internal audits, and built Python automation that replaced hours of manual reformatting across hundreds of quality documents. That experience taught me to look for the process behind the problem before writing a single line of code.",
-  "Outside of work, I build across whatever domain grabs my attention. I've developed algorithmic trading strategies for E-mini S&P 500 futures on NinjaTrader, built a game-theory-optimal poker training application with React and Supabase, and created academic workflow tools to manage my own coursework. Each project is different, but the pattern is the same.",
-  "The common thread across everything I do is systems thinking. I don't specialize in one stack or one industry. I connect dots across quantitative analysis, process improvement, and software development. That range isn't a distraction. It's how I approach every problem I encounter.",
-];
+// APPROVED about narrative (REDESIGN-SPEC section 4.2, verbatim 2026-05-24).
+// Do not paraphrase or invent. Five paragraphs, grounded-confident voice,
+// employer kept generic. No em dashes (D-22). Both aboutParagraphs and
+// landingAbout.paragraphs carry the same approved five-paragraph copy (D-09).
 
-// Landing-page condensed About.
-// Structure: 3 paragraphs with a pull-quote between #2 and #3.
+const approvedNarrative = [
+  "I'm Evan Stachowiak, and I build things. I grew up between two worlds: a mother with a doctorate in nursing education and a father who ran manufacturing companies. One side gave me a deep respect for understanding how things actually work; the other gave me an early, hands-on feel for how a business runs on the floor. My childhood was split between the suburbs and a horse rescue in Wisconsin, which mostly meant manual labor and weekends building and fixing things next to my dad.",
+  "One of those projects was a horse shelter. We built it by measuring the old one, working out every material and how the pieces fit, and turning that into a plan we could actually execute. That loop, understand the inputs, understand how it works, then build it, has never left me. A few years later, at 13, I watched my dad run gutters in a way that made no sense to me, suggested a cleaner method, and it worked. That was when I realized I had a knack for seeing how things should work, as long as I understood why they work first.",
+  "That curiosity runs through everything, not just code. I started college on a vocal performance scholarship, which is where I learned to drill a hard skill until it becomes automatic, before the build instinct won and I moved into tech. I learn the same way regardless of the subject: break it down to fundamentals, build a working understanding from the bottom up, then get hands on and learn the rest by making mistakes fast. It is how I taught myself to ski and snowboard in a day each and ended up instructing, and how I taught myself the stack for my EV Trainer and shipped it in under a week.",
+  "My edge is where that curiosity meets discipline. I came up through quality and operations work in manufacturing, which made me genuinely analytical and critical about how things get built. Pair that with a real passion for statistics, the kind that has me thinking in expected value at the poker table as readily as in my work, and my information-management coursework, and you get what I actually do well: build with AI and keep it reliable. As a data science intern I put that to work right away, catching several errors in a costing model in my first week and automating documentation that would have cost a small team a week of manual effort.",
+  "Everything else I have built came from the same place: sports analytics tools, an autonomous AI agent that researches and writes my morning briefing, decision-modeling trainers. Find the leverage point, learn what I need, and sweat the details until it feels right. I care how things look and not just whether they work, and the same discipline that keeps me consistent in the gym is what keeps me refining a build long after it runs. At this point the question is never whether I can build something. It is what to build next.",
+] as const;
+
+export const aboutParagraphs = [...approvedNarrative];
+
+// Landing-page About: the approved five-paragraph narrative with a pull quote.
+// about.tsx renders all five paragraphs with the pull quote woven in (D-10).
 export const landingAbout = {
-  paragraphs: [
-    "I'm a junior at Syracuse studying Information Management & Technology, concentrating in Infosec. My ISO 9001:2015 Internal Auditor certification came out of two summers at Stainless Engineering and E.C. Styberg Engineering, where I ended up rebuilding document control systems, running internal audits, and writing Python that replaced hours of manual reformatting across hundreds of quality documents.",
-    "Outside of school and work, I build whatever I can't stop thinking about. So far that's meant algorithmic trading strategies for E-mini S&P 500 futures on NinjaTrader, a game-theory-optimal poker trainer in React and Supabase, and a handful of academic workflow tools I wrote because the existing ones didn't fit how I actually work.",
-    "Nothing I do fits neatly into one stack or one industry, and I like it that way. The projects that pull me in sit in the gap between quantitative analysis, process work, and software. The more ranges you can draw from, the more interesting the solutions tend to get.",
-  ],
-  pullQuote:
-    "Every project starts with the same question: where's the friction, and what's the cleanest way to get rid of it?",
+  paragraphs: [...approvedNarrative],
+  pullQuote: 'The question is never whether I can build it. It is what to build next.',
 } as const;
 
 export interface SkillCategory {
