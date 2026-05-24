@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: executing
+stopped_at: Completed 02-01-PLAN.md (install + Wave 0 jsdom stubs + 8 test scaffolds)
+last_updated: "2026-05-24T22:34:29.313Z"
+last_activity: 2026-05-24
+progress:
+  total_phases: 2
+  completed_phases: 0
+  total_plans: 7
+  completed_plans: 1
+  percent: 14
+---
+
 # Project State
 
 ## Project Reference
@@ -5,20 +21,21 @@
 See: .planning/ROADMAP.md and .planning/REDESIGN-SPEC.md (updated 2026-05-24)
 
 **Core value:** A single-page portfolio that showcases real projects and the AI-engineering system used to build them, positioned for the CEO / founding-engineer and AI/data-science recruiter track.
-**Current focus:** Phase 2 — Single-Page Portfolio Redesign
+**Current focus:** Phase 02 — single-page-portfolio-redesign
 
 ## Current Position
 
-Phase: 2 of 2 (Single-Page Portfolio Redesign)
-Plan: 0 of 7 in current phase
+Phase: 02 (single-page-portfolio-redesign) — EXECUTING
+Plan: 2 of 7
 Status: Ready to execute
-Last activity: 2026-05-24 — Phase 2 planned (research + 7 plans across 6 waves; plan-checker PASSED)
+Last activity: 2026-05-24
 
-Progress: [█████░░░░░] Milestone 1 shipped; Milestone 2 planned, not started
+Progress: [█░░░░░░░░░] 14%
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed (Milestone 2): 0
 - Average duration: n/a
 - Total execution time: n/a
@@ -28,13 +45,18 @@ Progress: [█████░░░░░] Milestone 1 shipped; Milestone 2 plan
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 (Harness Page) | shipped | — | — |
-| 2 (Single-Page Redesign) | 0/7 | — | — |
+| 2 (Single-Page Redesign) | 1/7 | 35min | 35min |
 
 **Recent Trend:**
-- Last 5 plans: n/a (Phase 2 not yet executed)
-- Trend: n/a
+
+- Last 5 plans: 02-01 (35min, 3 tasks, 11 files)
+- Trend: n/a (first plan of Phase 2)
 
 *Updated after each plan completion*
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase 02 P01 | 35min | 3 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -47,6 +69,10 @@ Phase 2 locked decisions (D-01..D-24) live in `.planning/phases/02-single-page-p
 - [Phase 2]: Pop-out uses Base UI Dialog (focus trap/ESC/scroll-lock/focus-return), Lenis paused while open (D-12, D-16).
 - [Phase 2]: Section-view analytics is a backward-compatible enum extension; do not assume a schema migration (D-05).
 - [Phase 2]: No em dashes anywhere in copy or data (D-22).
+- [Phase 2 / 02-01]: Base UI dialog import path confirmed as @base-ui/react/dialog (subpath export, @base-ui/react@1.3.0) - resolves RESEARCH A2 for Wave 3 pop-out.
+- [Phase 2 / 02-01]: node_modules/next/dist/docs/ DOES exist after install (contrary to RESEARCH assumption); AGENTS.md installed-docs path is satisfiable directly, with Context7-pinned next 16.2.2 as fallback.
+- [Phase 2 / 02-01]: em-dash scaffold (em-dash.test.ts) sweeps BOTH src/data/*.ts string exports AND src/components/sections/*.tsx user-facing copy with source comments stripped (line + block + JSX), so R-20 governs copy only, not decorative comments.
+- [Phase 2 / 02-01]: Wave 0 lint baseline is intentionally RED (5 pre-existing react-hooks errors in cursor-spotlight/hero-loader/loadup-sequence/hero/use-analytics); lint-exits-0 criterion WAIVED for 02-01 per user decision; verification floor is no-NEW-lint-errors. Owner: 02-06 polish before the 02-07 gate.
 
 ### Pending Todos
 
@@ -54,8 +80,9 @@ None.
 
 ### Blockers/Concerns
 
-- [Phase 2]: `node_modules` is absent — Wave 0 (`npm install`) is a hard prerequisite before any build/test/lint/dev (plan 02-01).
+- [Phase 2]: ~~`node_modules` is absent — Wave 0 (`npm install`) is a hard prerequisite~~ RESOLVED in 02-01: install complete, build/test/lint all run.
 - [Phase 2]: Supabase `page_events.event_type` column constraint unverified (RESEARCH A1) — handled as a verify-then-conditionally-migrate step in plan 02-04, not an assumption.
+- [Phase 2 / 02-01]: Pre-existing RED lint baseline (5 react-hooks errors) must be fixed in 02-06 polish before the 02-07 verification gate; cursor-spotlight.tsx/hero-loader.tsx/loadup-sequence.tsx are NOT touched by any other plan in this phase and need a deliberate cleanup task.
 
 ## Deferred Items
 
@@ -67,6 +94,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-05-24
-Stopped at: Phase 2 planning complete and verified (plan-checker PASSED; decision-coverage gate 24/24).
-Resume file: None — next step is `/gsd-execute-phase 2` (Wave 0 `npm install` first).
+Last session: 2026-05-24T22:33:10.499Z
+Stopped at: Completed 02-01-PLAN.md (install + Wave 0 jsdom stubs + 8 test scaffolds)
+Resume file: None

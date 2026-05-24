@@ -64,7 +64,7 @@ Convert the multi-page site into one scrollable page that showcases real project
 **Requirement IDs:** R-13 through R-31 (see `requirements.md`).
 
 **Plans:** 7 plans (across 6 execution waves, Wave 0 through Wave 5)
-- [ ] 02-01-PLAN.md (Wave 0) — Foundation: npm install, jsdom IO/media stubs, scaffold all Wave 0 test files, green baseline.
+- [x] 02-01-PLAN.md (Wave 0) — Foundation: npm install, jsdom IO/media stubs, scaffold all Wave 0 test files, green baseline.
 - [ ] 02-02-PLAN.md (Wave 1) — Architecture & routing: compose all sections on `/`, Lenis+GSAP shared ticker, hash-anchor navbar + scrollspy, six redirects to `?s=`, delete legacy routes + Interested CTA.
 - [ ] 02-03-PLAN.md (Wave 2) — Content & data: extended project model + featured set, verbatim about narrative, retargeted hero copy, inline resume rebuild, em-dash sweep over data.
 - [ ] 02-04-PLAN.md (Wave 2) — Harness & analytics: six-pillar harness section wired into the page, section_view analytics + use-section-view hook, delete broken tab tests, Supabase column verify.
