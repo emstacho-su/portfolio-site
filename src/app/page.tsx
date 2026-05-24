@@ -10,9 +10,22 @@ import { HarnessSection } from '@/components/sections/harness';
 import { ResumeSection } from '@/components/sections/resume';
 import { ContactSection } from '@/components/sections/contact';
 import { CursorSpotlight } from '@/components/fx/cursor-spotlight';
+import { useSectionView } from '@/hooks/use-section-view';
 
 // Navbar height (h-16 = 64px); anchors scroll to sit just below the fixed nav.
 const NAV_OFFSET = -64;
+
+// The six in-page section ids in scroll order (D-01 / D-02). useSectionView
+// observes these and fires one section_view analytics event per section on first
+// scroll-into-view, so the live page emits section_view events (R-17 / D-05).
+const SECTION_IDS = [
+  'hero',
+  'about',
+  'projects',
+  'harness',
+  'resume',
+  'contact',
+] as const;
 
 // Reads the `?s=<section>` query that the legacy-route redirects (next.config.ts)
 // land on, smooth-scrolls to the matching anchor via Lenis, then cleans the URL.
@@ -37,6 +50,12 @@ function ScrollFromQuery() {
 }
 
 export default function Home() {
+  // Emit one section_view event per section as each scrolls into view. The hook
+  // observes the rendered section ids by getElementById, so the section_view
+  // POSTs to /api/analytics fire on the real page (closing the live-wiring gap
+  // for 02-07 manual check 7). useSectionView takes a stable array reference.
+  useSectionView(SECTION_IDS as unknown as string[]);
+
   return (
     <>
       <CursorSpotlight />
