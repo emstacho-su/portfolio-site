@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: "Completed 02-03-PLAN.md (content and data layer: extended Project model + featured set, approved about narrative, retargeted hero copy, inline resume rebuild)"
-last_updated: "2026-05-24T23:16:52.164Z"
+last_updated: "2026-05-24T23:25:43.453Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 2
   completed_phases: 0
   total_plans: 7
-  completed_plans: 4
-  percent: 57
+  completed_plans: 5
+  percent: 71
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/ROADMAP.md and .planning/REDESIGN-SPEC.md (updated 2026-05-24)
 ## Current Position
 
 Phase: 02 (single-page-portfolio-redesign) — EXECUTING
-Plan: 5 of 7
+Plan: 6 of 7
 Status: Ready to execute
 Last activity: 2026-05-24
 
-Progress: [██████░░░░] 57%
+Progress: [███████░░░] 71%
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [██████░░░░] 57%
 | Phase 02 P02-02 | 8min | 3 tasks | 13 files |
 | Phase 02 P02-03 | 13min | 3 tasks | 7 files |
 | Phase 02 P04 | 13min | 3 tasks | 9 files |
+| Phase 02 P02-05 | 20min | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,9 @@ Phase 2 locked decisions (D-01..D-24) live in `.planning/phases/02-single-page-p
 - [Phase ?]: [Phase 2 / 02-03]: resume on-page employer is generic ('A manufacturing company'); specifics + phone confined to /resume.pdf (D-20).
 - [Phase ?]: 02-04: Supabase page_events.event_type is free-text (no repo-level CHECK/enum DDL); section_view is a code-only enum extension, no migration
 - [Phase ?]: 02-04: harness distilled to a six-entry pillar array in src/data/harness.ts; tab UI and inventory dump removed; section_view fires once per section via use-section-view on the six live ids
+- [Phase ?]: 02-05: ProjectPopout is dual-mode - controlled by the section and uncontrolled in standalone/test use where it renders its own Dialog.Trigger; onOpenChange wrapper strips the Base UI eventDetails arg so it fires with only the boolean
+- [Phase ?]: 02-05: page.tsx needed NO change - 02-04 already mounted the real ProjectsSection, so useSectionView and the id=projects anchor are preserved untouched (D-01/D-02)
+- [Phase ?]: 02-05: Dialog.Viewport captured into state is the IntersectionObserver root for in-dialog video autoplay; ScrollTrigger.refresh runs after bootReady, after document.fonts.ready, and on dialog open inside rAF (Pitfall 3)
 
 ### Pending Todos
 
@@ -106,6 +110,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-05-24T23:16:24.746Z
+Last session: 2026-05-24T23:25:14.957Z
 Stopped at: Completed 02-03-PLAN.md (content and data layer: extended Project model + featured set, approved about narrative, retargeted hero copy, inline resume rebuild)
 Resume file: None
