@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-01-PLAN.md (install + Wave 0 jsdom stubs + 8 test scaffolds)
-last_updated: "2026-05-24T22:34:29.313Z"
+stopped_at: Completed 02-02-PLAN.md (single-page architecture, six redirects, scrollspy nav, shared Lenis/GSAP ticker)
+last_updated: "2026-05-24T22:49:34.052Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 2
   completed_phases: 0
   total_plans: 7
-  completed_plans: 1
-  percent: 14
+  completed_plans: 2
+  percent: 29
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/ROADMAP.md and .planning/REDESIGN-SPEC.md (updated 2026-05-24)
 ## Current Position
 
 Phase: 02 (single-page-portfolio-redesign) — EXECUTING
-Plan: 2 of 7
+Plan: 3 of 7
 Status: Ready to execute
 Last activity: 2026-05-24
 
-Progress: [█░░░░░░░░░] 14%
+Progress: [███░░░░░░░] 29%
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Progress: [█░░░░░░░░░] 14%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 02 P01 | 35min | 3 tasks | 11 files |
+| Phase 02 P02-02 | 8min | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,9 @@ Phase 2 locked decisions (D-01..D-24) live in `.planning/phases/02-single-page-p
 - [Phase 2 / 02-01]: node_modules/next/dist/docs/ DOES exist after install (contrary to RESEARCH assumption); AGENTS.md installed-docs path is satisfiable directly, with Context7-pinned next 16.2.2 as fallback.
 - [Phase 2 / 02-01]: em-dash scaffold (em-dash.test.ts) sweeps BOTH src/data/*.ts string exports AND src/components/sections/*.tsx user-facing copy with source comments stripped (line + block + JSX), so R-20 governs copy only, not decorative comments.
 - [Phase 2 / 02-01]: Wave 0 lint baseline is intentionally RED (5 pre-existing react-hooks errors in cursor-spotlight/hero-loader/loadup-sequence/hero/use-analytics); lint-exits-0 criterion WAIVED for 02-01 per user decision; verification floor is no-NEW-lint-errors. Owner: 02-06 polish before the 02-07 gate.
+- [Phase ?]: [Phase 2 / 02-02]: Legacy routes use permanent:true (HTTP 308) redirects to /?s=<section>; literal 301 (statusCode) not used as no stakeholder mandated it (RESEARCH Open Q2).
+- [Phase ?]: [Phase 2 / 02-02]: Lenis runs autoRaf:false sharing one rAF clock with gsap.ticker (ScrollTrigger backbone for Wave 3); ticker guards null lenis under reduced motion; boot-gate and reduced-motion destroy branch unchanged.
+- [Phase ?]: [Phase 2 / 02-02]: Harness section is a placeholder anchor stub (id=harness) until Wave 2 / 02-04 fills the six pillars; ProjectsSection mounted as the existing real component.
 
 ### Pending Todos
 
@@ -94,6 +98,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-05-24T22:33:10.499Z
-Stopped at: Completed 02-01-PLAN.md (install + Wave 0 jsdom stubs + 8 test scaffolds)
+Last session: 2026-05-24T22:49:34.022Z
+Stopped at: Completed 02-02-PLAN.md (single-page architecture, six redirects, scrollspy nav, shared Lenis/GSAP ticker)
 Resume file: None
