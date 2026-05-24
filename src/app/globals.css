@@ -84,6 +84,11 @@
     @apply bg-background text-foreground antialiased;
     font-size: 1.0625rem;
     line-height: 1.65;
+    /* The full-bleed hero grid uses a w-screen breakout (D-06). w-screen
+       ignores the scrollbar gutter, so without this an off-by-a-few-px
+       horizontal scrollbar (and a CLS hit) can appear. Clamp it here
+       (T-02-15 mitigation); vertical scrolling is unaffected. */
+    overflow-x: hidden;
   }
 
   /* Typographic hierarchy per spec §2 */

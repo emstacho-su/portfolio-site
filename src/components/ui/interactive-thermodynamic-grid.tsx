@@ -79,7 +79,16 @@ const ThermodynamicGrid = ({
       prevY: -10000,
       active: false,
       hasPrev: false,
+      lastMoveTs: 0,
     };
+
+    // Idle-clear tuning (D-07 / R-19): once the pointer has been still for
+    // IDLE_MS, the existing heat is cooled with IDLE_COOLING (a much more
+    // aggressive per-frame multiplier than the at-rest base coolingFactor)
+    // so the red squares clear promptly with no lingering trail. Any new
+    // movement re-arms lastMoveTs and re-ignites heat on the next frame.
+    const IDLE_MS = 90;
+    const IDLE_COOLING = 0.72;
 
     let rafId: number | null = null;
 
@@ -135,6 +144,7 @@ const ThermodynamicGrid = ({
       mouse.x = x;
       mouse.y = y;
       mouse.active = true;
+      mouse.lastMoveTs = performance.now();
       ensureLoop();
     };
 
@@ -143,8 +153,10 @@ const ThermodynamicGrid = ({
       mouse.hasPrev = false;
     };
 
-    const injectHeat = () => {
-      if (!mouse.active) return;
+    const injectHeat = (idle: boolean) => {
+      // While idle (pointer held still) stop adding heat so the grid can cool
+      // to clear instead of re-igniting the same cell every frame (D-07).
+      if (!mouse.active || idle) return;
       const dx = mouse.x - mouse.prevX;
       const dy = mouse.y - mouse.prevY;
       const dist = Math.sqrt(dx * dx + dy * dy);
@@ -175,7 +187,7 @@ const ThermodynamicGrid = ({
       mouse.prevY = mouse.y;
     };
 
-    const paint = () => {
+    const paint = (cooling: number = coolingFactor) => {
       // Paper backdrop
       ctx.fillStyle = `rgb(${PAPER_R}, ${PAPER_G}, ${PAPER_B})`;
       ctx.fillRect(0, 0, width, height);
@@ -187,9 +199,11 @@ const ThermodynamicGrid = ({
           const idx = c + r * cols;
           const temp = grid[idx];
 
-          // Cool toward zero
+          // Cool toward zero. `cooling` is the base coolingFactor while the
+          // pointer is moving, and the faster IDLE_COOLING once it stops, so
+          // heat clears promptly at rest (D-07).
           if (temp > 0) {
-            grid[idx] = temp * coolingFactor;
+            grid[idx] = temp * cooling;
             if (grid[idx] < 0.001) grid[idx] = 0;
           }
 
@@ -218,9 +232,16 @@ const ThermodynamicGrid = ({
 
     const tick = () => {
       rafId = null;
-      injectHeat();
-      const active = paint();
-      if (active || mouse.active) {
+      // Idle = pointer present but not moved within IDLE_MS. When idle we stop
+      // injecting and switch to the aggressive IDLE_COOLING so the trail clears
+      // promptly; movement re-arms lastMoveTs and re-ignites heat (D-07).
+      const idle = !mouse.active || performance.now() - mouse.lastMoveTs > IDLE_MS;
+      injectHeat(idle);
+      const active = paint(idle ? IDLE_COOLING : coolingFactor);
+      // Keep ticking while heat remains (so the idle decay runs to clear) or
+      // the pointer is actively moving. When idle and fully cooled, the loop
+      // naturally stops until the next pointer move calls ensureLoop().
+      if (active || (mouse.active && !idle)) {
         ensureLoop();
       }
     };

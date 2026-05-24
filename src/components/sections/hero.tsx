@@ -149,10 +149,16 @@ function CompileSequence({ play }: CompileSequenceProps) {
 
   return (
     <div className="relative">
-      {/* Thermodynamic heat grid — reveals via clip-path, interactive at step 2 */}
+      {/* Thermodynamic heat grid (D-06): full-bleed breakout so the canvas
+          spans the full viewport width while the hero text stays in the
+          1200px column. left-1/2 -translate-x-1/2 w-screen re-centers the
+          child against the viewport regardless of the parent max-width; an
+          overflow-x-hidden ancestor (body, globals.css) prevents w-screen
+          from adding a horizontal scrollbar / CLS. Reveals via clip-path;
+          interactive at step 2. */}
       <motion.div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-screen overflow-hidden pointer-events-none"
         initial={false}
         animate={{
           opacity: step >= 1 ? 1 : 0,
@@ -160,7 +166,7 @@ function CompileSequence({ play }: CompileSequenceProps) {
         }}
         transition={t(0.4)}
       >
-        <ThermodynamicGrid resolution={18} coolingFactor={0.94} interactive={step >= 2} />
+        <ThermodynamicGrid resolution={18} coolingFactor={0.90} interactive={step >= 2} />
       </motion.div>
 
       <div className="relative">
