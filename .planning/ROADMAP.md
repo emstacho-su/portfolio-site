@@ -70,7 +70,7 @@ Convert the multi-page site into one scrollable page that showcases real project
 - [x] 02-04-PLAN.md (Wave 2) — Harness & analytics: six-pillar harness section wired into the page, section_view analytics + use-section-view hook, delete broken tab tests, Supabase column verify.
 - [x] 02-05-PLAN.md (Wave 3) — Projects system: stacked GSAP panels, accessible Base UI Dialog pop-out (Lenis pause), scroll-into-view demo video/image, wired into the page.
 - [x] 02-06-PLAN.md (Wave 4) — Hero grid & polish: full-bleed grid breakout, idle-clear heat tuning, delete dead duplicate grid, reduced-motion audit test.
-- [ ] 02-07-PLAN.md (Wave 5) — Verification gate: build/test/lint green, Vercel preview, Lighthouse perf >= 95 / a11y = 100, manual QA of redirects/analytics/scroll feel (blocking human checkpoint).
+- [x] 02-07-PLAN.md (Wave 5) — Verification gate: build/test/lint green, Vercel preview, Lighthouse perf >= 95 / a11y = 100, manual QA of redirects/analytics/scroll feel (blocking human checkpoint).
 
 **Success criteria:**
 - One-page scroll with working anchor-nav + scrollspy; `/interested` gone; old routes redirect; analytics intact.
