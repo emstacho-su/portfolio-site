@@ -37,35 +37,41 @@ export function HeroLoader() {
   const markReady = useBootMarkReady();
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // Decide whether to play in a lazy initializer rather than via setState in an
-  // effect (react.dev "you might not need an effect"). The reduced-motion and
-  // sessionStorage reads are synchronous. null = SSR / pre-mount (renders
-  // nothing, avoiding a hydration mismatch); true = play; false = skip/done.
-  // The sessionStorage writes and markReady() side effects stay in the effect
-  // below so render is pure.
-  const [show, setShow] = useState<boolean | null>(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return null;
-    const reduced = window.matchMedia(
+  // Decide whether to play the loader in a POST-HYDRATION effect, not a
+  // useState lazy initializer. The loader renders nothing on the server
+  // (show === null). A lazy initializer also runs during the client's
+  // hydration render, so it would compute show=true and render the loader
+  // while the server rendered null -> hydration mismatch (React #418).
+  // Keeping show=null on both the server AND the first client render makes
+  // hydration identical; the effect below (client-only, post-hydration) then
+  // sets the real value and applies the session-key writes / markReady side
+  // effects. The lint rule that prefers a lazy initializer does not account
+  // for SSR hydration, so it is disabled on the setShow line.
+  const [show, setShow] = useState<boolean | null>(null);
+  const decidedRef = useRef(false);
+
+  useEffect(() => {
+    if (decidedRef.current) return;
+    decidedRef.current = true;
+
+    const reduced = !!window.matchMedia?.(
       '(prefers-reduced-motion: reduce)'
     ).matches;
-    const alreadyPlayed = sessionStorage.getItem(LOADER_SESSION_KEY);
-    return reduced || alreadyPlayed ? false : true;
-  });
+    const alreadyPlayed = !!sessionStorage.getItem(LOADER_SESSION_KEY);
+    const willPlay = !reduced && !alreadyPlayed;
 
-  // Apply the decision's side effects on mount. No synchronous setState here.
-  useEffect(() => {
-    if (show === false) {
+    if (willPlay) {
+      // Play path: record that the loader played this session.
+      sessionStorage.setItem(LOADER_SESSION_KEY, '1');
+    } else {
       // Skip path: pre-mark hero compile so it shows its static state, then
       // signal boot ready.
       sessionStorage.setItem(HERO_COMPILE_SESSION_KEY, '1');
       markReady();
-      return;
     }
-    if (show === true) {
-      // Play path: record that the loader played this session.
-      sessionStorage.setItem(LOADER_SESSION_KEY, '1');
-    }
-  }, [show, markReady]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only post-hydration decision; a lazy initializer would break SSR hydration (React #418)
+    setShow(willPlay);
+  }, [markReady]);
 
   // Allow keyboard skip during phases 1–2 (don't break the impact moment).
   useEffect(() => {
