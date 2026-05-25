@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { ReactLenis, type LenisRef } from 'lenis/react';
+import type Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useBootReady } from '@/lib/boot-context';
@@ -37,23 +38,33 @@ export function LenisProvider({ children }: LenisProviderProps) {
   // Under reduced motion the other effect destroys Lenis, so the ticker update
   // guards against a null instance (it would otherwise drive nothing / throw).
   useEffect(() => {
-    const lenis = lenisRef.current?.lenis;
-    if (!lenis) return;
-
-    lenis.on('scroll', ScrollTrigger.update);
+    // Track the instance the scroll listener is bound to, so cleanup never
+    // reads lenisRef.current (which may have changed by cleanup time).
+    let boundLenis: Lenis | null = null;
 
     const update = (time: number) => {
-      // Reduced motion may destroy Lenis after this loop is registered.
-      const current = lenisRef.current?.lenis;
-      if (!current) return;
-      current.raf(time * 1000); // gsap.ticker time is seconds; Lenis wants ms.
+      // Read the Lenis instance EACH FRAME. The ref may not be populated when
+      // this effect first runs; with autoRaf:false the gsap.ticker is Lenis's
+      // ONLY rAF driver, so the previous `if (!lenis) return` guard could skip
+      // gsap.ticker.add() entirely and never retry, leaving Lenis frozen and
+      // the page unscrollable (the [] deps mean it never re-ran). Reading the
+      // instance inside the callback also covers reduced-motion destroy.
+      const lenis = lenisRef.current?.lenis;
+      if (!lenis) return;
+      // Bind ScrollTrigger sync once the instance exists (same timing reason).
+      if (boundLenis !== lenis) {
+        lenis.on('scroll', ScrollTrigger.update);
+        boundLenis = lenis;
+      }
+      lenis.raf(time * 1000); // gsap.ticker time is seconds; Lenis wants ms.
     };
+
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
       gsap.ticker.remove(update);
-      lenis.off('scroll', ScrollTrigger.update);
+      boundLenis?.off('scroll', ScrollTrigger.update);
     };
   }, []);
 
