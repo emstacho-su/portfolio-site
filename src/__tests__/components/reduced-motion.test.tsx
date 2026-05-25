@@ -17,9 +17,11 @@ import type { Project, DemoSection as DemoSectionData } from '@/data/projects';
  * style and no autoplay-driving behavior.
  *
  * Coverage map (the phase's new animations):
- * - project-panel (Wave 3, 02-05): GSAP `gsap.from([data-animate])` scroll
- *   entrance, gated by `useReducedMotion()` -> early return, content stays in
- *   its final state with no inline transform/opacity. ASSERTED HERE.
+ * - project-panel (Wave 3, 02-05; reveal reworked in 02.1): motion `whileInView`
+ *   entrance on the grid container, gated by `useReducedMotion()` (initial=false
+ *   / no whileInView under reduce). The inner [data-animate] markers stay plain,
+ *   so under reduce no [data-animate] child carries an inline
+ *   transform/opacity/transition. ASSERTED HERE.
  * - demo-section (Wave 3/4, 02-05): in-view <video> autoplay via
  *   useInViewVideo; under reduce the `src` is omitted (poster only) and the
  *   IntersectionObserver is never created. ASSERTED HERE.
@@ -130,8 +132,9 @@ describe('reduced-motion short-circuit (R-30 / D-23)', () => {
       screen.getByRole('button', { name: /open the .* case study/i })
     ).toBeInTheDocument();
 
-    // Under reduce, the GSAP entrance early-returns: no [data-animate] child
-    // carries an inline transform/opacity/transition that would imply motion.
+    // Under reduce, the panel renders without motion (initial=false, no
+    // whileInView): no [data-animate] child carries an inline
+    // transform/opacity/transition that would imply motion.
     const animated = container.querySelectorAll<HTMLElement>('[data-animate]');
     expect(animated.length).toBeGreaterThan(0);
     for (const el of Array.from(animated)) {
@@ -195,10 +198,11 @@ describe('animations remain wired under no-reduce (R-30 control)', () => {
       <ProjectPanel project={PROJECT_FIXTURE} onOpen={onOpen} />
     );
 
-    // Under no-reduce, GSAP applies autoAlpha:0 (visibility:hidden) as the
-    // entrance start state, which removes elements from the a11y tree, so query
-    // the DOM directly rather than by role here. The title appears in both the
-    // heading and the placeholder-image label, so target the <h3> directly.
+    // Under no-reduce, motion applies the container's initial { opacity: 0 } and
+    // whileInView never fires in jsdom (no IntersectionObserver intersection),
+    // so the panel sits faded but its content is still in the DOM. The title
+    // appears in both the heading and the placeholder-image label, so target the
+    // <h3> directly.
     const heading = container.querySelector('h3');
     expect(heading?.textContent).toBe(PROJECT_FIXTURE.title);
     expect(screen.getByText(/open case study/i)).toBeInTheDocument();

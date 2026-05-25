@@ -1,20 +1,12 @@
 'use client';
 
-import { useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-import { useReducedMotion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { ExternalLink, ArrowUpRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { PlaceholderImage } from '@/components/ui/placeholder-image';
-import { useBootReady } from '@/lib/boot-context';
 import { cn } from '@/lib/utils';
+import { EASE } from '@/lib/animation';
 import type { Project } from '@/data/projects';
-
-// GSAP needs both plugins registered for useGSAP scoped ScrollTrigger entrances.
-// Registering at module scope is idempotent and safe in Next 16 client modules.
-gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 interface ProjectPanelProps {
   project: Project;
@@ -24,52 +16,31 @@ interface ProjectPanelProps {
 }
 
 export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
-  const panel = useRef<HTMLElement>(null);
+  // Entrance reveal via motion's whileInView (IntersectionObserver). This
+  // replaces a GSAP ScrollTrigger entrance that did NOT work in this Lenis +
+  // gsap.ticker setup: ScrollTrigger progress never advanced for panels below
+  // the first, so their content stayed near opacity 0 ("barely visible"). Only
+  // the first panel escaped because it completed during the initial load
+  // refresh. IntersectionObserver is independent of the scroll/ticker math and
+  // fires reliably when the panel enters the viewport. The reveal is on the
+  // grid container (one fade-up for the whole panel); the inner [data-animate]
+  // markers are retained for the D-23 reduced-motion audit. Under reduced motion
+  // we pass initial=false / no whileInView so content renders in its final,
+  // visible state with no inline animation style (R-30 / D-23 / S-3).
   const reduce = useReducedMotion();
-  const bootReady = useBootReady();
-
-  // Scroll-driven entrance for every [data-animate] child. Under reduced motion
-  // (D-23 / S-3) we return early so the content stays in its final, visible
-  // state with no transform or opacity animation. useGSAP scopes the animation
-  // to the panel ref and auto-reverts on unmount. The reduce + bootReady deps
-  // re-run the effect when the loader hands off or the preference changes;
-  // ScrollTrigger.refresh() after boot/fonts corrects start/end positions that
-  // were measured before layout settled (Pitfall 3).
-  useGSAP(
-    () => {
-      if (reduce || !panel.current) return;
-
-      gsap.from(panel.current.querySelectorAll('[data-animate]'), {
-        y: 60,
-        autoAlpha: 0,
-        duration: 0.8,
-        stagger: 0.08,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: panel.current,
-          start: 'top 70%',
-          end: 'top 30%',
-          toggleActions: 'play none none reverse',
-        },
-      });
-
-      if (bootReady) {
-        ScrollTrigger.refresh();
-      }
-      if (typeof document !== 'undefined' && document.fonts?.ready) {
-        document.fonts.ready.then(() => ScrollTrigger.refresh());
-      }
-    },
-    { scope: panel, dependencies: [reduce, bootReady] }
-  );
 
   return (
     <section
-      ref={panel}
       aria-label={`${project.title} overview`}
       className="min-h-screen w-full flex items-center px-6 py-20"
     >
-      <div className="mx-auto w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <motion.div
+        className="mx-auto w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center"
+        initial={reduce ? false : { opacity: 0, y: 48 }}
+        whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ duration: 0.7, ease: EASE.OUT }}
+      >
         {/* Visual */}
         <div data-animate className="order-2 lg:order-1">
           <div className="rounded-lg border border-border overflow-hidden">
@@ -161,7 +132,7 @@ export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
             />
           </button>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
