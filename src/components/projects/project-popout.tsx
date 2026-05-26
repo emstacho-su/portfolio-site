@@ -87,6 +87,12 @@ export function ProjectPopout({
         <Dialog.Backdrop className="fixed inset-0 z-40 bg-background/85 backdrop-blur-sm" />
         <Dialog.Viewport
           ref={setScroller}
+          // data-lenis-prevent: Lenis intercepts wheel events at the window and
+          // preventDefaults them, which blocked wheel scrolling INSIDE this
+          // dialog (native scrollTop worked, wheel did nothing). This attribute
+          // tells Lenis to ignore wheel events originating in the viewport so
+          // the case study scrolls natively while the page stays locked.
+          data-lenis-prevent
           className="fixed inset-0 z-50 overflow-y-auto overscroll-contain"
         >
           <Dialog.Popup className="min-h-screen w-full bg-background outline-none">

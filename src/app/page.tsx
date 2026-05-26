@@ -8,16 +8,17 @@ import { AboutSection } from '@/components/sections/about';
 import { ProjectsSection } from '@/components/sections/projects';
 import { HarnessSection } from '@/components/sections/harness';
 import { ResumeSection } from '@/components/sections/resume';
-import { ContactSection } from '@/components/sections/contact';
 import { CursorSpotlight } from '@/components/fx/cursor-spotlight';
 import { useSectionView } from '@/hooks/use-section-view';
 
 // Navbar height (h-16 = 64px); anchors scroll to sit just below the fixed nav.
 const NAV_OFFSET = -64;
 
-// The six in-page section ids in scroll order (D-01 / D-02). useSectionView
-// observes these and fires one section_view analytics event per section on first
-// scroll-into-view, so the live page emits section_view events (R-17 / D-05).
+// Section ids observed for section_view analytics + scrollspy, in scroll order
+// (D-01 / D-02). The standalone "Get In Touch" section was removed as redundant
+// with the footer; `contact` now resolves to the footer (id="contact"), so the
+// Contact nav link, scrollspy, and the ?s=contact redirect still land there and
+// a contact section_view still fires when the footer scrolls into view.
 const SECTION_IDS = [
   'hero',
   'about',
@@ -75,8 +76,6 @@ export default function Home() {
         <ProjectsSection />
         <HarnessSection />
         <ResumeSection />
-        {/* Contact is the final scroll target above the layout footer (D-21). */}
-        <ContactSection />
       </main>
     </>
   );

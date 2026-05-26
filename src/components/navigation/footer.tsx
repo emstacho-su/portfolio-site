@@ -29,7 +29,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-hairline mt-10">
+    <footer id="contact" className="border-t border-hairline mt-10 scroll-mt-16">
       <div className="max-w-[1200px] mx-auto px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
           {CONTACT.map(({ label, value, href, icon: Icon }) => (
