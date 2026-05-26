@@ -42,8 +42,11 @@ export const projects: Project[] = [
       'Recharts',
       'Vercel',
     ],
-    status: 'in-progress',
-    links: { repo: 'https://github.com/emstacho-su/quant-edge-tracker' },
+    status: 'shipped',
+    links: {
+      repo: 'https://github.com/emstacho-su/quant-edge-tracker',
+      live: 'https://quant-edge-tracker.vercel.app',
+    },
     heroImage: '/projects/quant-edge-tracker/hero.png',
     demos: [
       {
@@ -119,7 +122,7 @@ export const projects: Project[] = [
     overview:
       'EV Trainer is a decision-modeling trainer built on applied game theory. It runs expected-value and decision-tree analysis, computes ranges and equity, and turns the math into interactive, voice-enabled drills so the reasoning becomes second nature. It is an applied study in decision science and statistics, and I taught myself the stack and shipped the first version in under a week.',
     tech: ['TypeScript', 'React', 'Supabase'],
-    status: 'shipped',
+    status: 'in-progress',
     links: { repo: 'https://github.com/emstacho-su/ev-trainer' },
     heroImage: '/projects/ev-trainer/hero.png',
     demos: [
