@@ -43,8 +43,29 @@ export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
       >
         {/* Visual */}
         <div data-animate className="order-2 lg:order-1">
-          <div className="rounded-lg border border-border overflow-hidden">
-            <PlaceholderImage label={project.title} />
+          <div className="rounded-lg border border-border overflow-hidden bg-surface aspect-video relative">
+            {project.heroImage ? (
+              project.heroImage.endsWith('.mp4') ? (
+                <video
+                  src={project.heroImage}
+                  muted
+                  playsInline
+                  loop
+                  autoPlay
+                  className="h-full w-full object-cover aspect-video block"
+                  aria-label={`${project.title} showcase`}
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={project.heroImage}
+                  alt={project.title}
+                  className="h-full w-full object-cover aspect-video block"
+                />
+              )
+            ) : (
+              <PlaceholderImage label={project.title} />
+            )}
           </div>
         </div>
 
@@ -123,9 +144,9 @@ export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
               'font-mono text-sm text-crimson transition-colors',
               'hover:bg-crimson/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson/50'
             )}
-            aria-label={`Open the ${project.title} case study`}
+            aria-label={`See more about the ${project.title} case study`}
           >
-            Open case study
+            See More
             <ArrowUpRight
               size={16}
               className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"

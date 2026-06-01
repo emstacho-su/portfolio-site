@@ -38,7 +38,7 @@ export function ProjectPopout({
   open,
   project,
   onOpenChange,
-  triggerLabel = 'Open case study',
+  triggerLabel = 'See More',
 }: ProjectPopoutProps) {
   const lenis = useLenis();
   // The scrollable Dialog.Viewport element, captured once it mounts so demo

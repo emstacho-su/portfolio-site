@@ -17,7 +17,10 @@ import nextConfig from '../../../next.config';
 describe('next.config redirects (R-16)', () => {
   const EXPECTED = [
     { source: '/projects', destination: '/?s=projects' },
-    { source: '/projects/:slug*', destination: '/?s=projects' },
+    // Scoped to exclude paths containing a dot so real static assets under
+    // public/projects/ (demo .mp4 / .png) are served instead of 308-redirected;
+    // only extensionless legacy slug paths still redirect.
+    { source: '/projects/:slug((?!.*\\.).*)', destination: '/?s=projects' },
     { source: '/resume', destination: '/?s=resume' },
     { source: '/harness', destination: '/?s=harness' },
     { source: '/interested', destination: '/?s=contact' },

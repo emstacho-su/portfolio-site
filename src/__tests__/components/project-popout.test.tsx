@@ -44,7 +44,7 @@ describe('ProjectPopout dialog a11y (Wave 3)', () => {
     const onOpenChange = vi.fn();
     render(<ProjectPopout onOpenChange={onOpenChange} />);
 
-    const trigger = screen.getByRole('button', { name: /open case study/i });
+    const trigger = screen.getByRole('button', { name: /see more/i });
     fireEvent.click(trigger);
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(true));
 

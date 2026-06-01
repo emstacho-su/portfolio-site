@@ -33,13 +33,26 @@ export function DemoSection({ demo, scroller }: DemoSectionProps) {
   useInViewVideo(videoRef, { scroller });
 
   return (
+    // One full-viewport scroll destination: the caption/body sit above the media
+    // and the media shrinks into the remaining height so the whole section (text
+    // + clip) fits within a single desktop viewport without scrolling past it.
     <section
       aria-label={demo.caption}
-      className="min-h-[60vh] flex flex-col justify-center gap-6 py-16 border-t border-border first:border-t-0"
+      className="min-h-screen flex flex-col justify-center gap-4 py-10 border-t border-border first:border-t-0"
     >
+      <div className="max-w-2xl shrink-0">
+        <h3 className="font-mono text-sm text-crimson/90">{demo.caption}</h3>
+        <p className="mt-2 text-sm md:text-base text-foreground/75 leading-relaxed">
+          {demo.body}
+        </p>
+      </div>
+
       <div
         className={cn(
-          'relative overflow-hidden rounded-lg border border-border bg-surface aspect-video'
+          // flex-1 + min-h-0 lets the media take whatever vertical space is left
+          // after the text; object-contain then fits the whole 16:9 clip inside
+          // that box so nothing is cropped, even on shorter laptop screens.
+          'relative flex-1 min-h-0 w-full overflow-hidden rounded-lg border border-border bg-surface'
         )}
       >
         {demo.type === 'video' ? (
@@ -53,7 +66,7 @@ export function DemoSection({ demo, scroller }: DemoSectionProps) {
             playsInline
             loop
             preload="none"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain"
             aria-label={demo.caption}
           />
         ) : (
@@ -63,16 +76,9 @@ export function DemoSection({ demo, scroller }: DemoSectionProps) {
           <img
             src={demo.src}
             alt={demo.caption}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain"
           />
         )}
-      </div>
-
-      <div className="max-w-2xl">
-        <h3 className="font-mono text-sm text-crimson/90">{demo.caption}</h3>
-        <p className="mt-2 text-sm md:text-base text-foreground/75 leading-relaxed">
-          {demo.body}
-        </p>
       </div>
     </section>
   );

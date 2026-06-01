@@ -129,7 +129,7 @@ describe('reduced-motion short-circuit (R-30 / D-23)', () => {
     ).toBeInTheDocument();
     expect(screen.getByText(PROJECT_FIXTURE.hook)).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /open the .* case study/i })
+      screen.getByRole('button', { name: /see more about the .* case study/i })
     ).toBeInTheDocument();
 
     // Under reduce, the panel renders without motion (initial=false, no
@@ -205,6 +205,6 @@ describe('animations remain wired under no-reduce (R-30 control)', () => {
     // <h3> directly.
     const heading = container.querySelector('h3');
     expect(heading?.textContent).toBe(PROJECT_FIXTURE.title);
-    expect(screen.getByText(/open case study/i)).toBeInTheDocument();
+    expect(screen.getByText(/see more/i)).toBeInTheDocument();
   });
 });

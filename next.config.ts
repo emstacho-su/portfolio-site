@@ -14,8 +14,11 @@ const nextConfig: NextConfig = {
     return [
       { source: '/projects', destination: '/?s=projects', permanent: true },
       // Retire the dynamic case-study detail route; everything lands on the
-      // projects section of the single page.
-      { source: '/projects/:slug*', destination: '/?s=projects', permanent: true },
+      // projects section of the single page. The negative-lookahead on a dot
+      // excludes real static assets under public/projects/ (demo .mp4 / .png
+      // files) so they are served instead of 308-redirected; only extensionless
+      // legacy slug paths (e.g. /projects/quant-edge-tracker) still redirect.
+      { source: '/projects/:slug((?!.*\\.).*)', destination: '/?s=projects', permanent: true },
       { source: '/resume', destination: '/?s=resume', permanent: true },
       { source: '/harness', destination: '/?s=harness', permanent: true },
       { source: '/interested', destination: '/?s=contact', permanent: true },

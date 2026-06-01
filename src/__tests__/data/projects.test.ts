@@ -24,7 +24,7 @@ const REQUIRED_FIELDS = [
   'demos',
 ] as const;
 
-const FEATURED_TITLES = ['Quant Edge Tracker', 'AI News Agent', 'EV Trainer'];
+const FEATURED_TITLES = ['Quant Edge Tracker', 'AI News Agent'];
 
 describe('projects data model (R-26, D-15)', () => {
   it('has at least one project', () => {
@@ -80,7 +80,7 @@ describe('projects data model (R-26, D-15)', () => {
 });
 
 describe('featured project set (R-25, D-14)', () => {
-  it('is exactly Quant Edge Tracker, AI News Agent, EV Trainer', () => {
+  it('is exactly Quant Edge Tracker, AI News Agent', () => {
     const titles = projects.map((p) => (p as { title?: string }).title);
     expect(titles.sort()).toEqual([...FEATURED_TITLES].sort());
   });
