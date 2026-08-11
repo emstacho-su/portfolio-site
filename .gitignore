@@ -43,5 +43,8 @@ next-env.d.ts
 # dev runtime log
 .dev.log
 
+# phase audit screenshots (rerunnable via .audit/capture-baseline.mjs)
+.audit/**/*.png
+
 # brainstorm / visual companion mockups (local only)
 .superpowers/
