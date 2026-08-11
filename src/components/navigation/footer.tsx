@@ -30,6 +30,14 @@ export function Footer() {
 
   return (
     <footer id="contact" className="border-t border-hairline mt-10 scroll-mt-16">
+      {/* Availability line, verbatim per PORTFOLIO_BRIEF.md §3.1 — the single
+          most useful sentence a recruiter can see (§6.5). */}
+      <div className="max-w-[1200px] mx-auto px-6 pt-6">
+        <p className="text-base text-foreground">
+          Looking for full-time data, AI, or process engineering roles starting
+          summer 2027.
+        </p>
+      </div>
       <div className="max-w-[1200px] mx-auto px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
           {CONTACT.map(({ label, value, href, icon: Icon }) => (

@@ -68,6 +68,9 @@ export function ResumeContent() {
               <p className="text-sm text-foreground/85 mt-1">
                 {education.degree}
               </p>
+              <p className="text-sm text-foreground/85">
+                {education.concentration}
+              </p>
               <p className="font-mono text-xs text-crimson/70 mt-1">
                 {education.expectedDate}
               </p>

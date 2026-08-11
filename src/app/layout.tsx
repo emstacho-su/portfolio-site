@@ -9,32 +9,36 @@ import { HeroLoader } from '@/components/fx/hero-loader';
 import { BootProvider } from '@/lib/boot-context';
 import './globals.css';
 
+// First-person description, assembled only from approved copy: the hero
+// tagline (D-08), the §3.2 positioning, and the §3.1 availability line.
+// Voice: talking to the recruiter directly, not "Portfolio of ...".
+const DESCRIPTION =
+  'I build AI systems with a ground-truth understanding of how real operations work. Syracuse iSchool senior concentrating in information security. Looking for full-time data, AI, or process engineering roles starting summer 2027.';
+
 export const metadata: Metadata = {
-  title: 'Evan Stachowiak | AI Systems Builder',
-  description:
-    'Portfolio of Evan Stachowiak: I build AI systems with a ground-truth understanding of how real operations work. Syracuse IMT, data science, AI engineering.',
+  metadataBase: new URL('https://estachowiak.dev'),
+  title: 'Evan Stachowiak',
+  description: DESCRIPTION,
   keywords: [
-    'portfolio',
     'AI engineering',
     'AI systems',
     'data science',
     'Syracuse University',
     'IMT',
-    'software engineer',
+    'information security',
   ],
   authors: [{ name: 'Evan Stachowiak' }],
   openGraph: {
-    title: 'Evan Stachowiak | AI Systems Builder',
-    description:
-      'I build AI systems with a ground-truth understanding of how real operations work.',
+    title: 'Evan Stachowiak',
+    description: DESCRIPTION,
     type: 'website',
     siteName: 'Evan Stachowiak',
+    url: 'https://estachowiak.dev',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Evan Stachowiak | AI Systems Builder',
-    description:
-      'I build AI systems with a ground-truth understanding of how real operations work.',
+    title: 'Evan Stachowiak',
+    description: DESCRIPTION,
   },
   robots: { index: true, follow: true },
 };

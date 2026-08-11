@@ -42,7 +42,7 @@ export const projects: Project[] = [
       'Recharts',
       'Vercel',
     ],
-    status: 'in-progress',
+    status: 'shipped',
     links: {
       repo: 'https://github.com/emstacho-su/quant-edge-tracker',
       live: 'https://quant-edge-tracker.vercel.app',

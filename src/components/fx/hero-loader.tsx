@@ -251,7 +251,7 @@ export function HeroLoader() {
       ref={rootRef}
       role="status"
       aria-live="polite"
-      aria-label="Loading portfolio"
+      aria-label="Loading site"
       className="fixed inset-0 z-[100]"
       style={{ pointerEvents: 'auto' }}
     >
