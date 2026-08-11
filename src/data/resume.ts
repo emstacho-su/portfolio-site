@@ -34,6 +34,7 @@ export interface ResumeData {
   highlights: string[];
   experience: ResumeExperience[];
   projects: ResumeProject[];
+  volunteering: ResumeExperience[];
   education: ResumeEducation;
   skills: Record<string, string[]>;
   certifications: string[];
@@ -104,6 +105,19 @@ export const resumeData: ResumeData = {
   ],
 
   projects: resumeProjects,
+
+  // Twelve documented years is a real line item, not narrative color (§3.6).
+  volunteering: [
+    {
+      title: 'Volunteer Caretaker',
+      company: 'Local animal rescues',
+      dateRange: '2013 to 2025',
+      bullets: [
+        'Grew up living on a horse rescue and volunteered across multiple animal rescue organizations for over a decade',
+        'Daily feeding, grooming, exercising, and stall maintenance for rescued horses; pen cleaning, walking, and behavioral training assistance for rescue dogs',
+      ],
+    },
+  ],
 
   education: {
     school: 'Syracuse University',

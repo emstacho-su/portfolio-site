@@ -10,7 +10,7 @@ import {
 } from 'motion/react';
 import { useRef, type ReactNode } from 'react';
 import { Section } from '@/components/ui/section';
-import { landingAbout } from '@/data/about';
+import { landingAbout, linkedinAbout } from '@/data/about';
 import { EASE } from '@/lib/animation';
 
 export function AboutSection() {
@@ -23,13 +23,32 @@ export function AboutSection() {
         <div className="h-[2px] bg-crimson mt-4 w-32" />
       </SlideBlock>
 
-      {/* First four paragraphs, then the pull quote, then the closing
-          paragraph. All five paragraphs of the approved narrative render
-          (D-09); each keeps the SlideBlock reduced-motion-gated slide (S-3). */}
+      {/* LinkedIn About leads (§9.4): the technical record first. */}
       <div className="space-y-8 md:space-y-10">
-        {landingAbout.paragraphs.slice(0, 4).map((paragraph, i) => (
-          <SlideBlock key={i} from="left">
+        {linkedinAbout.map((paragraph) => (
+          <SlideBlock key={paragraph.slice(0, 32)} from="left">
             <p className="text-lg sm:text-xl text-foreground leading-[1.7] max-w-[58rem]">
+              {paragraph}
+            </p>
+          </SlideBlock>
+        ))}
+      </div>
+
+      {/* Origin narrative below the fold under its own heading (§9.4): kept
+          in full, repositioned rather than deleted. All five paragraphs of
+          the approved narrative render (D-09) with the pull quote woven in;
+          each keeps the SlideBlock reduced-motion-gated slide (S-3). */}
+      <SlideBlock from="left" className="mt-20 md:mt-24 mb-10 md:mb-12">
+        <h3 className="font-sans font-semibold text-2xl md:text-3xl text-foreground tracking-tight">
+          How I got here
+        </h3>
+        <div className="h-[2px] bg-crimson mt-3 w-20" />
+      </SlideBlock>
+
+      <div className="space-y-8 md:space-y-10">
+        {landingAbout.paragraphs.slice(0, 4).map((paragraph) => (
+          <SlideBlock key={paragraph.slice(0, 32)} from="left">
+            <p className="text-base sm:text-lg text-foreground/85 leading-[1.7] max-w-[58rem]">
               {paragraph}
             </p>
           </SlideBlock>
@@ -45,7 +64,7 @@ export function AboutSection() {
       </SlideBlock>
 
       <SlideBlock from="left">
-        <p className="text-lg sm:text-xl text-foreground leading-[1.7] max-w-[58rem]">
+        <p className="text-base sm:text-lg text-foreground/85 leading-[1.7] max-w-[58rem]">
           {landingAbout.paragraphs[4]}
         </p>
       </SlideBlock>

@@ -22,9 +22,10 @@ describe('next.config redirects (R-16)', () => {
     // only extensionless legacy slug paths still redirect.
     { source: '/projects/:slug((?!.*\\.).*)', destination: '/?s=projects' },
     { source: '/resume', destination: '/?s=resume' },
-    { source: '/harness', destination: '/?s=harness' },
+    // Harness section dropped 2026-08-11; its legacy sources land on the root.
+    { source: '/harness', destination: '/' },
     { source: '/interested', destination: '/?s=contact' },
-    { source: '/toolkit', destination: '/?s=harness' },
+    { source: '/toolkit', destination: '/' },
   ] as const;
 
   async function getRedirects() {

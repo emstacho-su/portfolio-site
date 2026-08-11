@@ -14,6 +14,16 @@ const approvedNarrative = [
 
 export const aboutParagraphs = [...approvedNarrative];
 
+// LinkedIn About (PORTFOLIO_BRIEF.md §3.2, verbatim). This LEADS the on-page
+// About section (§9.4): it reaches the technical record by paragraph two,
+// where the origin narrative takes ~700 words to get there. Do not paraphrase.
+export const linkedinAbout = [
+  'I look at systems from angles others tend to overlook, both the big picture and the small details that hold it all together. That instinct led me to quality assurance, where I earned an ISO 9001:2015 Internal Auditor certification and spent two internships analyzing workflows, standardizing documentation, and finding inefficiencies before they became problems.',
+  'At E.C. Styberg Engineering, an employee owned stamping manufacturer, that work has become data work. I pull control plan and PFMEA data out of a legacy planning tool into auditable form, standardize operation descriptions across the corpus, and map process characteristics to failure modes so IATF compliance gaps are visible rather than assumed.',
+  'I build the same way on my own time. An analytics platform that stores every model prediction next to the edge it claimed, so calibration is measurable after the fact. An autonomous research agent with no framework hiding the loop and a budget gate that halts execution when it should. A wardrobe app whose color engine is isolated from the UI by a CI check that fails the build if a framework dependency leaks in.',
+  'The through line is caring whether something actually works and being able to prove it. Senior in Information Management and Technology at the Syracuse University iSchool, concentrating in information security. Looking for full time data, AI, or process engineering roles starting summer 2027.',
+] as const;
+
 // Landing-page About: the approved five-paragraph narrative with a pull quote.
 // about.tsx renders all five paragraphs with the pull quote woven in (D-10).
 export const landingAbout = {

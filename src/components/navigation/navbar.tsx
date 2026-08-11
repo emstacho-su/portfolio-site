@@ -15,7 +15,6 @@ import { Menu } from 'lucide-react';
 const NAV_LINKS = [
   { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
-  { label: 'Harness', href: '#harness' },
   { label: 'Resume', href: '#resume' },
   { label: 'Contact', href: '#contact' },
 ] as const;
@@ -26,7 +25,6 @@ const SECTION_IDS = [
   'hero',
   'about',
   'projects',
-  'harness',
   'resume',
   'contact',
 ];

@@ -6,7 +6,6 @@ import { useLenis } from 'lenis/react';
 import { HeroSection } from '@/components/sections/hero';
 import { AboutSection } from '@/components/sections/about';
 import { ProjectsSection } from '@/components/sections/projects';
-import { HarnessSection } from '@/components/sections/harness';
 import { ResumeSection } from '@/components/sections/resume';
 import { CursorSpotlight } from '@/components/fx/cursor-spotlight';
 import { useSectionView } from '@/hooks/use-section-view';
@@ -23,7 +22,6 @@ const SECTION_IDS = [
   'hero',
   'about',
   'projects',
-  'harness',
   'resume',
   'contact',
 ] as const;
@@ -74,7 +72,6 @@ export default function Home() {
         </div>
         <AboutSection />
         <ProjectsSection />
-        <HarnessSection />
         <ResumeSection />
       </main>
     </>

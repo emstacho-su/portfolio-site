@@ -4,8 +4,15 @@ import { ResumeEntry } from './resume-entry';
 import { resumeData } from '@/data/resume';
 
 export function ResumeContent() {
-  const { experience, projects, education, skills, certifications, interests } =
-    resumeData;
+  const {
+    experience,
+    projects,
+    volunteering,
+    education,
+    skills,
+    certifications,
+    interests,
+  } = resumeData;
 
   return (
     <div className="bg-card border border-border rounded-lg p-6 md:p-8">
@@ -45,6 +52,27 @@ export function ResumeContent() {
                   subtitle={proj.technologies}
                   bullets={proj.bullets}
                   status={proj.status}
+                />
+              ))}
+            </div>
+          </div>
+
+          <Separator className="bg-border" />
+
+          {/* Volunteering (§3.6): a twelve-year commitment rendered as a real
+              credential, not just About-section color. */}
+          <div>
+            <h3 className="font-mono text-sm text-crimson uppercase tracking-wider mb-5">
+              Volunteering
+            </h3>
+            <div className="space-y-6">
+              {volunteering.map((entry) => (
+                <ResumeEntry
+                  key={`${entry.company}-${entry.title}`}
+                  title={entry.title}
+                  subtitle={entry.company}
+                  dateRange={entry.dateRange}
+                  bullets={entry.bullets}
                 />
               ))}
             </div>

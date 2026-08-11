@@ -20,11 +20,12 @@ const nextConfig: NextConfig = {
       // legacy slug paths (e.g. /projects/quant-edge-tracker) still redirect.
       { source: '/projects/:slug((?!.*\\.).*)', destination: '/?s=projects', permanent: true },
       { source: '/resume', destination: '/?s=resume', permanent: true },
-      { source: '/harness', destination: '/?s=harness', permanent: true },
+      // The harness section was dropped (Evan, 2026-08-11: the AI harness has
+      // changed drastically since it was written). Its legacy sources land on
+      // the page top; an unknown ?s id would no-op to the same place anyway.
+      { source: '/harness', destination: '/', permanent: true },
       { source: '/interested', destination: '/?s=contact', permanent: true },
-      // RETARGET the original /toolkit entry: its old destination (/harness) is
-      // being deleted, so it now points at the harness section anchor.
-      { source: '/toolkit', destination: '/?s=harness', permanent: true },
+      { source: '/toolkit', destination: '/', permanent: true },
     ];
   },
 };

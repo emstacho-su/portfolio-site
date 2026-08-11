@@ -27,14 +27,17 @@ const T_CURSOR = 2600;
 const TYPE_INTERVAL_MS = 32;
 
 export function HeroSection() {
-  const bootReady = useBootReady();
-
+  // The hero content is ALWAYS in the DOM (brief §9.1): the name, positioning
+  // line, and CTA server-render so crawlers, link-preview bots, and no-JS
+  // visitors get real text. The compile sequence runs as a post-hydration
+  // progressive enhancement over that text, and the HeroLoader overlay covers
+  // the hero until the boot handoff on first visits.
   return (
     <section
       id="hero"
       className="min-h-[78vh] flex flex-col items-center justify-center px-6 relative pt-16 overflow-hidden text-center"
     >
-      {bootReady && <HeroContent />}
+      <HeroContent />
     </section>
   );
 }
@@ -48,50 +51,53 @@ function HeroContent() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  // Decide whether to play the compile sequence in a lazy initializer rather
-  // than via setState in an effect (react.dev "you might not need an effect").
-  // The reduced-motion and sessionStorage reads are synchronous. The
-  // SESSION_KEY write side effect stays in the effect below so render is pure.
-  const [play] = useState(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return false;
-    const reduced = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-    const alreadyPlayed = sessionStorage.getItem(SESSION_KEY);
-    return !reduced && !alreadyPlayed;
-  });
-
-  useEffect(() => {
-    if (play) {
-      sessionStorage.setItem(SESSION_KEY, '1');
-    }
-  }, [play]);
-
   return (
     <motion.div
       ref={sectionRef}
       style={{ y, opacity }}
       className="relative w-full max-w-[1200px] mx-auto"
     >
-      <CompileSequence play={play} />
+      <CompileSequence />
     </motion.div>
   );
 }
 
-interface CompileSequenceProps {
-  play: boolean;
-}
-
-function CompileSequence({ play }: CompileSequenceProps) {
+function CompileSequence() {
   // step 0 = nothing; 1 = grid; 2 = underline; 3 = name typing mono;
   // 4 = crossfade to sans; 5 = tagline; 6 = meta+cta; 7 = cursor + done
+  //
+  // SSR-safe by construction (§9.1): the INITIAL state is the FINAL state
+  // (step 7, name fully typed), identical on the server and the first client
+  // render, so the delivered HTML carries the full hero text and hydration
+  // matches. Once the boot handoff fires, a post-hydration effect decides
+  // whether to rewind to step 0 and play the compile animation; reduced
+  // motion and repeat visits simply keep the already-rendered final state.
   const lenis = useLenis();
-  const [step, setStep] = useState<number>(play ? 0 : 7);
-  const [typed, setTyped] = useState<string>(play ? '' : NAME_MONO);
+  const bootReady = useBootReady();
+  const [step, setStep] = useState<number>(7);
+  const [typed, setTyped] = useState<string>(NAME_MONO);
   const [skipped, setSkipped] = useState<boolean>(false);
+  const playDecidedRef = useRef(false);
 
   useEffect(() => {
-    if (!play) return;
+    if (!bootReady || playDecidedRef.current) return;
+    playDecidedRef.current = true;
+
+    const reduced = !!window.matchMedia?.(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    const alreadyPlayed = !!sessionStorage.getItem(SESSION_KEY);
+    if (reduced || alreadyPlayed) return; // keep the rendered final state
+
+    sessionStorage.setItem(SESSION_KEY, '1');
+    // Intentional one-shot rewind: SSR/hydration render the FINAL state (so
+    // the text is in the delivered HTML), then this post-hydration effect
+    // rewinds to step 0 to play the compile animation. Same SSR pattern and
+    // rationale as HeroLoader's setShow (see hero-loader.tsx); the lint rule
+    // does not account for hydration-safe initial states.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setStep(0);
+    setTyped('');
 
     const timers: number[] = [];
     let typeInterval: number | null = null;
@@ -148,7 +154,7 @@ function CompileSequence({ play }: CompileSequenceProps) {
       window.removeEventListener('keydown', onSkip);
       window.removeEventListener('pointerdown', onSkip);
     };
-  }, [play]);
+  }, [bootReady]);
 
   const t = (duration: number) =>
     skipped
