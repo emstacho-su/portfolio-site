@@ -40,12 +40,15 @@ export interface ResumeData {
   interests: string[];
 }
 
-// Display status for a project id, read from the projects data so the
-// projects section and the resume section can never disagree again.
-function projectStatus(id: string): string {
-  const project = projects.find((p) => p.id === id);
-  return project?.status === 'shipped' ? 'Shipped' : 'In Progress';
-}
+// The resume section's project list is DERIVED from src/data/projects.ts
+// (single source of truth, brief §8.1): title, stack, status, and compact
+// bullets all come from the same objects the projects section renders.
+const resumeProjects: ResumeProject[] = projects.map((p) => ({
+  title: p.title,
+  technologies: p.tech.join(', '),
+  status: p.status === 'shipped' ? 'Shipped' : 'In Progress',
+  bullets: p.resumeBullets,
+}));
 
 export const resumeData: ResumeData = {
   highlights: [
@@ -100,26 +103,7 @@ export const resumeData: ResumeData = {
     },
   ],
 
-  projects: [
-    {
-      title: 'Quant Edge Tracker',
-      technologies: 'React 19, TypeScript, Vite, Supabase, Recharts',
-      status: projectStatus('quant-edge-tracker'),
-      bullets: [
-        'Built a sports analytics platform: a data pipeline plus modeling layer that converts market lines into fair, vig-adjusted probabilities',
-        'Tracks closing-line value and model calibration over time and surfaces statistical edges with interactive charts',
-      ],
-    },
-    {
-      title: 'AI News Agent',
-      technologies: 'FastAPI, Claude API, Resend, Fly.io',
-      status: projectStatus('ai-news-agent'),
-      bullets: [
-        'Shipped an autonomous daily briefing: a hand-rolled agent loop that researches, ranks, and writes a personalized news summary on a schedule',
-        'Added persistent topic memory, per-item Q&A, and budget tracking; later rebuilt on Claude Code Routines and the Resend MCP',
-      ],
-    },
-  ],
+  projects: resumeProjects,
 
   education: {
     school: 'Syracuse University',

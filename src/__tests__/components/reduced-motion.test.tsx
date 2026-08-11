@@ -80,11 +80,14 @@ const PROJECT_FIXTURE: Project = {
   title: 'Reduced Motion Fixture',
   hook: 'A fixture project for the reduced-motion audit.',
   overview: 'Overview paragraph for the reduced-motion audit fixture project.',
+  summary: ['Case-study paragraph for the reduced-motion audit fixture.'],
+  period: 'Jan 2026 to Feb 2026',
   tech: ['TypeScript', 'React'],
   status: 'shipped',
   links: { repo: 'https://example.com/repo', live: 'https://example.com' },
   heroImage: '/projects/rm-fixture/hero.png',
   demos: [],
+  resumeBullets: ['Compact resume line for the reduced-motion audit fixture.'],
 };
 
 const VIDEO_DEMO: DemoSectionData = {

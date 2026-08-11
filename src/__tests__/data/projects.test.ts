@@ -17,14 +17,18 @@ const REQUIRED_FIELDS = [
   'title',
   'hook',
   'overview',
+  'summary',
+  'period',
   'tech',
   'status',
   'links',
   'heroImage',
   'demos',
+  'resumeBullets',
 ] as const;
 
-const FEATURED_TITLES = ['Quant Edge Tracker', 'AI News Agent'];
+// Brief §4 display set (bulkDocReformat deliberately left off per Evan).
+const FEATURED_TITLES = ['StyleStack', 'Quant Edge Tracker', 'AI News Agent'];
 
 describe('projects data model (R-26, D-15)', () => {
   it('has at least one project', () => {
@@ -55,17 +59,26 @@ describe('projects data model (R-26, D-15)', () => {
     for (const project of projects) {
       const demos = (project as { demos?: unknown }).demos;
       expect(Array.isArray(demos), `project ${(project as { id?: string }).id} demos is not an array`).toBe(true);
-      // Ordered (used by the Wave 3 pop-out, 02-05) means non-empty with at
-      // least one demo section to walk through in sequence.
-      expect(
-        (demos as unknown[]).length,
-        `project ${(project as { id?: string }).id} has an empty demos[]`
-      ).toBeGreaterThan(0);
+      // An EMPTY demos[] is a legitimate awaiting-media state (brief §8.3):
+      // the pop-out then renders the summary paragraphs plus an explicit
+      // "media in production" empty state, and dev builds warn about the gap.
       for (const demo of demos as Array<Record<string, unknown>>) {
         expect(['video', 'image']).toContain(demo.type);
         expect(typeof demo.caption).toBe('string');
         expect(typeof demo.body).toBe('string');
         expect(typeof demo.src).toBe('string');
+      }
+    }
+  });
+
+  it('projects awaiting media still give the pop-out real content (summary)', () => {
+    for (const project of projects) {
+      const { summary, demos } = project as unknown as {
+        summary: string[];
+        demos: unknown[];
+      };
+      if (demos.length === 0) {
+        expect(summary.length).toBeGreaterThan(0);
       }
     }
   });

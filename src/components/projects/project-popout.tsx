@@ -117,10 +117,31 @@ export function ProjectPopout({
                   <h2 className="font-sans text-3xl md:text-4xl text-crimson font-semibold">
                     {project.title}
                   </h2>
-                  <p className="mt-4 text-base md:text-lg text-foreground/80 leading-relaxed max-w-2xl">
-                    {project.overview}
+                  <p className="mt-3 font-mono text-xs uppercase tracking-wider text-tertiary">
+                    {project.period} /{' '}
+                    {project.status === 'shipped' ? 'Shipped' : 'In Progress'}
                   </p>
+                  <p className="mt-6 text-base md:text-lg text-foreground/80 leading-relaxed max-w-2xl">
+                    {project.hook}
+                  </p>
+                  {/* Long-form case-study copy (Evan's LinkedIn write-up, §4). */}
+                  <div className="mt-6 space-y-4 max-w-2xl">
+                    {project.summary.map((paragraph) => (
+                      <p
+                        key={paragraph.slice(0, 32)}
+                        className="text-sm md:text-base text-foreground/75 leading-relaxed"
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
                 </header>
+              )}
+
+              {project && project.demos.length === 0 && (
+                <p className="font-mono text-xs uppercase tracking-wider text-tertiary border-t border-border pt-8">
+                  Demo media in production
+                </p>
               )}
 
               {project?.demos.map((demo, index) => (

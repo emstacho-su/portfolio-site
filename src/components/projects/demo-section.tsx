@@ -65,10 +65,22 @@ export function DemoSection({ demo, scroller }: DemoSectionProps) {
             muted
             playsInline
             loop
+            controls
             preload="none"
             className="h-full w-full object-contain"
             aria-label={demo.caption}
-          />
+          >
+            {/* Captions slot (§8.3): drop a WebVTT file next to the clip and
+                set captionsSrc on the demo entry to wire it up. */}
+            {demo.captionsSrc && (
+              <track
+                kind="captions"
+                srcLang="en"
+                label="English captions"
+                src={demo.captionsSrc}
+              />
+            )}
+          </video>
         ) : (
           // Swappable placeholder path (D-13): not a build-time-known asset, so
           // next/image optimization does not apply. Plain <img> is intentional.

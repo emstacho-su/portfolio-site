@@ -3,7 +3,6 @@
 import { motion, useReducedMotion } from 'motion/react';
 import { ExternalLink, ArrowUpRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { PlaceholderImage } from '@/components/ui/placeholder-image';
 import { cn } from '@/lib/utils';
 import { EASE } from '@/lib/animation';
 import type { Project } from '@/data/projects';
@@ -32,7 +31,12 @@ export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
   return (
     <section
       aria-label={`${project.title} overview`}
-      className="min-h-screen w-full flex items-center px-6 py-20"
+      // Full-viewport panels only when real media exists; without media the
+      // emptiness should not be the experience (brief §8.2).
+      className={cn(
+        'w-full flex items-center px-6',
+        project.heroImage ? 'min-h-screen py-20' : 'py-24 md:py-32'
+      )}
     >
       <motion.div
         className="mx-auto w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center"
@@ -64,7 +68,17 @@ export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
                 />
               )
             ) : (
-              <PlaceholderImage label={project.title} />
+              // Genuine empty state, not a fake image box (§8.2). Assets land
+              // per public/projects/<slug>/README.md.
+              <div className="h-full w-full flex flex-col items-center justify-center gap-2 p-8 text-center">
+                <p className="font-mono text-xs uppercase tracking-wider text-tertiary">
+                  Demo media in production
+                </p>
+                <p className="text-sm text-muted-foreground max-w-xs">
+                  Screenshots and a video walkthrough of the live app are being
+                  produced.
+                </p>
+              </div>
             )}
           </div>
         </div>
@@ -78,6 +92,9 @@ export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
             >
               {project.status === 'shipped' ? 'Shipped' : 'In Progress'}
             </Badge>
+            <span className="font-mono text-xs text-tertiary">
+              {project.period}
+            </span>
             {project.links.repo && (
               <a
                 href={project.links.repo}

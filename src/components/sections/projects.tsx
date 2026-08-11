@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { motion, useInView } from 'motion/react';
 import { useRef } from 'react';
 import { Reveal } from '@/components/ui/reveal';
@@ -23,6 +23,19 @@ export function ProjectsSection({ onProjectClick }: ProjectsSectionProps) {
   // closed so the title does not flash empty mid-transition.
   const [open, setOpen] = useState(false);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+
+  // Build-visible TODO (brief §8.3): surface missing demo media in dev so an
+  // empty media set cannot silently ship unnoticed.
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+    for (const p of projects) {
+      if (!p.heroImage || p.demos.length === 0) {
+        console.warn(
+          `[media TODO] ${p.slug}: demo media missing, expected assets under public/projects/${p.slug}/ (see that folder's README.md)`
+        );
+      }
+    }
+  }, []);
 
   const handleOpen = useCallback(
     (project: Project) => {
