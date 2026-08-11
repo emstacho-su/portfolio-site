@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { jetbrainsMono } from '@/lib/fonts';
+import { generalSans, jetbrainsMono } from '@/lib/fonts';
 import { AnimationProvider } from './providers/animation-provider';
 import { LenisProvider } from './providers/lenis-provider';
 import { SkipLink } from '@/components/ui/skip-link';
@@ -17,7 +17,7 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://estachowiak.dev'),
-  title: 'Evan Stachowiak',
+  title: 'Evan Stachowiak | Data, AI, and Process Engineering',
   description: DESCRIPTION,
   keywords: [
     'AI engineering',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Evan Stachowiak' }],
   openGraph: {
-    title: 'Evan Stachowiak',
+    title: 'Evan Stachowiak | Data, AI, and Process Engineering',
     description: DESCRIPTION,
     type: 'website',
     siteName: 'Evan Stachowiak',
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Evan Stachowiak',
+    title: 'Evan Stachowiak | Data, AI, and Process Engineering',
     description: DESCRIPTION,
   },
   robots: { index: true, follow: true },
@@ -51,7 +51,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jetbrainsMono.variable} h-full`}
+      className={`${generalSans.variable} ${jetbrainsMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">
         <SkipLink />

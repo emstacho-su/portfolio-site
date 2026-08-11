@@ -114,7 +114,7 @@ export function ProjectPopout({
             <div className="mx-auto w-full max-w-[1100px] px-6 pt-24 pb-16">
               {project && (
                 <header className="mb-16">
-                  <h2 className="font-mono text-3xl md:text-4xl text-crimson font-semibold">
+                  <h2 className="font-sans text-3xl md:text-4xl text-crimson font-semibold">
                     {project.title}
                   </h2>
                   <p className="mt-4 text-base md:text-lg text-foreground/80 leading-relaxed max-w-2xl">

@@ -25,12 +25,12 @@ export function ResumeSectionClient({ onResumeDownload }: ResumeSectionProps = {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
         <div ref={headingRef}>
           <Reveal>
-            <h2 className="font-mono text-2xl md:text-3xl text-crimson flex items-center gap-2">
+            <h2 className="font-sans font-semibold text-2xl md:text-3xl text-crimson flex items-center gap-2">
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={isHeadingInView ? { opacity: 1 } : undefined}
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="text-crimson/40"
+                className="font-mono text-crimson/40"
               >
                 {'>_'}
               </motion.span>

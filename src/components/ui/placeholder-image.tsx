@@ -25,7 +25,7 @@ export function PlaceholderImage({ label, className }: PlaceholderImageProps) {
     >
       <div className="text-center px-4 relative z-10">
         <p className="font-mono text-xs text-muted-foreground">{label}</p>
-        <p className="font-mono text-[10px] text-muted-foreground/50 mt-1">
+        <p className="font-mono text-xs text-tertiary mt-1">
           1200 x 800
         </p>
       </div>

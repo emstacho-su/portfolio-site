@@ -74,7 +74,7 @@ export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
           <div data-animate className="flex items-center gap-3 mb-4">
             <Badge
               variant="outline"
-              className="font-mono text-[10px] border-crimson/40 text-crimson"
+              className="font-mono text-xs border-crimson/40 text-crimson"
             >
               {project.status === 'shipped' ? 'Shipped' : 'In Progress'}
             </Badge>
@@ -104,7 +104,7 @@ export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
 
           <h3
             data-animate
-            className="font-mono text-2xl md:text-3xl text-foreground font-semibold mb-4"
+            className="font-sans text-2xl md:text-3xl text-foreground font-semibold mb-4"
           >
             {project.title}
           </h3>
@@ -128,7 +128,7 @@ export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
               <Badge
                 key={tech}
                 variant="secondary"
-                className="font-mono text-[10px] bg-surface border border-border"
+                className="font-mono text-xs bg-surface border border-border"
               >
                 {tech}
               </Badge>

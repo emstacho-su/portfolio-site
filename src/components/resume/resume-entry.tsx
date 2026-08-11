@@ -18,7 +18,7 @@ export function ResumeEntry({
       <div className="absolute left-0 top-1.5 w-2 h-2 -translate-x-[4.5px] rounded-full bg-crimson/60" />
       <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-2">
         <div>
-          <h4 className="font-mono text-sm text-foreground font-semibold">
+          <h4 className="font-sans text-sm text-foreground font-semibold">
             {title}
             {status && (
               <span className="ml-2 text-crimson text-xs font-normal">

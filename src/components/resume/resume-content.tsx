@@ -59,7 +59,7 @@ export function ResumeContent() {
               Education
             </h3>
             <div>
-              <p className="font-mono text-sm text-foreground font-semibold">
+              <p className="font-sans text-sm text-foreground font-semibold">
                 {education.school}
               </p>
               <p className="text-xs text-muted-foreground">
@@ -83,7 +83,7 @@ export function ResumeContent() {
                     <Badge
                       key={course}
                       variant="secondary"
-                      className="font-mono text-[10px] bg-surface border border-border"
+                      className="font-mono text-xs bg-surface border border-border"
                     >
                       {course}
                     </Badge>
@@ -111,7 +111,7 @@ export function ResumeContent() {
                       <Badge
                         key={skill}
                         variant="secondary"
-                        className="font-mono text-[10px] bg-surface border border-border"
+                        className="font-mono text-xs bg-surface border border-border"
                       >
                         {skill}
                       </Badge>
@@ -153,7 +153,7 @@ export function ResumeContent() {
                 <Badge
                   key={interest}
                   variant="outline"
-                  className="font-mono text-[10px] border-border text-muted-foreground"
+                  className="font-mono text-xs border-border text-muted-foreground"
                 >
                   {interest}
                 </Badge>

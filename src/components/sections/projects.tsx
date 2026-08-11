@@ -45,7 +45,7 @@ export function ProjectsSection({ onProjectClick }: ProjectsSectionProps) {
       <div className="mx-auto w-full max-w-[1200px] px-6 pt-10 md:pt-14">
         <div ref={headingRef} className="mb-4">
           <Reveal>
-            <h2 className="font-mono text-2xl md:text-3xl text-crimson">
+            <h2 className="font-sans font-semibold text-2xl md:text-3xl text-crimson">
               Projects
             </h2>
           </Reveal>

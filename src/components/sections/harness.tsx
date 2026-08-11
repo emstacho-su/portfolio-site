@@ -21,7 +21,7 @@ function HarnessBody() {
     <Section id="harness">
       <div ref={headingRef} className="mb-4">
         <Reveal>
-          <h2 className="font-mono text-2xl md:text-3xl text-crimson">
+          <h2 className="font-sans font-semibold text-2xl md:text-3xl text-crimson">
             Harness
           </h2>
         </Reveal>
@@ -58,7 +58,7 @@ function HarnessBody() {
             <h3 className="font-sans text-lg font-semibold text-foreground">
               {pillar.name}
             </h3>
-            <p className="font-mono text-xs text-muted-foreground mt-3 leading-relaxed">
+            <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
               {pillar.oneLiner}
             </p>
           </motion.article>
