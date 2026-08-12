@@ -12,9 +12,15 @@ interface ProjectPanelProps {
   // Opens the shared pop-out case study with this project's payload (S-5 fires
   // analytics in the parent section, not here).
   onOpen: (project: Project) => void;
+  // False when a parent (the horizontal gallery) already animates the panel
+  // into view: the slide/scale/opacity of the gallery IS the entrance, and a
+  // translated slide can transit the viewport too briefly for whileInView to
+  // catch during a fast flick, stranding the panel invisible (mobile audit
+  // 2026-08-12). Defaults to true for standalone/stacked use.
+  entrance?: boolean;
 }
 
-export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
+export function ProjectPanel({ project, onOpen, entrance = true }: ProjectPanelProps) {
   // Entrance reveal via motion's whileInView (IntersectionObserver). This
   // replaces a GSAP ScrollTrigger entrance that did NOT work in this Lenis +
   // gsap.ticker setup: ScrollTrigger progress never advanced for panels below
@@ -42,8 +48,8 @@ export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
     >
       <motion.div
         className="mx-auto w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center"
-        initial={reduce ? false : { opacity: 0, y: 48 }}
-        whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+        initial={reduce || !entrance ? false : { opacity: 0, y: 48 }}
+        whileInView={reduce || !entrance ? undefined : { opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.7, ease: EASE.OUT }}
       >

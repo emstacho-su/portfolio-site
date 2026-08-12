@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { CollapsingHeader } from '@/components/sections/collapsing-header';
+import { HorizontalGallery } from '@/components/projects/horizontal-gallery';
 import { ProjectPanel } from '@/components/projects/project-panel';
 import { ProjectPopout } from '@/components/projects/project-popout';
 import { projects } from '@/data/projects';
@@ -59,17 +60,21 @@ export function ProjectsSection({ onProjectClick }: ProjectsSectionProps) {
         captions={['Built end to end.', 'Scroll for the work.']}
       />
 
-      {/* Vertically stacked overview panels, content-height with tightened
-          padding (whitespace reduction ruling, 2026-08-12). */}
-      <div>
+      {/* Apple-style horizontal gallery (Evan, 2026-08-12): the section pins
+          and vertical scroll slides the panels between each other. Reduced
+          motion renders the prior vertical stack via the gallery's fallback. */}
+      <HorizontalGallery>
         {projects.map((project) => (
           <ProjectPanel
             key={project.id}
             project={project}
             onOpen={handleOpen}
+            // The gallery's slide + depth falloff is the entrance; the panel's
+            // own whileInView could be skipped by a fast flick mid-pin.
+            entrance={false}
           />
         ))}
-      </div>
+      </HorizontalGallery>
 
       {/* One shared accessible pop-out for whichever panel was clicked. */}
       <ProjectPopout

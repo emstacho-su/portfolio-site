@@ -49,9 +49,14 @@ export function SlabHeading({
   });
   const y = useSpring(yRaw, { stiffness: 55, damping: 22, mass: 1 });
 
-  const captionOpacity = useTransform(scrollYProgress, [0.08, 0.32], [0, 1], {
-    clamp: true,
-  });
+  // Captions reveal via whileInView (IntersectionObserver), NOT the scroll
+  // progress above: target-based useScroll caches element offsets, and when
+  // late layout (media, reflow) shifts the slab's document position the
+  // cached mapping strands the captions at opacity 0 (mobile audit
+  // 2026-08-12). IO measures real intersection, and once:true latches the
+  // reveal so it never rewinds at the top of the page. The parallax y stays
+  // scroll-linked — a slightly stale parallax is invisible; missing captions
+  // are not.
 
   const MotionTag = as === 'h3' ? motion.h3 : motion.h2;
 
@@ -80,7 +85,10 @@ export function SlabHeading({
 
       {captions ? (
         <motion.div
-          style={reduce ? undefined : { opacity: captionOpacity }}
+          initial={reduce ? false : { opacity: 0 }}
+          whileInView={reduce ? undefined : { opacity: 1 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
           className="mx-auto mt-4 md:mt-5 flex w-full max-w-[1200px] items-center justify-between gap-6 font-mono text-[11px] md:text-xs uppercase tracking-[0.18em] text-background/75"
         >
           <span>{captions[0]}</span>

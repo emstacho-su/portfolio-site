@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useBootMarkReady } from '@/lib/boot-context';
+import { safeSessionGet, safeSessionSet } from '@/lib/safe-storage';
 
 // === Session keys ===
 // Loader plays once per browser session (matches LoadupSequence behavior).
@@ -20,6 +21,12 @@ const PHASE_2_SWEEP_DUR = 0.75; // parted-curtain reveal
 const PHASE_3_DROP_DUR = 0.32; // name slams in (heavy ease.in)
 const PHASE_4_FADE_DUR = 0.5; // loader exits
 const PHASE_4_DELAY = 0.3; // breath after stamp lands
+// Fail-safe hand-off deadline. The full timeline is ~3s after fonts resolve;
+// if fonts.ready hangs on a slow cellular connection or a throttled background
+// tab stalls gsap.ticker, the loader must still hand off — a stuck loader
+// means an unscrollable page, since Lenis stays stopped until markReady
+// (mobile audit 2026-08-12).
+const FAILSAFE_MS = 6000;
 
 // =====================================================================
 // EASING — tweak these to change the feel without restructuring code.
@@ -57,33 +64,53 @@ export function HeroLoader() {
     const reduced = !!window.matchMedia?.(
       '(prefers-reduced-motion: reduce)'
     ).matches;
-    const alreadyPlayed = !!sessionStorage.getItem(LOADER_SESSION_KEY);
+    const alreadyPlayed = !!safeSessionGet(LOADER_SESSION_KEY);
     const willPlay = !reduced && !alreadyPlayed;
 
     if (willPlay) {
       // Play path: record that the loader played this session.
-      sessionStorage.setItem(LOADER_SESSION_KEY, '1');
+      safeSessionSet(LOADER_SESSION_KEY, '1');
     } else {
       // Skip path: pre-mark hero compile so it shows its static state, then
       // signal boot ready.
-      sessionStorage.setItem(HERO_COMPILE_SESSION_KEY, '1');
+      safeSessionSet(HERO_COMPILE_SESSION_KEY, '1');
       markReady();
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only post-hydration decision; a lazy initializer would break SSR hydration (React #418)
     setShow(willPlay);
   }, [markReady]);
 
-  // Allow keyboard skip during phases 1–2 (don't break the impact moment).
+  // Skip: Escape, or any tap/click — touch devices have no Escape key, and
+  // before this the loader was unskippable on phones (mobile audit 2026-08-12).
   useEffect(() => {
     if (show !== true) return;
-    const skip = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return;
-      sessionStorage.setItem(HERO_COMPILE_SESSION_KEY, '1');
+    const skip = () => {
+      safeSessionSet(HERO_COMPILE_SESSION_KEY, '1');
       setShow(false);
       markReady();
     };
-    window.addEventListener('keydown', skip);
-    return () => window.removeEventListener('keydown', skip);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') skip();
+    };
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('pointerdown', skip);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('pointerdown', skip);
+    };
+  }, [show, markReady]);
+
+  // Fail-safe hand-off: force boot-ready if the timeline hasn't completed by
+  // the deadline (see FAILSAFE_MS). markReady is idempotent, and unmounting
+  // clears the timer on the normal path.
+  useEffect(() => {
+    if (show !== true) return;
+    const failSafe = window.setTimeout(() => {
+      safeSessionSet(HERO_COMPILE_SESSION_KEY, '1');
+      setShow(false);
+      markReady();
+    }, FAILSAFE_MS);
+    return () => window.clearTimeout(failSafe);
   }, [show, markReady]);
 
   // GSAP timeline — built once when show flips true.
@@ -97,7 +124,7 @@ export function HeroLoader() {
         paused: true,
         onComplete: () => {
           // Hand-off: ensure hero typewriter is skipped, then unmount + boot ready.
-          sessionStorage.setItem(HERO_COMPILE_SESSION_KEY, '1');
+          safeSessionSet(HERO_COMPILE_SESSION_KEY, '1');
           setShow(false);
           markReady();
         },

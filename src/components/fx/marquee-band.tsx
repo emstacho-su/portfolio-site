@@ -105,9 +105,11 @@ export function MarqueeBand({
         style={reduce || drift === 0 ? undefined : { x }}
         className="w-max"
       >
-        {/* Pauses on hover so a moving link can actually be clicked. */}
+        {/* No hover pause (Evan, 2026-08-12): the band keeps rolling under
+            the cursor; at these loop durations a link is still easily
+            clickable in motion. */}
         <div
-          className="flex items-center gap-8 w-max animate-marquee group-hover:[animation-play-state:paused]"
+          className="flex items-center gap-8 w-max animate-marquee"
           style={{ '--marquee-duration': `${duration}s` } as CSSProperties}
         >
           {copy}
