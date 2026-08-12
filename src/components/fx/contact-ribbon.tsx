@@ -1,103 +1,94 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
-import { useLenis } from 'lenis/react';
-import { MarqueeBand } from '@/components/fx/marquee-band';
+import { useEffect, useState } from 'react';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+} from 'motion/react';
+import { MarqueeBand, type MarqueeItem } from '@/components/fx/marquee-band';
 
 // Contact ticker as a traveling ribbon (Evan, 2026-08-12). During the hero it
-// runs full-bleed under the navbar. On the snap to About it plays a ribbon
-// wrap: shoots off to the right, a 45-degree corner fold appears, the ribbon
-// travels down the right edge of the viewport, folds again at the bottom
-// corner, and lands right side up as the full-bleed bottom bar. Scrolling
-// back to the hero plays the wrap in reverse. Corners are square and the bar
-// touches both screen edges in every resting state.
+// runs full-bleed under the navbar. The wrap is anchored to scroll itself
+// (not a fired animation): as the page moves from the hero to the About
+// header, the top bar shoots right, a 45-degree fold flashes at the top-right
+// corner, the ribbon travels down the right edge, folds again at the bottom
+// corner, and lands right side up as the full-bleed bottom bar. The hero snap
+// drives that scroll quickly, so the wrap reads as the scroll effect; slow or
+// reversed scrolling plays it back proportionally.
 //
-// The three segments are separate fixed/sticky elements choreographed with
-// variant delays; the fold diamonds flash at each corner while the ribbon
-// passes. The whole strip is decorative (MarqueeBand is aria-hidden); the
-// sr-only block below carries the addresses for assistive tech, since the
-// footer now holds only the copyright.
-const CONTACT_ITEMS = [
-  'emstacho@syr.edu',
-  'github.com/emstacho-su',
-  'linkedin.com/in/evan-stachowiak',
-  '(262) 933-0228',
-] as const;
+// Nav collision guarantee: the right-edge segment translates INSIDE a fixed
+// clipping wrapper that starts at the nav line (top-16, overflow-hidden), so
+// no resting or transit position can ever show above it. All segments are
+// square-cornered and touch both screen edges. The strip is decorative
+// (MarqueeBand is aria-hidden); the sr-only block carries the addresses for
+// assistive tech, since the footer holds only the copyright.
+// Phone stays plain text (Evan, 2026-08-12: no tel: link); the other
+// addresses are clickable in the visible strip (tabIndex -1, see
+// MarqueeBand) and real focusable links in the sr-only list below.
+const CONTACT_ITEMS: readonly MarqueeItem[] = [
+  { label: 'emstacho@syr.edu', href: 'mailto:emstacho@syr.edu' },
+  { label: 'github.com/emstacho-su', href: 'https://github.com/emstacho-su' },
+  {
+    label: 'linkedin.com/in/evan-stachowiak',
+    href: 'https://www.linkedin.com/in/evan-stachowiak-449119349',
+  },
+  { label: '(262) 933-0228' },
+];
 
 // Bar cross-section after the 33% trim: py-1 + text ~= 26px tall. The right
-// ribbon column and the fold diamonds share the same 26px (w/h utilities
-// below use the arbitrary value directly).
+// ribbon column and the fold diamonds share the same 26px.
 const BAND_CLASS =
   'bg-crimson text-background py-1 font-mono text-[11px] md:text-xs uppercase tracking-[0.15em]';
 
-// Zone hysteresis: past 60% of the viewport counts as below the hero; back
-// above 35% counts as the hero again. The snap animation crosses the gap
-// fast, so the state never flaps mid-wrap.
-const DOWN_AT = 0.6;
-const UP_AT = 0.35;
-
-type Zone = 'top' | 'bottom';
-
-const topBarVariants = {
-  top: {
-    x: '0%',
-    transition: { delay: 0.95, duration: 0.4, ease: [0, 0, 0.2, 1] as const },
-  },
-  bottom: {
-    x: '110%',
-    transition: { duration: 0.3, ease: [0.4, 0, 1, 1] as const },
-  },
-};
-
-const rightRibbonVariants = {
-  top: {
-    y: ['101%', '0%', '-101%'],
-    transition: { delay: 0.25, duration: 0.8, times: [0, 0.5, 1], ease: 'easeInOut' as const },
-  },
-  bottom: {
-    y: ['-101%', '0%', '101%'],
-    transition: { delay: 0.25, duration: 0.8, times: [0, 0.5, 1], ease: 'easeInOut' as const },
-  },
-};
-
-const bottomBarVariants = {
-  top: {
-    x: '110%',
-    transition: { duration: 0.3, ease: [0.4, 0, 1, 1] as const },
-  },
-  bottom: {
-    x: '0%',
-    transition: { delay: 0.95, type: 'spring' as const, stiffness: 300, damping: 32 },
-  },
-};
-
-// Fold diamonds: opacity flashes while the ribbon passes their corner.
-const foldFlash = (delay: number) => ({
-  opacity: [0, 1, 1, 0],
-  transition: { delay, duration: 0.5, times: [0, 0.2, 0.8, 1] },
-});
-
-const topFoldVariants = { bottom: foldFlash(0.2), top: foldFlash(0.85) };
-const bottomFoldVariants = { bottom: foldFlash(0.85), top: foldFlash(0.2) };
+const NAV_PX = 64;
 
 export function ContactRibbon() {
   const reduce = useReducedMotion();
-  const [zone, setZone] = useState<Zone>('top');
 
-  useLenis((lenis) => {
-    const vh = window.innerHeight;
-    const y = lenis.scroll;
-    setZone((current) => {
-      if (current === 'top' && y > vh * DOWN_AT) return 'bottom';
-      if (current === 'bottom' && y < vh * UP_AT) return 'top';
-      return current;
-    });
+  // The wrap plays across the hero-to-About scroll distance. Measured from
+  // the real #about position (hero height) so the snap's landing point and
+  // the wrap's completion coincide; re-measured on resize.
+  const [range, setRange] = useState(800);
+  useEffect(() => {
+    const measure = () => {
+      const about = document.getElementById('about');
+      if (about) setRange(Math.max(about.offsetTop - NAV_PX, 1));
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
+
+  const { scrollY } = useScroll();
+  const progress = useTransform(scrollY, [0, range], [0, 1], { clamp: true });
+
+  // Phase map: top bar exits (0 to 0.3), ribbon transits the right edge
+  // (0.22 to 0.78), bottom bar lands (0.7 to 1). Folds flash while the
+  // ribbon passes their corner.
+  const topX = useTransform(progress, [0, 0.3], ['0%', '110%'], {
+    clamp: true,
   });
+  const ribbonY = useTransform(progress, [0.22, 0.78], ['-101%', '101%'], {
+    clamp: true,
+  });
+  const bottomX = useTransform(progress, [0.7, 1], ['110%', '0%'], {
+    clamp: true,
+  });
+  const topFoldOpacity = useTransform(
+    progress,
+    [0.18, 0.28, 0.42, 0.52],
+    [0, 1, 1, 0]
+  );
+  const bottomFoldOpacity = useTransform(
+    progress,
+    [0.55, 0.65, 0.78, 0.88],
+    [0, 1, 1, 0]
+  );
 
   // Reduced motion: no ribbon theatrics, just the static full-bleed bottom
-  // bar docking above the footer (Lenis is destroyed under reduce, so the
-  // zone listener never runs either).
+  // bar docking above the footer.
   if (reduce) {
     return (
       <div className="sticky bottom-0 z-30 mt-16 md:mt-24">
@@ -117,36 +108,12 @@ export function ContactRibbon() {
     <>
       <ContactAddresses />
 
-      {/* Top segment: full-bleed under the navbar during the hero. */}
-      <motion.div
-        aria-hidden="true"
-        className="fixed top-16 inset-x-0 z-30"
-        initial={false}
-        variants={topBarVariants}
-        animate={zone}
-      >
-        <MarqueeBand
-          items={CONTACT_ITEMS}
-          repeat={2}
-          duration={38}
-          drift={0}
-          className={BAND_CLASS}
-        />
-      </motion.div>
-
-      {/* Right-edge segment: the ribbon in transit. A rotated copy of the
-          band travels the full height of the viewport below the nav. */}
-      <motion.div
-        aria-hidden="true"
-        className="fixed top-16 bottom-0 right-0 z-30 w-[26px] overflow-hidden"
-        initial={false}
-        variants={rightRibbonVariants}
-        animate={zone}
-      >
-        <div
-          className="absolute top-0 left-[26px] origin-top-left rotate-90"
-          style={{ width: 'calc(100vh - 64px)' }}
-        >
+      {/* Top segment: full-bleed under the navbar during the hero. Clipped
+          horizontally by its own wrapper so the exit never paints outside
+          the viewport. Pointer events stay ON so its links are clickable;
+          once translated away, the moved content no longer hit-tests. */}
+      <div className="fixed top-16 inset-x-0 z-30 overflow-hidden">
+        <motion.div aria-hidden="true" style={{ x: topX }}>
           <MarqueeBand
             items={CONTACT_ITEMS}
             repeat={2}
@@ -154,36 +121,51 @@ export function ContactRibbon() {
             drift={0}
             className={BAND_CLASS}
           />
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
 
-      {/* Corner folds: 45-degree diamonds in the darker crimson, flashing as
-          the ribbon wraps each corner. */}
+      {/* Right-edge segment: a rotated copy of the band translating inside a
+          clip wrapper that starts AT the nav line, so it can never show over
+          or behind the navbar. */}
+      <div className="fixed top-16 bottom-0 right-0 z-30 w-[26px] overflow-hidden pointer-events-none">
+        <motion.div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{ y: ribbonY }}
+        >
+          <div
+            className="absolute top-0 left-[26px] origin-top-left rotate-90"
+            style={{ width: `calc(100vh - ${NAV_PX}px)` }}
+          >
+            <MarqueeBand
+              items={CONTACT_ITEMS}
+              repeat={2}
+              duration={38}
+              drift={0}
+              className={BAND_CLASS}
+            />
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Corner folds: 45-degree diamonds in the darker crimson, visible only
+          while the ribbon wraps their corner. */}
       <motion.div
         aria-hidden="true"
-        className="fixed top-16 right-0 z-[31] w-[26px] h-[26px] bg-crimson-hover rotate-45 opacity-0"
-        initial={false}
-        variants={topFoldVariants}
-        animate={zone}
+        className="fixed top-16 right-0 z-[31] w-[26px] h-[26px] bg-crimson-hover rotate-45 pointer-events-none"
+        style={{ opacity: topFoldOpacity }}
       />
       <motion.div
         aria-hidden="true"
-        className="fixed bottom-0 right-0 z-[31] w-[26px] h-[26px] bg-crimson-hover rotate-45 opacity-0"
-        initial={false}
-        variants={bottomFoldVariants}
-        animate={zone}
+        className="fixed bottom-0 right-0 z-[31] w-[26px] h-[26px] bg-crimson-hover rotate-45 pointer-events-none"
+        style={{ opacity: bottomFoldOpacity }}
       />
 
       {/* Bottom segment: sticky inside <main>, so it rides the viewport
           bottom and docks flush above the footer at the end of the page.
           Full-bleed, square corners. */}
-      <div className="sticky bottom-0 z-30 mt-16 md:mt-24">
-        <motion.div
-          aria-hidden="true"
-          initial={false}
-          variants={bottomBarVariants}
-          animate={zone}
-        >
+      <div className="sticky bottom-0 z-30 mt-16 md:mt-24 overflow-hidden">
+        <motion.div aria-hidden="true" style={{ x: bottomX }}>
           <MarqueeBand
             items={CONTACT_ITEMS}
             repeat={2}
@@ -197,14 +179,29 @@ export function ContactRibbon() {
   );
 }
 
-// The addresses as real text for screen readers: the visible ribbon is
-// aria-hidden and the footer is copyright-only, so this is the accessible
-// source of the contact info.
+// The addresses as real, focusable links for keyboard and screen reader
+// users: the visible ribbon is aria-hidden with unfocusable links and the
+// footer is copyright-only, so this is the accessible source of the
+// contact info.
 function ContactAddresses() {
   return (
     <ul className="sr-only">
       {CONTACT_ITEMS.map((item) => (
-        <li key={item}>{item}</li>
+        <li key={item.label}>
+          {item.href ? (
+            <a
+              href={item.href}
+              target={item.href.startsWith('http') ? '_blank' : undefined}
+              rel={
+                item.href.startsWith('http') ? 'noopener noreferrer' : undefined
+              }
+            >
+              {item.label}
+            </a>
+          ) : (
+            item.label
+          )}
+        </li>
       ))}
     </ul>
   );

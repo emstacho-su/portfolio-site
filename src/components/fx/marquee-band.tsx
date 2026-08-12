@@ -11,9 +11,18 @@ import {
 import { Sparkle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+export interface MarqueeItem {
+  label: string;
+  /* When set, the item renders as a link. Marquee links are tabIndex -1:
+     the band is aria-hidden and every item repeats many times, so keyboard
+     and AT users get a single accessible copy elsewhere (see ContactRibbon's
+     sr-only list) while pointer users click the moving strip. */
+  href?: string;
+}
+
 interface MarqueeBandProps {
-  /* Phrases repeated along the band; a separator glyph renders after each. */
-  items: readonly string[];
+  /* Items repeated along the band; a separator glyph renders after each. */
+  items: readonly MarqueeItem[];
   /* Band surface: background, text color, font, size, vertical padding. */
   className?: string;
   /* Seconds for one full loop (one copy width). Lower = faster. */
@@ -62,7 +71,23 @@ export function MarqueeBand({
       {Array.from({ length: repeat }).flatMap((_, r) =>
         items.map((item, i) => (
           <span key={`${r}-${i}`} className="flex items-center gap-8 shrink-0">
-            <span className="whitespace-nowrap">{item}</span>
+            {item.href ? (
+              <a
+                href={item.href}
+                tabIndex={-1}
+                target={item.href.startsWith('http') ? '_blank' : undefined}
+                rel={
+                  item.href.startsWith('http')
+                    ? 'noopener noreferrer'
+                    : undefined
+                }
+                className="whitespace-nowrap hover:underline underline-offset-4"
+              >
+                {item.label}
+              </a>
+            ) : (
+              <span className="whitespace-nowrap">{item.label}</span>
+            )}
             {separator}
           </span>
         ))
@@ -74,14 +99,15 @@ export function MarqueeBand({
     <div
       ref={ref}
       aria-hidden="true"
-      className={cn('relative w-full overflow-hidden', className)}
+      className={cn('group relative w-full overflow-hidden', className)}
     >
       <motion.div
         style={reduce || drift === 0 ? undefined : { x }}
         className="w-max"
       >
+        {/* Pauses on hover so a moving link can actually be clicked. */}
         <div
-          className="flex items-center gap-8 w-max animate-marquee"
+          className="flex items-center gap-8 w-max animate-marquee group-hover:[animation-play-state:paused]"
           style={{ '--marquee-duration': `${duration}s` } as CSSProperties}
         >
           {copy}

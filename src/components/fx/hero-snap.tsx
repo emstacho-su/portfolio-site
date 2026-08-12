@@ -17,6 +17,11 @@ export function HeroSnap() {
   const lastY = useRef(0);
 
   useLenis((lenis) => {
+    // Touch devices scroll natively (syncTouch is off), so a locked
+    // programmatic scrollTo here fires mid-gesture and fights the finger and
+    // its momentum (mobile audit 2026-08-12). The snap is a wheel/trackpad
+    // affordance; coarse pointers keep fully native hero scrolling.
+    if (window.matchMedia('(pointer: coarse)').matches) return;
     const y = lenis.scroll;
     const dir = y - lastY.current;
     lastY.current = y;
