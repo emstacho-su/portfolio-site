@@ -14,12 +14,12 @@ const approvedNarrative = [
 
 export const aboutParagraphs = [...approvedNarrative];
 
-// LinkedIn About (PORTFOLIO_BRIEF.md §3.2, verbatim). This LEADS the on-page
-// About section (§9.4): it reaches the technical record by paragraph two,
-// where the origin narrative takes ~700 words to get there. Do not paraphrase.
+// LinkedIn About (verbatim from Evan's updated LinkedIn, 2026-08-12; this
+// version supersedes PORTFOLIO_BRIEF.md §3.2). This LEADS the on-page About
+// section (§9.4). Do not paraphrase.
 export const linkedinAbout = [
   'I look at systems from angles others tend to overlook, both the big picture and the small details that hold it all together. That instinct led me to quality assurance, where I earned an ISO 9001:2015 Internal Auditor certification and spent two internships analyzing workflows, standardizing documentation, and finding inefficiencies before they became problems.',
-  'At E.C. Styberg Engineering, an employee owned stamping manufacturer, that work has become data work. I pull control plan and PFMEA data out of a legacy planning tool into auditable form, standardize operation descriptions across the corpus, and map process characteristics to failure modes so IATF compliance gaps are visible rather than assumed.',
+  "At E.C. Styberg Engineering, that work has become data work spanning quality systems, inventory, and commercial process. Different problems, same move: find where the record and reality have drifted apart, close the gap, and build something that keeps it closed. Sometimes that's a compliance gap everyone assumed was covered, sometimes it's inventory that doesn't match the floor, sometimes it's a process documented one way and run another. It's also made me the person in the room when outside technology meets the shop, pressure-testing vendor claims against how the plant actually runs.",
   'I build the same way on my own time. An analytics platform that stores every model prediction next to the edge it claimed, so calibration is measurable after the fact. An autonomous research agent with no framework hiding the loop and a budget gate that halts execution when it should. A wardrobe app whose color engine is isolated from the UI by a CI check that fails the build if a framework dependency leaks in.',
   'The through line is caring whether something actually works and being able to prove it. Senior in Information Management and Technology at the Syracuse University iSchool, concentrating in information security. Looking for full time data, AI, or process engineering roles starting summer 2027.',
 ] as const;

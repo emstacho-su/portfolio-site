@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Evan Stachowiak Resume</title>
+<style>
+  @font-face {
+    font-family: 'General Sans';
+    src: url('../src/fonts/GeneralSans-400.woff2') format('woff2');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'General Sans';
+    src: url('../src/fonts/GeneralSans-500.woff2') format('woff2');
+    font-weight: 500;
+  }
+  @font-face {
+    font-family: 'General Sans';
+    src: url('../src/fonts/GeneralSans-600.woff2') format('woff2');
+    font-weight: 600;
+  }
+  @font-face {
+    font-family: 'General Sans';
+    src: url('../src/fonts/GeneralSans-700.woff2') format('woff2');
+    font-weight: 700;
+  }
+
+  :root {
+    --ink: #1a1a1a;
+    --sub: #5c5853;
+    --faint: #67625a;
+    --crimson: #b81e33;
+    --hairline: #d8d3c8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @page { size: Letter; margin: 0; }
+
+  html, body {
+    width: 8.5in;
+    font-family: 'General Sans', 'Segoe UI', sans-serif;
+    color: var(--ink);
+    background: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page { padding: 0.5in 0.55in 0.45in; }
+
+  /* ============ Header ============ */
+  header { margin-bottom: 10px; }
+  .accent-rule { width: 72px; height: 3px; background: var(--crimson); margin-bottom: 8px; }
+  h1 { font-size: 25px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+  .subline { font-size: 10.5px; font-weight: 500; color: var(--sub); margin-top: 4px; }
+  .contact {
+    display: flex; flex-wrap: wrap; gap: 3px 14px;
+    font-size: 8.4px; color: var(--faint); margin-top: 6px;
+  }
+  .contact a { color: var(--faint); text-decoration: none; }
+  .availability {
+    margin-top: 8px; padding: 6px 9px;
+    border-left: 2.5px solid var(--crimson);
+    font-size: 9.6px; font-weight: 500;
+  }
+
+  /* ============ Layout ============ */
+  .columns { display: grid; grid-template-columns: 1fr 2.45in; gap: 0 0.3in; margin-top: 10px; }
+
+  .label {
+    font-size: 8.6px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--crimson);
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 3px; margin: 12px 0 7px;
+  }
+  .label:first-child { margin-top: 0; }
+
+  /* ============ Entries ============ */
+  .entry { margin-bottom: 8px; break-inside: avoid; }
+  .entry-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .entry-title { font-size: 10.2px; font-weight: 600; }
+  .entry-title .status { color: var(--crimson); font-weight: 500; font-size: 8.6px; }
+  .entry-dates { font-size: 8.4px; color: var(--crimson); white-space: nowrap; }
+  .entry-sub { font-size: 8.8px; color: var(--sub); margin-top: 1px; }
+  ul { list-style: none; margin-top: 3px; }
+  li {
+    font-size: 9px; line-height: 1.42; color: #333;
+    padding-left: 10px; position: relative; margin-bottom: 2.5px;
+  }
+  li::before { content: '\25B8'; position: absolute; left: 0; color: var(--crimson); opacity: 0.55; font-size: 8px; }
+
+  /* ============ Sidebar ============ */
+  .side .block { margin-bottom: 4px; }
+  .side p, .side li { font-size: 8.8px; }
+  .edu-school { font-size: 10px; font-weight: 600; }
+  .edu-line { font-size: 8.8px; color: #333; margin-top: 1px; }
+  .edu-meta { font-size: 8.4px; color: var(--crimson); margin-top: 2px; }
+  .edu-note { font-size: 8.2px; color: var(--sub); margin-top: 2px; }
+  .coursework { font-size: 8.2px; color: var(--sub); line-height: 1.5; margin-top: 4px; }
+  .skill-group { margin-bottom: 5px; }
+  .skill-cat { font-size: 8.2px; font-weight: 600; color: var(--sub); margin-bottom: 1.5px; }
+  .skill-items { font-size: 8.6px; line-height: 1.45; color: #333; }
+  .side ul li { padding-left: 10px; margin-bottom: 2px; }
+  .side ul li::before { content: '\2713'; opacity: 0.7; }
+  .interests { font-size: 8.6px; color: #333; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="accent-rule"></div>
+    <h1>Evan Stachowiak</h1>
+    <p class="subline">Data, AI, and Process Engineering &middot; Syracuse University iSchool</p>
+    <div class="contact">
+      <a href="mailto:emstacho@syr.edu">emstacho@syr.edu</a>
+      <span>(262) 933-0228</span>
+      <a href="https://estachowiak.dev">estachowiak.dev</a>
+      <a href="https://www.linkedin.com/in/evan-stachowiak-449119349">linkedin.com/in/evan-stachowiak-449119349</a>
+      <a href="https://github.com/emstacho-su">github.com/emstacho-su</a>
+      <span>Syracuse, NY / Milwaukee, WI</span>
+    </div>
+    <p class="availability">
+      I build AI systems with a ground-truth understanding of how real operations work.
+      Looking for full-time data, AI, or process engineering roles starting summer 2027.
+      Open to relocation nationwide.
+    </p>
+  </header>
+
+  <div class="columns">
+    <!-- ============ Main column ============ -->
+    <main>
+      <div class="label">Relevant Experience</div>
+
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">Data Science Intern</span>
+          <span class="entry-dates">May 2026 to Present</span>
+        </div>
+        <p class="entry-sub">E.C. Styberg Engineering &amp; Manufacturing &middot; Kenosha, WI</p>
+        <ul>
+          <li>Built a new business tracker that consolidated opportunity data previously scattered across spreadsheets and inboxes, so pipeline status is visible in one place rather than reconstructed on request</li>
+          <li>Rebuilt tooling room inventory records, reconciling system data against what was physically on the floor and establishing a process to keep the two aligned</li>
+          <li>Reviewed internal estimating processes, documenting how they work in practice against how they were designed to work</li>
+          <li>Acted as technical liaison for a third-party AI tool evaluation, translating between the vendor and internal stakeholders and pressure-testing vendor claims against how the shop actually operates</li>
+          <li>Extracted control plan and PFMEA data from a legacy quality planning tool into auditable form, standardized operation descriptions across the corpus, and mapped process characteristics to failure modes to surface IATF compliance gaps</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">Quality Assurance Intern</span>
+          <span class="entry-dates">May 2025 to Aug 2025</span>
+        </div>
+        <p class="entry-sub">E.C. Styberg Engineering &amp; Manufacturing &middot; Kenosha, WI</p>
+        <ul>
+          <li>Reformatted instructions and policies into a standardized company-wide format, and built a Python application to parse legacy documents into the new template (bulkDocReformat)</li>
+          <li>Ensured all documents were properly controlled under the quality system</li>
+          <li>Earned ISO 9001 Internal Auditor certification</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">Undergraduate Teaching Assistant, IST 263</span>
+          <span class="entry-dates">Jan 2025 to May 2025</span>
+        </div>
+        <p class="entry-sub">Syracuse University iSchool &middot; Intro to HTML &amp; Front-End Web Design &middot; Syracuse, NY</p>
+        <ul>
+          <li>Selected as an undergraduate TA; supported 20+ students in HTML/CSS debugging through one-on-one guidance and example-based instruction</li>
+          <li>Created supplemental materials translating complex front-end concepts into accessible, step-by-step demonstrations</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">Quality Assurance Intern</span>
+          <span class="entry-dates">May 2023 to Aug 2023</span>
+        </div>
+        <p class="entry-sub">Stainless Foundry &amp; Engineering, LLC &middot; Milwaukee, WI</p>
+        <ul>
+          <li>Managed and standardized outdated melt procedures, converting physical documents into organized digital records</li>
+          <li>Created new documentation for each melt material, including reference images, to prevent misidentification</li>
+          <li>Improved department accessibility for floor workers who did not speak English by restructuring the filing system</li>
+          <li>Recognized with the SFSA Schumo Scholarship for this work and presented it at a national industry conference</li>
+        </ul>
+      </div>
+
+      <div class="label">Projects</div>
+
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">StyleStack <span class="status">(In Progress)</span></span>
+          <span class="entry-dates">fsn-wardrobe.vercel.app</span>
+        </div>
+        <p class="entry-sub">Next.js App Router, TypeScript, Supabase RLS, pnpm monorepo, Vitest, fast-check</p>
+        <ul>
+          <li>Built a wardrobe app around a pure TypeScript compatibility engine, isolated from the UI, held at 100% branch coverage, and tested with property-based generation</li>
+          <li>CI enforces the engine isolation: ESLint bans framework imports, the package builds standalone, and the build fails if a dependency leaks in; 82 test files across the workspace</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">Quant Edge Tracker <span class="status">(Shipped)</span></span>
+          <span class="entry-dates">quant-edge-tracker.vercel.app</span>
+        </div>
+        <p class="entry-sub">React 19, TypeScript, Vite, Supabase, Recharts, Claude Code SDK</p>
+        <ul>
+          <li>Built a sports analytics platform: a data pipeline plus modeling layer that converts market lines into fair, vig-adjusted probabilities</li>
+          <li>Stores every prediction next to the edge it claimed: across 59 predictions one strategy projected 53.0% and realized 39.6%, a 13.4 point overconfidence gap the measurement layer exists to catch</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">AI News Agent <span class="status">(Shipped)</span></span>
+          <span class="entry-dates">github.com/emstacho-su/ai-news-agent</span>
+        </div>
+        <p class="entry-sub">Python 3.11, FastAPI, Anthropic API, Fly.io, Resend</p>
+        <ul>
+          <li>Shipped an autonomous daily briefing: a hand-rolled agent loop of roughly 150 lines that researches, ranks, and writes a personalized news summary on a schedule</li>
+          <li>Added persistent topic memory, per-item Q&amp;A, and enforced budget caps; 373 tests with every Anthropic call mocked; later rebuilt on Claude Code Routines and the Resend MCP</li>
+        </ul>
+      </div>
+    </main>
+
+    <!-- ============ Sidebar ============ -->
+    <aside class="side">
+      <div class="label">Education</div>
+      <div class="block">
+        <p class="edu-school">Syracuse University</p>
+        <p class="edu-line">School of Information Studies (iSchool)</p>
+        <p class="edu-line">B.S., Information Management &amp; Technology</p>
+        <p class="edu-line">Concentration in Information Security</p>
+        <p class="edu-meta">Expected May 2027 &middot; Senior</p>
+        <p class="edu-note">Activities: Sigma Chi Fraternity</p>
+        <p class="coursework">
+          Coursework: Applied Data Science (IST 387) &middot; Python Programming (IST 256) &middot;
+          Front-End Web Dev (IST 263) &middot; Networks &amp; Cloud (IST 233) &middot;
+          Info Reporting &amp; Presentation (IST 344) &middot; IT &amp; Data Culture (IST 305)
+        </p>
+      </div>
+
+      <div class="label">Skills</div>
+      <div class="block">
+        <div class="skill-group">
+          <p class="skill-cat">Programming</p>
+          <p class="skill-items">Python &middot; HTML/CSS &middot; JavaScript &middot; TypeScript</p>
+        </div>
+        <div class="skill-group">
+          <p class="skill-cat">Tools &amp; Platforms</p>
+          <p class="skill-items">Microsoft Suite (Excel Cert.) &middot; Git/GitHub &middot; Cursor &middot; Claude Code CLI &middot; Codex CLI &middot; VS Code</p>
+        </div>
+        <div class="skill-group">
+          <p class="skill-cat">Data &amp; Analytics</p>
+          <p class="skill-items">Statistical Modeling &middot; Data Visualization (ggplot2) &middot; Exploratory Data Analysis</p>
+        </div>
+        <div class="skill-group">
+          <p class="skill-cat">Quality &amp; Compliance</p>
+          <p class="skill-items">ISO 9001:2015 Auditing &middot; Process Improvement &middot; Document Control</p>
+        </div>
+        <div class="skill-group">
+          <p class="skill-cat">AI &amp; Emerging Tech</p>
+          <p class="skill-items">Prompt Engineering &middot; Context Engineering &middot; Agentic AI Workflows</p>
+        </div>
+      </div>
+
+      <div class="label">Certifications &amp; Awards</div>
+      <div class="block">
+        <ul>
+          <li>ISO 9001:2015 Certified Internal Auditor</li>
+          <li>Microsoft Excel Certified</li>
+          <li>SFSA Schumo Scholarship Recipient</li>
+          <li>VPA Leadership Scholarship</li>
+          <li>SFSA National Conference Presenter</li>
+          <li>ACT 35 &middot; SAT 1540</li>
+        </ul>
+      </div>
+
+      <div class="label">Volunteering</div>
+      <div class="block">
+        <p class="edu-school" style="font-size: 9.4px;">Volunteer Caretaker</p>
+        <p class="edu-line">Local animal rescues</p>
+        <p class="edu-meta">2013 to 2025 &middot; 12 years</p>
+        <p class="coursework" style="margin-top: 2px;">
+          Grew up living on a horse rescue; daily feeding, grooming, exercising, and
+          stall maintenance for rescued horses, plus care and behavioral training
+          assistance for rescue dogs across multiple organizations.
+        </p>
+      </div>
+
+      <div class="label">Interests</div>
+      <div class="block">
+        <p class="interests">Philosophy &middot; Quantitative Strategy &middot; Fitness &amp; Nutrition Science &middot; AI Workflow Design &middot; Game Theory</p>
+      </div>
+    </aside>
+  </div>
+</div>
+</body>
+</html>
