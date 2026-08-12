@@ -1,9 +1,16 @@
 import { ImageResponse } from 'next/og';
+import {
+  SK_VIEWBOX,
+  SK_INK_PATHS,
+  SK_RAIL_PATHS,
+  SK_INK_STROKE,
+  SK_RAIL_STROKE,
+} from '@/components/navigation/sk-logo';
 
-// Social preview card (PORTFOLIO_BRIEF.md §6.1): cream background, name large,
-// positioning line beneath, crimson accent rule, domain at the bottom.
-// Rendered with satori's bundled sans for now; General Sans / JetBrains Mono
-// get wired in once the fonts are self-hosted (Phase 2).
+// Social preview card (PORTFOLIO_BRIEF.md §6.1): cream background, the SK
+// monogram (replacing the bare accent rule, 2026-08-12), name large,
+// positioning line beneath, domain at the bottom. Literal token hexes;
+// ImageResponse cannot read CSS variables.
 
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
@@ -29,14 +36,26 @@ export default function Image() {
           position: 'relative',
         }}
       >
-        <div
-          style={{
-            width: 110,
-            height: 6,
-            backgroundColor: '#b81e33',
-            marginBottom: 44,
-          }}
-        />
+        <svg
+          width="150"
+          height="72"
+          viewBox={SK_VIEWBOX}
+          fill="none"
+          strokeLinecap="butt"
+          strokeLinejoin="round"
+          style={{ marginBottom: 44 }}
+        >
+          <g stroke="#1a1a1a" strokeWidth={SK_INK_STROKE}>
+            {SK_INK_PATHS.map((d) => (
+              <path key={d} d={d} />
+            ))}
+          </g>
+          <g stroke="#b81e33" strokeWidth={SK_RAIL_STROKE}>
+            {SK_RAIL_PATHS.map((d) => (
+              <path key={d} d={d} />
+            ))}
+          </g>
+        </svg>
         <div
           style={{
             fontSize: 92,

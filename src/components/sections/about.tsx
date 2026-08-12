@@ -131,20 +131,26 @@ function SlideBlock({ children, from, className }: SlideBlockProps) {
   // overflow-x boundary ("one side cut off", viewport audit 2026-08-12).
   const offset = (from === 'left' ? -1 : 1) * (small ? 44 : 96);
 
-  // Entry only — slide in from the side as the block enters the viewport from
-  // the bottom, then hold in place. Opacity's range ends AFTER x's on purpose:
-  // the block must land (or nearly land) before it turns readable, so a
-  // still-offset block is never presented as clipped readable text.
+  // Small viewports: entry only on the latched progress — slide in from the
+  // side as the block enters from the bottom, then hold (the continuous
+  // mapping read as sections going missing on phones, mobile audit
+  // 2026-08-12). Desktop: the full sideload in AND out restored (Evan,
+  // 2026-08-12) — continuous, unlatched progress slides the block in as it
+  // enters from the bottom and back out the same side as it leaves through
+  // the top, rewinding naturally when scrolling up. Opacity's entry range
+  // ends after x's on purpose: the block must land (or nearly land) before
+  // it turns readable, so a still-offset block is never presented as
+  // clipped readable text.
   const xRaw: MotionValue<number> = useTransform(
-    latched,
-    [0, small ? 0.2 : 0.35],
-    [offset, 0],
+    small ? latched : scrollYProgress,
+    small ? [0, 0.2] : [0, 0.35, 0.72, 1],
+    small ? [offset, 0] : [offset, 0, 0, offset],
     { clamp: true }
   );
   const opacityRaw: MotionValue<number> = useTransform(
-    latched,
-    [0, small ? 0.25 : 0.4],
-    [0, 1],
+    small ? latched : scrollYProgress,
+    small ? [0, 0.25] : [0, 0.4, 0.76, 1],
+    small ? [0, 1] : [0, 1, 1, 0],
     { clamp: true }
   );
 
