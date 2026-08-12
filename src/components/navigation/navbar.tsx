@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { TIMING, EASE } from '@/lib/animation';
 import { useScrollspy } from '@/hooks/use-scrollspy';
 import { MobileMenu } from './mobile-menu';
+import { SkLogo } from './sk-logo';
 import { Menu } from 'lucide-react';
 
 // In-page anchor links (D-02). href values are hashes; the id after `#` is both
@@ -70,19 +71,15 @@ export function Navbar() {
             language (full-bleed slabs, viewport-wrapping ribbon) instead of
             the 1200px text column. */}
         <nav className="w-full px-5 md:px-8 h-16 flex items-center justify-between">
+          {/* Monogram replaces the ES_ wordmark (Evan, 2026-08-12). Ink
+              linework inherits the link color, so hover tints the whole
+              mark crimson to match the old hover behavior. */}
           <Link
             href="/"
-            className="group font-mono text-sm text-foreground hover:text-crimson transition-all duration-200 inline-flex items-baseline hover:-translate-y-[1px] active:translate-y-[1px] active:scale-[0.96]"
+            className="text-foreground hover:text-crimson transition-all duration-200 inline-flex items-center hover:-translate-y-[1px] active:translate-y-[1px] active:scale-[0.96]"
             aria-label="Home"
           >
-            ES
-            <motion.span
-              className="text-crimson inline-block"
-              animate={{ opacity: [1, 0.35, 1] }}
-              transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              _
-            </motion.span>
+            <SkLogo className="h-7 w-auto" />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
