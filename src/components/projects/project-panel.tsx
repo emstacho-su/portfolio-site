@@ -31,11 +31,13 @@ export function ProjectPanel({ project, onOpen }: ProjectPanelProps) {
   return (
     <section
       aria-label={`${project.title} overview`}
-      // Full-viewport panels only when real media exists; without media the
-      // emptiness should not be the experience (brief §8.2).
+      // Content-height panels with tightened padding (whitespace reduction
+      // ruling, 2026-08-12; supersedes the D-11 full-viewport treatment). The
+      // media branch keeps slightly more air than the empty state because the
+      // aspect-video visual already carries height.
       className={cn(
-        'w-full flex items-center px-6',
-        project.heroImage ? 'min-h-screen py-20' : 'py-24 md:py-32'
+        'w-full px-6',
+        project.heroImage ? 'py-14 md:py-16' : 'py-16 md:py-20'
       )}
     >
       <motion.div

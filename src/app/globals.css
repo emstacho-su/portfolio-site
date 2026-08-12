@@ -30,6 +30,10 @@
   --color-hairline: var(--border-hairline);
   --color-tertiary: var(--text-tertiary);
 
+  /* Marquee band pair (projects transition): ember orange + deep roast ink */
+  --color-ember: var(--band-ember);
+  --color-ember-ink: var(--band-ember-ink);
+
   /* Fonts — General Sans self-hosted via next/font/local (src/lib/fonts.ts) */
   --font-sans: var(--font-general-sans), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: var(--font-jetbrains);
@@ -68,6 +72,12 @@
 
   /* Destructive kept for shadcn compat, in sync with accent-hover */
   --destructive: #96182A;
+
+  /* Marquee bands: ember orange sits next to crimson for the red+orange
+     transition scheme. Ink is deep roast; the band text is display-sized,
+     so the ~4.4:1 pair clears the 3:1 large-text AA bar with room. */
+  --band-ember: #D9612C;
+  --band-ember-ink: #3B0E08;
 }
 
 @layer base {
@@ -78,6 +88,11 @@
   html {
     @apply font-sans scroll-smooth;
     color-scheme: light;
+    /* Backstop for pre-reveal SlideBlock offsets: body's overflow-x: hidden
+       alone does not reliably stop sideways panning on iOS Safari. clip (not
+       hidden) so the root never becomes a scroll container (mobile audit
+       2026-08-12). */
+    overflow-x: clip;
   }
 
   body {
@@ -87,8 +102,12 @@
     /* The full-bleed hero grid uses a w-screen breakout (D-06). w-screen
        ignores the scrollbar gutter, so without this an off-by-a-few-px
        horizontal scrollbar (and a CLS hit) can appear. Clamp it here
-       (T-02-15 mitigation); vertical scrolling is unaffected. */
-    overflow-x: hidden;
+       (T-02-15 mitigation); vertical scrolling is unaffected. clip, not
+       hidden: overflow-x hidden computes overflow-y to auto, which makes
+       body a scroll container and silently disables every position: sticky
+       descendant (the projects marquee band). clip clamps without creating
+       a scroll container, same rationale as the html rule above. */
+    overflow-x: clip;
   }
 
   /* Typographic hierarchy per spec §2 */
@@ -190,6 +209,19 @@
 
   .cursor-blink {
     animation: blink-crimson 1.06s steps(1) infinite;
+  }
+
+  /* Marquee ticker: the track holds 3 identical copies, so one loop is a
+     translate of exactly one copy (-100% / 3). The reduced-motion block below
+     collapses it to a static strip (duration 0.01ms, single iteration). */
+  @keyframes marquee-scroll {
+    to {
+      transform: translateX(calc(-100% / 3));
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee-scroll var(--marquee-duration, 30s) linear infinite;
   }
 }
 

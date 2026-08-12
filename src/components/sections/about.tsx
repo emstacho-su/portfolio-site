@@ -8,67 +8,93 @@ import {
   useReducedMotion,
   type MotionValue,
 } from 'motion/react';
-import { useRef, type ReactNode } from 'react';
-import { Section } from '@/components/ui/section';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { CollapsingHeader } from '@/components/sections/collapsing-header';
 import { landingAbout, linkedinAbout } from '@/data/about';
 import { EASE } from '@/lib/animation';
 
+// Small-viewport tuning (mobile audit 2026-08-12): the ±140px desktop offset
+// overflows a phone-width layout (501px scrollWidth at a 390px viewport), and
+// the unhurried 0→0.4 entry range lets a momentum flick arrive at content
+// that is still transparent. Under 768px the slide shrinks and the entry
+// range compresses so the reveal keeps pace with touch scrolling.
+const SMALL_VIEWPORT_QUERY = '(max-width: 767px)';
+
+function useIsSmallViewport(): boolean {
+  const [small, setSmall] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia(SMALL_VIEWPORT_QUERY);
+    // Synchronous first read in the effect (not a lazy initializer): the
+    // server and hydration renders must agree on the desktop values, then the
+    // real viewport applies post-hydration (same SSR rationale as HeroLoader).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSmall(mq.matches);
+    const update = (event: MediaQueryListEvent) => setSmall(event.matches);
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  return small;
+}
+
 export function AboutSection() {
   return (
-    <Section id="about" className="max-w-[1200px] py-20 md:py-28">
-      <SlideBlock from="left" className="mb-12 md:mb-14">
-        <h2 className="font-sans text-4xl md:text-5xl lg:text-6xl text-foreground tracking-tight">
-          About
-        </h2>
-        <div className="h-[2px] bg-crimson mt-4 w-32" />
-      </SlideBlock>
+    <section id="about" className="w-full mt-12 md:mt-16 scroll-mt-16">
+      {/* Small crimson slab headers matching the Projects transition (Evan,
+          2026-08-12). Each header + its content sits in its own wrapper so
+          the collapsed sticky bar releases when its subsection ends. */}
+      <div className="relative">
+        <CollapsingHeader title="About" as="h2" size="sm" />
 
-      {/* LinkedIn About leads (§9.4): the technical record first. */}
-      <div className="space-y-8 md:space-y-10">
-        {linkedinAbout.map((paragraph) => (
-          <SlideBlock key={paragraph.slice(0, 32)} from="left">
-            <p className="text-lg sm:text-xl text-foreground leading-[1.7] max-w-[58rem]">
-              {paragraph}
-            </p>
-          </SlideBlock>
-        ))}
+        <div className="mx-auto w-full max-w-[1200px] px-6 pt-12 md:pt-14 pb-16 md:pb-20">
+          {/* LinkedIn About leads (§9.4): the technical record first. */}
+          <div className="space-y-8 md:space-y-10">
+            {linkedinAbout.map((paragraph) => (
+              <SlideBlock key={paragraph.slice(0, 32)} from="left">
+                <p className="text-lg sm:text-xl text-foreground leading-[1.7] max-w-[58rem]">
+                  {paragraph}
+                </p>
+              </SlideBlock>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Origin narrative below the fold under its own heading (§9.4): kept
           in full, repositioned rather than deleted. All five paragraphs of
           the approved narrative render (D-09) with the pull quote woven in;
           each keeps the SlideBlock reduced-motion-gated slide (S-3). */}
-      <SlideBlock from="left" className="mt-20 md:mt-24 mb-10 md:mb-12">
-        <h3 className="font-sans font-semibold text-2xl md:text-3xl text-foreground tracking-tight">
-          How I got here
-        </h3>
-        <div className="h-[2px] bg-crimson mt-3 w-20" />
-      </SlideBlock>
+      <div className="relative">
+        <CollapsingHeader title="How I got here" as="h3" size="sm" />
 
-      <div className="space-y-8 md:space-y-10">
-        {landingAbout.paragraphs.slice(0, 4).map((paragraph) => (
-          <SlideBlock key={paragraph.slice(0, 32)} from="left">
+        <div className="mx-auto w-full max-w-[1200px] px-6 pt-12 md:pt-14 pb-16 md:pb-20">
+          <div className="space-y-8 md:space-y-10">
+            {landingAbout.paragraphs.slice(0, 4).map((paragraph) => (
+              <SlideBlock key={paragraph.slice(0, 32)} from="left">
+                <p className="text-base sm:text-lg text-foreground/85 leading-[1.7] max-w-[58rem]">
+                  {paragraph}
+                </p>
+              </SlideBlock>
+            ))}
+          </div>
+
+          <SlideBlock from="right" className="my-14 md:my-16">
+            <blockquote className="pl-8 border-l-2 border-crimson max-w-[52rem]">
+              <p className="font-sans text-2xl sm:text-3xl md:text-4xl text-foreground leading-[1.25] tracking-tight">
+                &ldquo;{landingAbout.pullQuote}&rdquo;
+              </p>
+            </blockquote>
+          </SlideBlock>
+
+          <SlideBlock from="left">
             <p className="text-base sm:text-lg text-foreground/85 leading-[1.7] max-w-[58rem]">
-              {paragraph}
+              {landingAbout.paragraphs[4]}
             </p>
           </SlideBlock>
-        ))}
+        </div>
       </div>
-
-      <SlideBlock from="right" className="my-14 md:my-16">
-        <blockquote className="pl-8 border-l-2 border-crimson max-w-[52rem]">
-          <p className="font-sans text-2xl sm:text-3xl md:text-4xl text-foreground leading-[1.25] tracking-tight">
-            &ldquo;{landingAbout.pullQuote}&rdquo;
-          </p>
-        </blockquote>
-      </SlideBlock>
-
-      <SlideBlock from="left">
-        <p className="text-base sm:text-lg text-foreground/85 leading-[1.7] max-w-[58rem]">
-          {landingAbout.paragraphs[4]}
-        </p>
-      </SlideBlock>
-    </Section>
+    </section>
   );
 }
 
@@ -79,37 +105,63 @@ interface SlideBlockProps {
 }
 
 // Scroll-linked slide. Content shoots in from the chosen side as it enters
-// the viewport, and slides back out the same side as it leaves near the
-// footer. Tracks scroll position continuously rather than a one-shot trigger.
+// the viewport, then holds. Progress is latched at its high-water mark so the
+// reveal plays once and never rewinds: the previous continuous mapping re-hid
+// content whenever it dropped below the viewport again, which on phones read
+// as whole sections going missing (mobile audit 2026-08-12).
 function SlideBlock({ children, from, className }: SlideBlockProps) {
   const ref = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const small = useIsSmallViewport();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start end', 'end start'],
   });
 
-  const offset = from === 'left' ? -140 : 140;
+  // Latch: track the furthest progress seen; never report less.
+  const highWaterRef = useRef(0);
+  const latched: MotionValue<number> = useTransform(scrollYProgress, (v) => {
+    if (v > highWaterRef.current) highWaterRef.current = v;
+    return highWaterRef.current;
+  });
 
-  // Entry only — slide in from the side as the section enters the viewport
-  // from the bottom, then hold in place. No exit animation on scroll-past-top.
-  // Extended entry range (0 → 0.4) makes the slide feel unhurried.
+  // Offsets sized to fit the layout's side margins: the old ±140px exceeded
+  // the (viewport − 1200px)/2 + px-6 gutter on most desktop windows, so
+  // mid-reveal text was readable while its leading edge sat clipped past the
+  // overflow-x boundary ("one side cut off", viewport audit 2026-08-12).
+  const offset = (from === 'left' ? -1 : 1) * (small ? 44 : 96);
+
+  // Entry only — slide in from the side as the block enters the viewport from
+  // the bottom, then hold in place. Opacity's range ends AFTER x's on purpose:
+  // the block must land (or nearly land) before it turns readable, so a
+  // still-offset block is never presented as clipped readable text.
   const xRaw: MotionValue<number> = useTransform(
-    scrollYProgress,
-    [0, 0.4],
+    latched,
+    [0, small ? 0.2 : 0.35],
     [offset, 0],
     { clamp: true }
   );
   const opacityRaw: MotionValue<number> = useTransform(
-    scrollYProgress,
-    [0, 0.3],
+    latched,
+    [0, small ? 0.25 : 0.4],
     [0, 1],
     { clamp: true }
   );
 
-  // Spring-smooth the raw scroll-linked values for a softer settle.
-  const xMotion = useSpring(xRaw, { stiffness: 55, damping: 22, mass: 1 });
-  const opacityMotion = useSpring(opacityRaw, { stiffness: 70, damping: 24, mass: 1 });
+  // Spring-smooth the raw scroll-linked values for a softer settle. Small
+  // viewports get a stiffer spring for the same keep-up reason as the ranges.
+  const xMotion = useSpring(
+    xRaw,
+    small
+      ? { stiffness: 120, damping: 26, mass: 0.9 }
+      : { stiffness: 55, damping: 22, mass: 1 }
+  );
+  const opacityMotion = useSpring(
+    opacityRaw,
+    small
+      ? { stiffness: 150, damping: 28, mass: 0.9 }
+      : { stiffness: 70, damping: 24, mass: 1 }
+  );
 
   const style = prefersReducedMotion
     ? undefined
