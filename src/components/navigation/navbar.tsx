@@ -65,7 +65,11 @@ export function Navbar() {
             : 'bg-transparent'
         )}
       >
-        <nav className="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
+        {/* Full-width nav (Evan, 2026-08-12): the brand and links sit near the
+            screen edges with a small gutter, matching the edge-driven design
+            language (full-bleed slabs, viewport-wrapping ribbon) instead of
+            the 1200px text column. */}
+        <nav className="w-full px-5 md:px-8 h-16 flex items-center justify-between">
           <Link
             href="/"
             className="group font-mono text-sm text-foreground hover:text-crimson transition-all duration-200 inline-flex items-baseline hover:-translate-y-[1px] active:translate-y-[1px] active:scale-[0.96]"
