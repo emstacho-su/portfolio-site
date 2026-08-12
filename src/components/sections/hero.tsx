@@ -6,6 +6,7 @@ import { useLenis } from 'lenis/react';
 import { EASE } from '@/lib/animation';
 import ThermodynamicGrid from '@/components/ui/interactive-thermodynamic-grid';
 import { useBootReady } from '@/lib/boot-context';
+import { safeSessionGet, safeSessionSet } from '@/lib/safe-storage';
 
 // Retargeted hero copy (D-08, verbatim). Employer kept generic; no em dash.
 const TAGLINE =
@@ -35,7 +36,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="min-h-[78vh] flex flex-col items-center justify-center px-6 relative pt-16 overflow-hidden text-center"
+      className="min-h-[100svh] flex flex-col items-center justify-center px-6 relative pt-16 overflow-hidden text-center"
     >
       <HeroContent />
     </section>
@@ -86,10 +87,10 @@ function CompileSequence() {
     const reduced = !!window.matchMedia?.(
       '(prefers-reduced-motion: reduce)'
     ).matches;
-    const alreadyPlayed = !!sessionStorage.getItem(SESSION_KEY);
+    const alreadyPlayed = !!safeSessionGet(SESSION_KEY);
     if (reduced || alreadyPlayed) return; // keep the rendered final state
 
-    sessionStorage.setItem(SESSION_KEY, '1');
+    safeSessionSet(SESSION_KEY, '1');
     // Intentional one-shot rewind: SSR/hydration render the FINAL state (so
     // the text is in the delivered HTML), then this post-hydration effect
     // rewinds to step 0 to play the compile animation. Same SSR pattern and
@@ -270,7 +271,7 @@ function CompileSequence() {
                 lenis.scrollTo('#projects', { offset: -64 });
               }
             }}
-            className="group inline-flex items-center gap-2 font-sans text-base sm:text-lg text-crimson link-underline hover:text-crimson-hover transition-colors"
+            className="group inline-flex items-center gap-2 rounded-lg bg-crimson px-5 py-2.5 font-sans text-base sm:text-lg text-background shadow-md transition-all hover:bg-crimson-hover hover:shadow-lg active:translate-y-px"
           >
             Projects
             <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5">

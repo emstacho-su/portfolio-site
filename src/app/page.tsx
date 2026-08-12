@@ -7,7 +7,8 @@ import { HeroSection } from '@/components/sections/hero';
 import { AboutSection } from '@/components/sections/about';
 import { ProjectsSection } from '@/components/sections/projects';
 import { ResumeSection } from '@/components/sections/resume';
-import { ContactMarquee } from '@/components/sections/contact-marquee';
+import { ContactRibbon } from '@/components/fx/contact-ribbon';
+import { HeroSnap } from '@/components/fx/hero-snap';
 import { CursorSpotlight } from '@/components/fx/cursor-spotlight';
 import { useSectionView } from '@/hooks/use-section-view';
 
@@ -74,10 +75,13 @@ export default function Home() {
         <AboutSection />
         <ProjectsSection />
         <ResumeSection />
-        {/* Scrolling contact ticker: the seam into the footer's contact
-            section, which carries the same info accessibly. */}
-        <ContactMarquee />
+        {/* Contact ribbon: top bar during the hero, ribbon-wrap transit down
+            the right edge on the snap, full-bleed bottom bar after. Last
+            child of main so the bottom segment docks above the footer. */}
+        <ContactRibbon />
       </main>
+      {/* Snappy hero-to-About scroll snapping (Lenis-driven). */}
+      <HeroSnap />
     </>
   );
 }
