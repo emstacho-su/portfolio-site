@@ -12,9 +12,9 @@ import { SlabHeading } from '@/components/sections/slab-heading';
 // Bars pin beneath the SHRUNKEN navbar (h-12 = 48px): the nav slims down
 // past the hero, and collapsed bars only ever exist in that state.
 const NAV_PX = 48;
-// Collapsed bar height upper bound (text-lg + py-2.5), used to start the
+// Collapsed bar height upper bound (text-sm + py-2), used to start the
 // push-out exactly when the next header would touch the bar's bottom edge.
-const BAR_PX = 48;
+const BAR_PX = 36;
 
 interface CollapsingHeaderProps {
   title: string;
@@ -84,8 +84,10 @@ export function CollapsingHeader({
     clamp: true,
   });
 
+  // Condensed bar (Evan, 2026-08-13): ~36px tall so the nav + bar stack
+  // stays light.
   const barClass =
-    'flex items-center w-full bg-crimson text-background font-sans font-bold uppercase tracking-tight text-base md:text-lg px-6 py-2.5 shadow-md';
+    'flex items-center w-full bg-crimson text-background font-sans font-bold uppercase tracking-tight text-sm px-6 py-2 shadow-sm';
 
   return (
     <>
