@@ -147,11 +147,10 @@ function SlideBlock({ children, from, className }: SlideBlockProps) {
   // viewport, swings right to its reading position mid-transit, and arcs
   // back out to the LEFT as it reaches the header-stack line (the exit
   // boundary above). In and out on the same side, several blocks sharing
-  // the visible arc at once. ARC_PX stays inside the side gutter ("one
-  // side cut off", viewport audit 2026-08-12); the slight tilt about the
-  // left edge sells the rotation.
+  // the visible arc at once. The arc positions blocks only; alignment is
+  // untouched, no rotation (Evan, 2026-08-13). ARC_PX stays inside the
+  // side gutter ("one side cut off", viewport audit 2026-08-12).
   const ARC_PX = 96;
-  const ARC_TILT_DEG = 4;
   const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 
   const source = small ? latched : scrollYProgress;
@@ -168,17 +167,12 @@ function SlideBlock({ children, from, className }: SlideBlockProps) {
     if (p > 0.86) return (1 - p) / 0.14;
     return 1;
   });
-  const rotateRaw: MotionValue<number> = useTransform(source, (v: number) =>
-    small ? 0 : (0.5 - clamp01(v)) * ARC_TILT_DEG
-  );
-
   // Spring-smooth the raw scroll-linked values; stiff enough that the arc
   // tracks the wheel without drifting behind the scroll.
   const springCfg = small
     ? { stiffness: 120, damping: 26, mass: 0.9 }
     : { stiffness: 95, damping: 24, mass: 1 };
   const xMotion = useSpring(xRaw, springCfg);
-  const rotateMotion = useSpring(rotateRaw, springCfg);
   const opacityMotion = useSpring(
     opacityRaw,
     small
@@ -188,12 +182,7 @@ function SlideBlock({ children, from, className }: SlideBlockProps) {
 
   const style = prefersReducedMotion
     ? undefined
-    : {
-        x: xMotion,
-        opacity: opacityMotion,
-        rotate: rotateMotion,
-        transformOrigin: 'left center',
-      };
+    : { x: xMotion, opacity: opacityMotion };
 
   return (
     <motion.div
