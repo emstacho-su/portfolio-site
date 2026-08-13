@@ -9,8 +9,9 @@ import {
 } from 'motion/react';
 import { SlabHeading } from '@/components/sections/slab-heading';
 
-// Navbar is fixed h-16 (64px); bars pin directly beneath it.
-const NAV_PX = 64;
+// Bars pin beneath the SHRUNKEN navbar (h-12 = 48px): the nav slims down
+// past the hero, and collapsed bars only ever exist in that state.
+const NAV_PX = 48;
 // Collapsed bar height upper bound (text-lg + py-2.5), used to start the
 // push-out exactly when the next header would touch the bar's bottom edge.
 const BAR_PX = 48;
@@ -48,7 +49,7 @@ function usePastHeader(ref: RefObject<HTMLDivElement | null>): boolean {
 
 // Slab header that collapses on scroll-past: the full slab stays in flow, and
 // once it slides under the navbar a compact bar with the same styling snaps
-// in, pinned at the nav line (sticky top-16). The bar stays pinned for as
+// in, pinned at the shrunken nav line (sticky top-12). The bar stays pinned for as
 // long as this component's PARENT container is in view, so wrap each header
 // plus its content in a `relative` div to scope the sticky range. When the
 // NEXT header approaches, the bar is pushed out: a scroll-linked translate
@@ -97,7 +98,7 @@ export function CollapsingHeader({
           the slab collapsing into the bar. overflow-hidden on the slot's
           child would clip the snap, so the push-out translate lives on an
           outer wrapper and the snap-in spring on an inner one. */}
-      <div className="sticky top-16 z-30 h-0" aria-hidden="true">
+      <div className="sticky top-12 z-30 h-0" aria-hidden="true">
         {past &&
           (reduce ? (
             <div className={barClass}>{title}</div>

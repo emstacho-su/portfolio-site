@@ -6,7 +6,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer id="contact" className="border-t border-hairline scroll-mt-16">
+    <footer id="contact" className="border-t border-hairline scroll-mt-12">
       <div className="max-w-[1200px] mx-auto px-6 py-5">
         <p className="font-mono text-xs text-tertiary">
           © {year} Evan Stachowiak

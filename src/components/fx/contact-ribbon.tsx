@@ -42,7 +42,11 @@ const CONTACT_ITEMS: readonly MarqueeItem[] = [
 const BAND_CLASS =
   'bg-crimson text-background py-1 font-mono text-[11px] md:text-xs uppercase tracking-[0.15em]';
 
-const NAV_PX = 64;
+// The shrunken nav height (h-12): the ribbon transit and its clip only
+// matter once scrolling has begun, when the nav has slimmed down. The top
+// bar segment alone sits under the FULL nav (top-16), since it shows only
+// while the hero is at rest.
+const NAV_PX = 48;
 
 export function ContactRibbon() {
   const reduce = useReducedMotion();
@@ -127,7 +131,7 @@ export function ContactRibbon() {
       {/* Right-edge segment: a rotated copy of the band translating inside a
           clip wrapper that starts AT the nav line, so it can never show over
           or behind the navbar. */}
-      <div className="fixed top-16 bottom-0 right-0 z-30 w-[26px] overflow-hidden pointer-events-none">
+      <div className="fixed top-12 bottom-0 right-0 z-30 w-[26px] overflow-hidden pointer-events-none">
         <motion.div
           aria-hidden="true"
           className="absolute inset-0"
@@ -152,7 +156,7 @@ export function ContactRibbon() {
           while the ribbon wraps their corner. */}
       <motion.div
         aria-hidden="true"
-        className="fixed top-16 right-0 z-[31] w-[26px] h-[26px] bg-crimson-hover rotate-45 pointer-events-none"
+        className="fixed top-12 right-0 z-[31] w-[26px] h-[26px] bg-crimson-hover rotate-45 pointer-events-none"
         style={{ opacity: topFoldOpacity }}
       />
       <motion.div

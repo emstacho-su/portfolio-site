@@ -13,7 +13,7 @@ import { CursorSpotlight } from '@/components/fx/cursor-spotlight';
 import { useSectionView } from '@/hooks/use-section-view';
 
 // Navbar height (h-16 = 64px); anchors scroll to sit just below the fixed nav.
-const NAV_OFFSET = -64;
+const NAV_OFFSET = -48;
 
 // Section ids observed for section_view analytics + scrollspy, in scroll order
 // (D-01 / D-02). The standalone "Get In Touch" section was removed as redundant

@@ -30,17 +30,27 @@ const SECTION_IDS = [
   'contact',
 ];
 
-// Navbar height (h-16 = 64px); scroll the target to sit just below the nav.
-const NAV_OFFSET = -64;
+// Shrunken navbar height (h-12 = 48px): past the hero the nav slims down so
+// it stacks lighter against the collapsed header bars (Evan, 2026-08-13).
+// Anchor scrolls land under the SHRUNKEN nav, since every scrolled state
+// has it.
+const NAV_OFFSET = -48;
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [shrunk, setShrunk] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const lenis = useLenis();
   const activeId = useScrollspy(SECTION_IDS);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      // Background blurs in as soon as content slides underneath; the height
+      // shrink waits until the hero is actually behind us.
+      setScrolled(window.scrollY > 50);
+      setShrunk(window.scrollY > window.innerHeight * 0.75);
+    };
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -70,7 +80,12 @@ export function Navbar() {
             screen edges with a small gutter, matching the edge-driven design
             language (full-bleed slabs, viewport-wrapping ribbon) instead of
             the 1200px text column. */}
-        <nav className="w-full px-5 md:px-8 h-16 flex items-center justify-between">
+        <nav
+          className={cn(
+            'w-full px-5 md:px-8 flex items-center justify-between transition-[height] duration-300',
+            shrunk ? 'h-12' : 'h-16'
+          )}
+        >
           {/* Monogram replaces the ES_ wordmark (Evan, 2026-08-12). Ink
               linework inherits the link color, so hover tints the whole
               mark crimson to match the old hover behavior. */}
@@ -79,7 +94,12 @@ export function Navbar() {
             className="text-foreground hover:text-crimson transition-all duration-200 inline-flex items-center hover:-translate-y-[1px] active:translate-y-[1px] active:scale-[0.96]"
             aria-label="Home"
           >
-            <SkLogo className="h-7 w-auto" />
+            <SkLogo
+              className={cn(
+                'w-auto transition-all duration-300',
+                shrunk ? 'h-6' : 'h-7'
+              )}
+            />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">

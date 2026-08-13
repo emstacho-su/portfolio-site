@@ -268,7 +268,7 @@ function CompileSequence() {
             onClick={(event) => {
               if (lenis) {
                 event.preventDefault();
-                lenis.scrollTo('#projects', { offset: -64 });
+                lenis.scrollTo('#projects', { offset: -48 });
               }
             }}
             className="group inline-flex items-center gap-2 rounded-lg bg-crimson px-5 py-2.5 font-sans text-base sm:text-lg text-background shadow-md transition-all hover:bg-crimson-hover hover:shadow-lg active:translate-y-px"

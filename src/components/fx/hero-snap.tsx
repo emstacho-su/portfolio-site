@@ -3,8 +3,9 @@
 import { useEffect, useRef } from 'react';
 import { useLenis } from 'lenis/react';
 
-// Navbar height; the snap lands the About slab flush under the nav.
-const NAV_PX = 64;
+// Shrunken navbar height (the nav slims to h-12 past the hero); the snap
+// lands the About slab flush under it.
+const NAV_PX = 48;
 // Free-scroll dead zone at the very top so tiny wheel nudges do not fire.
 const TOP_DEADZONE_PX = 48;
 

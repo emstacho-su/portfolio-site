@@ -21,7 +21,7 @@ interface MobileMenuProps {
 }
 
 // Navbar height (h-16 = 64px); scroll the target to sit just below the nav.
-const NAV_OFFSET = -64;
+const NAV_OFFSET = -48;
 
 export function MobileMenu({
   open,

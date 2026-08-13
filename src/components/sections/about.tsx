@@ -40,7 +40,7 @@ function useIsSmallViewport(): boolean {
 
 export function AboutSection() {
   return (
-    <section id="about" className="w-full mt-12 md:mt-16 scroll-mt-16">
+    <section id="about" className="w-full mt-12 md:mt-16 scroll-mt-12">
       {/* Small crimson slab headers matching the Projects transition (Evan,
           2026-08-12). Each header + its content sits in its own wrapper so
           the collapsed sticky bar releases when its subsection ends. */}
