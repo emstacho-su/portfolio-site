@@ -18,6 +18,9 @@ interface MobileMenuProps {
   links: readonly NavLink[];
   // Active section id from scrollspy (without the leading `#`).
   activeId: string;
+  // Opens the Contact dialog; the Contact entry no longer scrolls anywhere
+  // since the footer is copyright-only (Evan, 2026-08-13).
+  onContact: () => void;
 }
 
 // Navbar height (h-16 = 64px); scroll the target to sit just below the nav.
@@ -28,6 +31,7 @@ export function MobileMenu({
   onClose,
   links,
   activeId,
+  onContact,
 }: MobileMenuProps) {
   const lenis = useLenis();
 
@@ -49,6 +53,10 @@ export function MobileMenu({
     event.preventDefault();
     // Close first so the body scroll-lock releases, then scroll to the anchor.
     onClose();
+    if (href === '#contact') {
+      onContact();
+      return;
+    }
     lenis?.scrollTo(href, { offset: NAV_OFFSET });
   };
 

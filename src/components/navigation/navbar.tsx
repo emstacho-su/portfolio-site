@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { TIMING, EASE } from '@/lib/animation';
 import { useScrollspy } from '@/hooks/use-scrollspy';
 import { MobileMenu } from './mobile-menu';
+import { ContactDialog } from './contact-dialog';
 import { SkLogo } from './sk-logo';
 import { Menu } from 'lucide-react';
 
@@ -40,6 +41,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [shrunk, setShrunk] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const lenis = useLenis();
   const activeId = useScrollspy(SECTION_IDS);
 
@@ -60,6 +62,13 @@ export function Navbar() {
     href: string
   ) => {
     event.preventDefault();
+    // Contact opens the pop-up with the explicit links instead of scrolling:
+    // the footer is copyright-only now, so there is nothing to snap to
+    // (Evan, 2026-08-13).
+    if (href === '#contact') {
+      setContactOpen(true);
+      return;
+    }
     lenis?.scrollTo(href, { offset: NAV_OFFSET });
   };
 
@@ -153,7 +162,10 @@ export function Navbar() {
         onClose={() => setMobileMenuOpen(false)}
         links={NAV_LINKS}
         activeId={activeId}
+        onContact={() => setContactOpen(true)}
       />
+
+      <ContactDialog open={contactOpen} onOpenChange={setContactOpen} />
     </>
   );
 }

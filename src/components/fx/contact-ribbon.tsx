@@ -8,6 +8,7 @@ import {
   useReducedMotion,
 } from 'motion/react';
 import { MarqueeBand, type MarqueeItem } from '@/components/fx/marquee-band';
+import { CONTACT_ITEMS as SHARED_CONTACT_ITEMS } from '@/data/contact';
 
 // Contact ticker as a traveling ribbon (Evan, 2026-08-12). During the hero it
 // runs full-bleed under the navbar. The wrap is anchored to scroll itself
@@ -24,18 +25,18 @@ import { MarqueeBand, type MarqueeItem } from '@/components/fx/marquee-band';
 // square-cornered and touch both screen edges. The strip is decorative
 // (MarqueeBand is aria-hidden); the sr-only block carries the addresses for
 // assistive tech, since the footer holds only the copyright.
-// Phone stays plain text (Evan, 2026-08-12: no tel: link); the other
-// addresses are clickable in the visible strip (tabIndex -1, see
-// MarqueeBand) and real focusable links in the sr-only list below.
-const CONTACT_ITEMS: readonly MarqueeItem[] = [
-  { label: 'emstacho@syr.edu', href: 'mailto:emstacho@syr.edu' },
-  { label: 'github.com/emstacho-su', href: 'https://github.com/emstacho-su' },
-  {
-    label: 'linkedin.com/in/evan-stachowiak',
-    href: 'https://www.linkedin.com/in/evan-stachowiak-449119349',
-  },
-  { label: '(262) 933-0228' },
-];
+// Addresses come from the shared list (src/data/contact.ts) so this strip and
+// the Contact dialog can never drift apart. In the STRIP the phone stays
+// plain text (Evan, 2026-08-12: no tel: link here); the dialog is where the
+// tel: link lives. The other addresses are clickable in the visible strip
+// (tabIndex -1, see MarqueeBand) and real focusable links in the sr-only
+// list below.
+const CONTACT_ITEMS: readonly MarqueeItem[] = SHARED_CONTACT_ITEMS.map(
+  (item) =>
+    item.kind === 'phone'
+      ? { label: item.label }
+      : { label: item.label, href: item.href }
+);
 
 // Bar cross-section after the 33% trim: py-1 + text ~= 26px tall. The right
 // ribbon column and the fold diamonds share the same 26px.
