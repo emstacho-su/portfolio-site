@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { generalSans, jetbrainsMono } from '@/lib/fonts';
 import { AnimationProvider } from './providers/animation-provider';
 import { LenisProvider } from './providers/lenis-provider';
-import { SkipLink } from '@/components/ui/skip-link';
 import { Navbar } from '@/components/navigation/navbar';
 import { Footer } from '@/components/navigation/footer';
 import { HeroLoader } from '@/components/fx/hero-loader';
@@ -54,7 +53,6 @@ export default function RootLayout({
       className={`${generalSans.variable} ${jetbrainsMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">
-        <SkipLink />
         <BootProvider>
           {/* Cinematic loader: dark pre-load → cream sweep → name stamp → handoff. */}
           <HeroLoader />

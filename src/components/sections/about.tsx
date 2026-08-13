@@ -8,7 +8,7 @@ import {
   useReducedMotion,
   type MotionValue,
 } from 'motion/react';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Children, useEffect, useRef, useState, type ReactNode } from 'react';
 import { CollapsingHeader } from '@/components/sections/collapsing-header';
 import { landingAbout, linkedinAbout } from '@/data/about';
 import { EASE } from '@/lib/animation';
@@ -39,6 +39,9 @@ function useIsSmallViewport(): boolean {
 }
 
 export function AboutSection() {
+  const aboutLead = linkedinAbout.slice(0, -1);
+  const aboutLast = linkedinAbout[linkedinAbout.length - 1];
+
   return (
     <section id="about" className="w-full mt-12 md:mt-16 scroll-mt-12">
       {/* Small crimson slab headers matching the Projects transition (Evan,
@@ -48,46 +51,54 @@ export function AboutSection() {
         <CollapsingHeader title="About" as="h2" size="sm" />
 
         <div className="mx-auto w-full max-w-[1200px] px-6 pt-12 md:pt-14 pb-16 md:pb-20">
-          {/* LinkedIn About leads (§9.4): the technical record first. */}
-          <div className="space-y-8 md:space-y-10">
-            {linkedinAbout.map((paragraph) => (
-              <SlideBlock key={paragraph.slice(0, 32)} from="left">
-                <p className="text-lg sm:text-xl text-foreground leading-[1.7] max-w-[58rem]">
-                  {paragraph}
-                </p>
-              </SlideBlock>
+          {/* LinkedIn About leads (§9.4): the technical record first. All but
+              the last paragraph rotate through the pinned carousel; the last
+              flows so the section scrolls naturally into the next. */}
+          <CarouselBlocks>
+            {aboutLead.map((paragraph) => (
+              <p
+                key={paragraph.slice(0, 32)}
+                className="text-lg sm:text-xl text-foreground leading-[1.7] max-w-[58rem]"
+              >
+                {paragraph}
+              </p>
             ))}
-          </div>
+          </CarouselBlocks>
+
+          <SlideBlock from="left" className="mt-8 md:mt-10">
+            <p className="text-lg sm:text-xl text-foreground leading-[1.7] max-w-[58rem]">
+              {aboutLast}
+            </p>
+          </SlideBlock>
         </div>
       </div>
 
       {/* Origin narrative below the fold under its own heading (§9.4): kept
           in full, repositioned rather than deleted. All five paragraphs of
-          the approved narrative render (D-09) with the pull quote woven in;
-          each keeps the SlideBlock reduced-motion-gated slide (S-3). */}
+          the approved narrative render (D-09) with the pull quote woven in
+          (S-3). Paragraphs and quote rotate in the carousel; the closing
+          paragraph flows. */}
       <div className="relative">
         <CollapsingHeader title="How I got here" as="h3" size="sm" />
 
         <div className="mx-auto w-full max-w-[1200px] px-6 pt-12 md:pt-14 pb-16 md:pb-20">
-          <div className="space-y-8 md:space-y-10">
+          <CarouselBlocks>
             {landingAbout.paragraphs.slice(0, 4).map((paragraph) => (
-              <SlideBlock key={paragraph.slice(0, 32)} from="left">
-                <p className="text-base sm:text-lg text-foreground/85 leading-[1.7] max-w-[58rem]">
-                  {paragraph}
-                </p>
-              </SlideBlock>
+              <p
+                key={paragraph.slice(0, 32)}
+                className="text-base sm:text-lg text-foreground/85 leading-[1.7] max-w-[58rem]"
+              >
+                {paragraph}
+              </p>
             ))}
-          </div>
-
-          <SlideBlock from="right" className="my-14 md:my-16">
             <blockquote className="pl-8 border-l-2 border-crimson max-w-[52rem]">
               <p className="font-sans text-2xl sm:text-3xl md:text-4xl text-foreground leading-[1.25] tracking-tight">
                 &ldquo;{landingAbout.pullQuote}&rdquo;
               </p>
             </blockquote>
-          </SlideBlock>
+          </CarouselBlocks>
 
-          <SlideBlock from="left">
+          <SlideBlock from="left" className="mt-8 md:mt-10">
             <p className="text-base sm:text-lg text-foreground/85 leading-[1.7] max-w-[58rem]">
               {landingAbout.paragraphs[4]}
             </p>
@@ -95,6 +106,112 @@ export function AboutSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+// Stage line: shrunken nav (48) + collapsed bar (36) + breathing room (36).
+// The pinned carousel stage and the SlideBlock fade-out line both use it so
+// text is never covered by the header stack.
+const STAGE_TOP_PX = 120;
+
+// Scroll-driven paragraph carousel (Evan, 2026-08-13): the stage pins below
+// the nav + collapsed-bar stack, the page reads as stationary, and scroll
+// rotates the blocks through it, each sliding in from the right and out to
+// the left with amped fades. The runway height sets how much scroll each
+// rotation consumes. Small viewports and reduced motion fall back to the
+// stacked SlideBlock flow.
+function CarouselBlocks({ children }: { children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const small = useIsSmallViewport();
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: [`start ${STAGE_TOP_PX}px`, `end ${STAGE_TOP_PX}px`],
+  });
+
+  // toArray flattens the mapped-array + sibling-element mix into one flat,
+  // keyed list.
+  const items = Children.toArray(children);
+
+  if (reduce || small) {
+    return (
+      // The ref still attaches here: useScroll above requires a hydrated
+      // target even when its progress goes unused in this branch.
+      <div ref={ref} className="space-y-8 md:space-y-10">
+        {items.map((child, i) => (
+          <SlideBlock key={i} from="left">
+            {child}
+          </SlideBlock>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div ref={ref} style={{ height: `${items.length * 55 + 25}vh` }}>
+      <div
+        className="sticky grid"
+        style={{ top: STAGE_TOP_PX }}
+      >
+        {items.map((child, i) => (
+          <CarouselItem
+            key={i}
+            index={i}
+            count={items.length}
+            progress={scrollYProgress}
+          >
+            {child}
+          </CarouselItem>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+interface CarouselItemProps {
+  index: number;
+  count: number;
+  progress: MotionValue<number>;
+  children: ReactNode;
+}
+
+function CarouselItem({ index, count, progress, children }: CarouselItemProps) {
+  // Rotations fill the pinned portion of the runway; the tail past 0.88 is
+  // the un-pin, which the held last item rides out into normal flow.
+  const span = 0.88 / count;
+  const a = index * span;
+  const b = a + span;
+  const f = span * 0.38;
+  const first = index === 0;
+  const last = index === count - 1;
+
+  // First item is already on stage when the pin begins (it entered with the
+  // page scroll); the last one holds so the stage never empties before the
+  // un-pin hands off to the flowing closer.
+  const opacityRange = first
+    ? [b - f, b]
+    : last
+      ? [a, a + f]
+      : [a, a + f, b - f, b];
+  const opacityValues = first ? [1, 0] : last ? [0, 1] : [0, 1, 1, 0];
+  const xRange = opacityRange;
+  const xValues = first ? [0, -80] : last ? [80, 0] : [80, 0, 0, -80];
+
+  const opacity = useTransform(progress, opacityRange, opacityValues, {
+    clamp: true,
+  });
+  const x = useTransform(progress, xRange, xValues, { clamp: true });
+
+  return (
+    <motion.div
+      style={{ opacity, x }}
+      // All stacked in one grid cell; pointer events off so invisible layers
+      // never intercept selection or clicks.
+      className="col-start-1 row-start-1 pointer-events-none"
+    >
+      {children}
+    </motion.div>
   );
 }
 
@@ -113,9 +230,12 @@ function SlideBlock({ children, from, className }: SlideBlockProps) {
   const ref = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const small = useIsSmallViewport();
+  // Exit boundary sits at the header-stack line, not the viewport top, so
+  // flowing text finishes its fade BEFORE sliding under the nav + collapsed
+  // bar instead of being covered mid-sentence (Evan, 2026-08-13).
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'end start'],
+    offset: ['start end', `end ${STAGE_TOP_PX}px`],
   });
 
   // Latch: track the furthest progress seen; never report less.
